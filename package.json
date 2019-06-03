@@ -1,0 +1,13 @@
+{
+    "main": "index.js",
+    "author": {
+        "name": "spaghetti"
+    },
+    "start": "node .",
+    "dependencies": {
+        "discord.js": "^11.5.1",
+        "dotenv": "^8.0.0",
+        "moment": "^2.22.2",
+        "moment-duration-format": "^2.2.2"
+    }
+}
