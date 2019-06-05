@@ -3,6 +3,7 @@ module.exports = {
     aliases: ['pfp'],
     description: 'Get your or the mentioned users avatar.',
     usage: '(@User)',
+    cooldown: 5,
     async execute(bot, message, args) {
 
         let user = message.mentions.users.first() || message.author;

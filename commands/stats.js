@@ -5,7 +5,7 @@ module.exports = {
     name: 'stats',
     aliases: ['stat'],
     description: 'Get some info about the bot, server and about you.',
-    cooldown: 10,
+    cooldown: 5,
     async execute(bot, message, args) {
 
         const duration = moment.duration(bot.uptime).format(" D [days], H [hrs], m [mins], s [secs]");//uptime
