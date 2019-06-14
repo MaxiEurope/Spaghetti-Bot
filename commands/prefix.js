@@ -25,26 +25,28 @@ module.exports = {
                 if (!guild) {
                     let nguild = new Guild({
                         serverID: message.guild.id,
-                        prefix: args[1]
+                        prefix: args[1],
+                        active: true
                     })
                     nguild.save().catch(err => console.log(err));
                     message.channel.send('🖇 Server prefix set: `' + args[1] + '`');
                 } else {
                     guild.prefix = args[1];
+                    guild.active = true;
                     guild.save().catch(err => console.log(err));
                     message.channel.send('🖇 Server prefix set: `' + args[1] + '`');
                 }
             } else if (args.length && args[0] === 'remove') {
                 if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send('You need the `MANAGE_MESSAGES` permission.');
-                if (!guild || guild.prefix === '') {
+                if (!guild || guild.active === false) {
                     message.channel.send('🖇 This server has no extra prefix set, therefore you can set one with `' + config.prefix + 'prefix set <prefix>`.');
                 } else {
-                    guild.prefix = '';
+                    guild.active = false;
                     guild.save().catch(err => console.log(err));
                     message.channel.send('🖇 Removed server prefix. You can still use `' + config.prefix + '`.');
                 }
             } else {
-                if (!guild || guild.prefix === '') {
+                if (!guild || guild.active === false) {
                     message.channel.send('🖇 This server has no extra prefix set, therefore you can set one with `' + config.prefix + 'prefix set <prefix>`.');
                 } else {
                     message.channel.send('🖇 This servers prefix is `' + guild.prefix + '`.');

@@ -32,8 +32,8 @@ for (const file of cmdf) {
 /**
  * jetzt kommt das cooldown und xp-cooldown system, eine djs collection
  */
-const cooldowns = new Discord.Collection();
-const xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
+let cooldowns = new Discord.Collection();
+let xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
 
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
@@ -51,44 +51,14 @@ bot.on('message', async message => { //message event
     if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //wenn und jemand eine DM schreibt, loggen
     // if (message.author.id !== '393096318123245578') return;
     /**
-     * xp - system
-     */
-    Profile.findOne({
-        userID: message.author.id
-    }, (err, profile) => {
-        if (err) console.log(err);
-        if (!profile) {
-            //ignorieren, da der user sein Profil erst erstellen muss
-        } else {
-            if (xpCooldowns.has(message.author.id)) {
-                //keine xp
-            } else {
-                xpCooldowns.add(message.author.id); //wir geben cooldown
-                setTimeout(() => {
-                    xpCooldowns.delete(message.author.id); //wir löschen den cooldown
-                    let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
-                    if (profile.xp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
-                        profile.xp = profile.xp + randomXp; //wir geben es dem user
-                        profile.save().catch(err => console.log(err)); //und speichern
-                    } else { //level up
-                        profile.xp = profile.xp + randomXp;
-                        profile.lvl = profile.lvl + 1; //+ 1 level
-                        // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
-                        profile.save().catch(err => console.log(err));
-                    }
-                })
-            }
-        }
-    })
-    /**
      * Da drunter ist die custom prefix funktion.
      */
-    let prefixes = [config.prefix];
+    let prefixes = [config.prefix]; //wir erstellen einen array und fügen den default prefix hinzu
     Guild.findOne({
         serverID: message.guild.id
     }, (err, guild) => {
         if (err) console.log(err);
-        if (!guild) {
+        if (!guild || guild.active === false) {
             prefixes.push(config.prefix);
         } else {
             prefixes.push(guild.prefix);
@@ -113,7 +83,9 @@ bot.on('message', async message => { //message event
                 //nichts
             } else {
                 if (disableCommand.cDisabled(cchannel, commandID, message) === true) {
-                    return message.channel.send('🚫 **That command is disabled in this channel.**');
+                    return message.channel.send('🚫 **That command is disabled in this channel.**').then(m => {
+                        m.delete(4000);
+                    })
                 }
             }
             /**
@@ -149,6 +121,37 @@ bot.on('message', async message => { //message event
                 console.error(error); //falls was schiefläuft, loggen wir es...
                 message.reply('an error occured! Please contact our staff!'); //...und sagen dem user bescheid
             }
+            /**
+             * xp - system
+             */
+            Profile.findOne({
+                userID: message.author.id
+            }, (err, profile) => {
+                if (err) console.log(err);
+                if (!profile) {
+                    //ignorieren, da der user sein Profil erst erstellen muss
+                } else {
+                    if (xpCooldowns.has(message.author.id)) {
+                        return;
+                        //keine xp
+                    } else {
+                        xpCooldowns.add(message.author.id); //wir geben cooldown
+                    }
+                    setTimeout(() => {
+                        xpCooldowns.delete(message.author.id); //wir löschen den cooldown
+                        let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
+                        if (profile.xp + randomXp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
+                            profile.xp = profile.xp + randomXp; //wir geben es dem user
+                            profile.save().catch(err => console.log(err)); //und speichern
+                        } else { //level up
+                            profile.xp = profile.xp + randomXp;
+                            profile.lvl = profile.lvl + 1; //+ 1 level
+                            // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
+                            profile.save().catch(err => console.log(err));
+                        }
+                    }, 60000); //jede minute kann man xp bekommen
+                }
+            })
         })
     })
 })

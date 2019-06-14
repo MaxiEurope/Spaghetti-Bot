@@ -7,11 +7,12 @@ const Profile = require('../util/mongo/profile.js');
 const Discord = require('discord.js');
 const lettercount = require('letter-count');
 const commanumber = require('comma-number');
+const parse = require('parse-color');
 
 module.exports = {
     name: 'profile',
     description: 'Your beautiful profile. Earn xp, level up, change your description and show your stats.',
-    usage: '(setting)',
+    usage: '(settings)',
     cooldown: 5,
     id: 15,
     async execute(bot, message, args) {
@@ -30,24 +31,79 @@ module.exports = {
                         creationDate: Date.now(),
                         shortDesc: 'A very cool person.',
                         longDesc: 'none',
-                        color: '#00ff00'
+                        color: '#00ff00',
+                        lvlupMessage: false
                     })
                     newProfile.save().catch(err => console.log(err));
                     return message.channel.send('✅ Successfully created profile for you.');
-                }else{
+                } else {
                     return message.channel.send('🚫 This user has never created its profile. Tell them to do so.');
                 }
-            }else{
-                if(!args.length){
+            } else {
+                if (args.length && args[0].toLowerCase() === 'settings') {
+                    if (_user.id !== message.author.id) return message.channel.send('🚫 You cannot edit/view others profile settings!');
+
+                    if (args[1] && args[1].toLowerCase() === 'info') {
+                        let text = args.slice(2).join(' ');
+                        if (!text) return message.channel.send('🚫 That\'s not a valid info.');
+                        let count = lettercount.count(text).chars;
+                        if (count > 50) return message.channel.send('🚫 That info is way too long. **50** chars are the max.');
+                        profile.shortDesc = text;
+                        profile.save().catch(err => console.log(err));
+                        return message.reply('✅ Saved your info.');
+                    } else if (args[1] && args[1].toLowerCase() === 'description') {
+                        let text = args.slice(2).join(' ');
+                        if (!text) return message.channel.send('🚫 That\'s not a valid description.');
+                        let count = lettercount.count(text).chars;
+                        if (count > 750) return message.channel.send('🚫 That description is way too long. **750** chars are the max.');
+                        profile.longDesc = text;
+                        profile.save().catch(err => console.log(err));
+                        return message.reply('✅ Saved your description.');
+                    } else if (args[1] && args[1].toLowerCase() === 'color') {
+                        let color = args[2];
+                        if (!color) return message.channel.send('🚫 You didn\'t specify a color. Use `#0ffff0` for example.');
+                        if (!color.startsWith('#') && color.length === 6) {
+                            const testResult = parse(`#${color}`);
+                            if (!testResult.hex) {
+                                return message.channel.send('🚫 Thats not a valid color. Use `#0ffff0` for example.');;
+                            }
+                            color = testResult;
+                        } else {
+                            color = parse(color);
+                        }
+                        if (!color.cmyk || !color.rgb || !color.hsv || !color.hsl || !color.hex) {
+                            return message.channel.send('🚫 This color seems invalid. Use a hex color instead or search for css colors.');;
+                        }
+                        profile.color = color.hex;
+                        profile.save().catch(err => console.log(err));
+                        return message.reply('✅ Saved your color.');
+                    } else if (args[1] && args[1].toLowerCase() === 'message') {
+                        let trueFalse = args[2];
+                        let res;
+                        if (!trueFalse) return message.channel.send('🚫 Please decide whether I shall send level-up messages in the chat. `true/false`');
+                        if (trueFalse.toLowerCase() === 'true') res = true;
+                        else if (trueFalse.toLowerCase() === 'false') res = false;
+                        else return message.channel.send('🚫 Please decide whether I shall send level-up messages in the chat. `true/false`');
+                        profile.lvlupMessage = res;
+                        profile.save().catch(err => console.log(err));
+                        return message.reply('✅ Saved.');
+                    } else {
+                        message.channel.send(`**${message.author.username}'s** current profile settings:\n` +
+                            `**Info:** - \`\`\`${profile.shortDesc}\`\`\`\n` +
+                            `**Description:** - \`\`\`${profile.longDesc}\`\`\`\n` +
+                            `**Color:** - ${profile.color}\n` +
+                            `**Lvl-up-msgs:** - ${profile.lvlupMessage}`);
+                    }
+                } else {
                     let _profile = new Discord.RichEmbed()
-                        .setTitle(_user + '\'s profile')
+                        .setTitle(_user.username + '\'s profile')
                         .setThumbnail(_user.displayAvatarURL)
                         .setColor(profile.color)
                         .setTimestamp(profile.creationDate)
-                        .setDescription('**INFO:** - '+profile.shortDesc+'\n\n'+
-                        '**Description:** - '+profile.longDesc+'')
+                        .setDescription('**INFO:** - ' + profile.shortDesc + '\n\n' +
+                            '**Description:** - ' + profile.longDesc + '')
                         .addField('Level', `**${profile.lvl}**`, true)
-                        .addField('XP', `**${commanumber(profile.xp)}/${commanumber(((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100))}`)
+                        .addField('XP', `**${commanumber(profile.xp)}/${commanumber(((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100))}**`, true)
                         .setFooter('Edit: -profile settings | Profile created at');
                     message.channel.send(_profile);
                 }

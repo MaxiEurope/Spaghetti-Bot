@@ -7,7 +7,8 @@ const schema = mongoose.Schema({
     creationDate: Number,
     shortDesc: String,
     longDesc: String,
-    color: String
+    color: String,
+    lvlupMessage: Boolean
 })
 
 module.exports = mongoose.model('Profile', schema);
