@@ -20,6 +20,7 @@ module.exports = {
     name: 'daily',
     description: 'Get your daily amount of coins every 24 h. Resets at midnight (timezone: Vienna/Europe).',
     cooldown: 10,
+    id: 5,
     async execute(bot, message, args) {
 
         User.findOne({

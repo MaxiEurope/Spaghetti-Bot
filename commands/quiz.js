@@ -6,6 +6,7 @@ module.exports = {
     description: 'Do some quiz! Available categories: **general, games, computer, vehicles, history, tv, music**. Difficulties: **easy, medium, hard**. You will have 30 seconds! Example: `-quiz vehicles medium`',
     usage: '(category difficulty)',
     cooldown: 10,
+    id: 12,
     async execute(bot, message, args) {
 
         let emojis = ['🤔', '❓', '💡', '🔬', '🗺', '📜', '🗒'];

@@ -13,6 +13,7 @@ module.exports = {
     description: 'Get some random food. Available types: fruit, vegetable, drink, other. If no parameter given, random food will be chosen.',
     usage: '(type)',
     cooldown: 1,
+    id: 8,
     async execute(bot, message, args) {
 
         let res;

@@ -6,6 +6,7 @@ module.exports = {
     description: 'Get some random emojis! Use the extra argument `count`, ex.: 5, to get 5 random emojis.',
     usage: '(count)',
     cooldown: 1,
+    id: 6,
     async execute(bot, message, args) {
 
         let responses = ['UWU', 'Emoji maaaaster', 'Yay :3', ':) Here you go', 'You like emojis, huh (:', '°w°', 'Hihi', 'Baaaam'];

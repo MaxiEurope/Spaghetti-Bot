@@ -6,6 +6,7 @@ module.exports = {
     description: 'Translate your message in whatever language you like. Example: `-translate Ciao /en`. If no language selected, english is the default one.',
     usage: '<text /<language>>',
     cooldown: 5,
+    id: 14,
     async execute(bot, message, args) {
 
         if (!args.length) return message.channel.send('🚫 Translating **nothing** is equal to ⁉.');

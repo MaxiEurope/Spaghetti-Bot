@@ -10,6 +10,7 @@ module.exports = {
     aliases: ['coin', 'balance', 'money', 'cash'],
     description: 'View your current coin balance.',
     cooldown: 2,
+    id: 4,
     async execute(bot, message, args) {
 
         Coins.findOne({

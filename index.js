@@ -11,11 +11,14 @@ bot.commands = new Discord.Collection(); //{commands} object
 //other
 const fs = require('fs'); //node filesystem
 const config = require('./config/config.json'); //config file = prefix + owner
+const disableCommand = require('./util/disableCommand.js'); //command disable check
 const mongoose = require('mongoose'); //unsere database
 mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
     useNewUrlParser: true
 });
-const Guild = require('./util/mongo/guild.js'); //guild database
+const Guild = require('./util/mongo/guild.js'); //guild database für prefix
+const Channel = require('./util/mongo/channel.js'); //channel database für disabled commands
+const Profile = require('./util/mongo/profile.js'); //profile database für xp
 /**
  * wir lesen das verzeichnis 'commands' und filtern alle dateien mit der endung '.js'
  * anschließend gehen wir mit einer for schleife durch alles files
@@ -27,9 +30,10 @@ for (const file of cmdf) {
     bot.commands.set(command.name, command);
 }
 /**
- * jetzt kommt das cooldown system, eine djs collection
+ * jetzt kommt das cooldown und xp-cooldown system, eine djs collection
  */
 const cooldowns = new Discord.Collection();
+const xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
 
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
@@ -44,8 +48,38 @@ bot.on('message', async message => { //message event
      * basic sachen, wir brauchen diese, um den bot steuern zu können
      */
     if (message.author.bot) return; //wenn der user ein bot ist, nicht weiter lassen
-    if (message.channel.type === 'dm') return console.log('New message from '+message.author.username+': ' + message.content + ''); //wenn und jemand eine DM schreibt, loggen
-    if (message.author.id !== '393096318123245578') return;
+    if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //wenn und jemand eine DM schreibt, loggen
+    // if (message.author.id !== '393096318123245578') return;
+    /**
+     * xp - system
+     */
+    Profile.findOne({
+        userID: message.author.id
+    }, (err, profile) => {
+        if (err) console.log(err);
+        if (!profile) {
+            //ignorieren, da der user sein Profil erst erstellen muss
+        } else {
+            if (xpCooldowns.has(message.author.id)) {
+                //keine xp
+            } else {
+                xpCooldowns.add(message.author.id); //wir geben cooldown
+                setTimeout(() => {
+                    xpCooldowns.delete(message.author.id); //wir löschen den cooldown
+                    let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
+                    if (profile.xp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
+                        profile.xp = profile.xp + randomXp; //wir geben es dem user
+                        profile.save().catch(err => console.log(err)); //und speichern
+                    } else { //level up
+                        profile.xp = profile.xp + randomXp;
+                        profile.lvl = profile.lvl + 1; //+ 1 level
+                        // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
+                        profile.save().catch(err => console.log(err));
+                    }
+                })
+            }
+        }
+    })
     /**
      * Da drunter ist die custom prefix funktion.
      */
@@ -68,38 +102,54 @@ bot.on('message', async message => { //message event
         command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //command namen lesen, evt aliases lesen
         if (!command) return; //wenn kein command unter diesem namen gefunden wurde, stoppen (evt user bescheid geben)
         /**
-         * nun kommt das cooldown system
+         * Channel disable command
          */
-        if (!cooldowns.has(command.name)) { //wenn der user keinen cooldown hat...
-            cooldowns.set(command.name, new Discord.Collection()); //...einen für den command hinzufügen
-        }
-        const now = Date.now(); //jetzt...
-        const timestamps = cooldowns.get(command.name); //...nehmen wir den command-cooldown...
-        const cooldownAmount = (command.cooldown || 3) * 1000; //...und multiplizieren ihn mit 1000 (js verwendet millisekunden für timeouts) - falls wir keinen cooldown eingestellt haben, automatisch 3 sekunden nehmen
-
-        if (timestamps.has(message.author.id)) { //wenn cooldown...
-            const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //...nehmen wir die zeit...
-
-            if (now < expirationTime) { //...schauen ob der cooldown noch gilt...
-                const timeLeft = (expirationTime - now) / 1000; //...nehmen die wartezeit...
-                return message.channel.send(`🚫 **${message.author.username}**, calm down 😓! **${timeLeft.toFixed(2)}** second(s) left.`).then(m => { //...und sagen es unserem ungeduldigen freund
-                    m.delete(3500); //und löschen es nach 3.5 sekunden
-                })
+        const commandID = command.id;
+        Channel.findOne({
+            channelID: message.channel.id
+        }, (err, cchannel) => {
+            if (err) console.log(err);
+            if (!cchannel) {
+                //nichts
+            } else {
+                if (disableCommand.cDisabled(cchannel, commandID, message) === true) {
+                    return message.channel.send('🚫 **That command is disabled in this channel.**');
+                }
             }
-        }
+            /**
+             * nun kommt das cooldown system
+             */
+            if (!cooldowns.has(command.name)) { //wenn der user keinen cooldown hat...
+                cooldowns.set(command.name, new Discord.Collection()); //...einen für den command hinzufügen
+            }
+            const now = Date.now(); //jetzt...
+            const timestamps = cooldowns.get(command.name); //...nehmen wir den command-cooldown...
+            const cooldownAmount = (command.cooldown || 3) * 1000; //...und multiplizieren ihn mit 1000 (js verwendet millisekunden für timeouts) - falls wir keinen cooldown eingestellt haben, automatisch 3 sekunden nehmen
 
-        timestamps.set(message.author.id, now); //setzen cooldown für den user, falls er keinen cooldown hat
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //timeout funktion, nehmen nach der zeit anschließend cooldown weg
+            if (timestamps.has(message.author.id)) { //wenn cooldown...
+                const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //...nehmen wir die zeit...
 
-        /**
-         * jetzt können endlich unsere commands genutzt werden
-         */
-        try {
-            command.execute(bot, message, args); //commands können nun genutzt werden
-        } catch (error) {
-            console.error(error); //falls was schiefläuft, loggen wir es...
-            message.reply('an error occured! Please contact our staff!'); //...und sagen dem user bescheid
-        }
+                if (now < expirationTime) { //...schauen ob der cooldown noch gilt...
+                    const timeLeft = (expirationTime - now) / 1000; //...nehmen die wartezeit...
+                    return message.channel.send(`🚫 **${message.author.username}**, calm down 😓! **${timeLeft.toFixed(2)}** second(s) left.`).then(m => { //...und sagen es unserem ungeduldigen freund
+                        m.delete(3500); //und löschen es nach 3.5 sekunden
+                    })
+                }
+            }
+
+            timestamps.set(message.author.id, now); //setzen cooldown für den user, falls er keinen cooldown hat
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //timeout funktion, nehmen nach der zeit anschließend cooldown weg
+
+            /**
+             * jetzt können endlich unsere commands genutzt werden
+             */
+            try {
+                command.execute(bot, message, args); //commands können nun genutzt werden
+            } catch (error) {
+                console.error(error); //falls was schiefläuft, loggen wir es...
+                message.reply('an error occured! Please contact our staff!'); //...und sagen dem user bescheid
+            }
+        })
     })
 })
 

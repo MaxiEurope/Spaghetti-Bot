@@ -4,6 +4,7 @@ module.exports = {
     description: 'Get your or the mentioned users avatar.',
     usage: '(@User)',
     cooldown: 5,
+    id: 2,
     async execute(bot, message, args) {
 
         let user = message.mentions.users.first() || message.author;

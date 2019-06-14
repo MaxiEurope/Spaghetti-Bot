@@ -10,6 +10,7 @@ module.exports = {
     name: 'buy',
     description: 'Buy a multiplier to feed me faster!',
     cooldown: 5,
+    id: 3,
     async execute(bot, message, args) {
 
         Coins.findOne({

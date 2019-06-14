@@ -7,6 +7,7 @@ module.exports = {
 	aliases: ['commands'],
 	usage: '<command-name>',
 	cooldown: 1,
+	id: 9,
 	async execute(bot, message, args) {
 		let embed = new RichEmbed();
 		const { commands } = message.client;

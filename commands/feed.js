@@ -22,6 +22,7 @@ module.exports = {
     name: 'feed',
     description: 'Feed me to get money and climb the leaderboard.',
     cooldown: 5,
+    id: 7,
     async execute(bot, message, args) {
 
         Coins.findOne({

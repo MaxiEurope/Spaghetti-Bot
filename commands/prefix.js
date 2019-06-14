@@ -11,6 +11,7 @@ module.exports = {
     name: 'prefix',
     description: 'Set a prefix for your server. List your prefix by using `-prefix` and remove it by using `-prefix remove`',
     cooldown: 5,
+    id: 11,
     async execute(bot, message, args) {
 
         Guild.findOne({
