@@ -15,10 +15,10 @@ module.exports = {
 		if (!args.length) {
 			embed.setAuthor('Here\'s a list of my commands', bot.user.displayAvatarURL)
 			.setDescription('🗒 **Basic**\n `-avatar` `-help` `-ping` `-stats`\n'+
-			'😂 **Fun**\n `-advice` `-emoji` `-food`\n'+
+			'😂 **Fun**\n `-advice` `-rndemoji` `-rndfood`\n'+
 			'💰 **Economy**\n `-daily` `-coins` `-buy` `-feed`\n'+
 			'❓ **Quiz**\n `-quiz`\n'+
-			'🖇 **Extra**\n `-translate` `-prefix`')
+			'🖇 **Extra**\n `-translate` `-prefix` `-profile`')
             .setFooter(`You can use '${prefix}help <command name>' to get info about a command. | () - optional arguments | <> - required arguments`)
             .setColor('#00ff00')
             .setTimestamp();

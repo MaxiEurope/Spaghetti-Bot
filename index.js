@@ -49,7 +49,48 @@ bot.on('message', async message => { //message event
      */
     if (message.author.bot) return; //wenn der user ein bot ist, nicht weiter lassen
     if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //wenn und jemand eine DM schreibt, loggen
-    // if (message.author.id !== '393096318123245578') return;
+    /**
+     * xp - system
+     */
+    Profile.findOne({
+        userID: message.author.id
+    }, (err, profile) => {
+        if (err) console.log(err);
+        if (!profile) {
+            //ignorieren, da der user sein Profil erst erstellen muss
+        } else if (profile.xp >= 0) {
+            let isOnCooldown;
+            if (xpCooldowns.has(message.author.id)) {
+                isOnCooldown = true;
+                //keine xp
+            } else {
+                xpCooldowns.add(message.author.id); //wir geben cooldown
+                let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
+                if (profile.xp + randomXp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
+                    profile.xp = profile.xp + randomXp; //wir geben es dem user
+                    profile.save().catch(err => console.log(err)); //und speichern
+                } else { //level up
+                    profile.xp = profile.xp + randomXp;
+                    if (profile.lvlupMessage === true) { // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
+                        let lvlUp = new Discord.RichEmbed()
+                            .setAuthor('Level Up!', message.author.displayAvatarURL)
+                            .setDescription(message.author + ' is now level ' + (profile.lvl + 1))
+                            .setColor(profile.color)
+                            .setFooter('Edit: -profile settings');
+                        message.channel.send(lvlUp);
+                    }
+                    profile.lvl = profile.lvl + 1; //+ 1 level
+                    profile.save().catch(err => console.log(err));
+                }
+                isOnCooldown = false;
+            }
+            if (isOnCooldown === false) {
+                setTimeout(() => {
+                    xpCooldowns.delete(message.author.id); //wir löschen den cooldown
+                }, 60000); //jede minute kann man xp bekommen
+            }
+        }
+    })
     /**
      * Da drunter ist die custom prefix funktion.
      */
@@ -121,37 +162,6 @@ bot.on('message', async message => { //message event
                 console.error(error); //falls was schiefläuft, loggen wir es...
                 message.reply('an error occured! Please contact our staff!'); //...und sagen dem user bescheid
             }
-            /**
-             * xp - system
-             */
-            Profile.findOne({
-                userID: message.author.id
-            }, (err, profile) => {
-                if (err) console.log(err);
-                if (!profile) {
-                    //ignorieren, da der user sein Profil erst erstellen muss
-                } else {
-                    if (xpCooldowns.has(message.author.id)) {
-                        return;
-                        //keine xp
-                    } else {
-                        xpCooldowns.add(message.author.id); //wir geben cooldown
-                    }
-                    setTimeout(() => {
-                        xpCooldowns.delete(message.author.id); //wir löschen den cooldown
-                        let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
-                        if (profile.xp + randomXp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
-                            profile.xp = profile.xp + randomXp; //wir geben es dem user
-                            profile.save().catch(err => console.log(err)); //und speichern
-                        } else { //level up
-                            profile.xp = profile.xp + randomXp;
-                            profile.lvl = profile.lvl + 1; //+ 1 level
-                            // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
-                            profile.save().catch(err => console.log(err));
-                        }
-                    }, 60000); //jede minute kann man xp bekommen
-                }
-            })
         })
     })
 })

@@ -11,13 +11,14 @@ const parse = require('parse-color');
 
 module.exports = {
     name: 'profile',
-    description: 'Your beautiful profile. Earn xp, level up, change your description and show your stats.',
+    description: 'Your beautiful profile. Earn xp, level up, change your description and show your stats. Run the command once, and your profile is being created. View/change your settings by running `-profile settings`. You can also mention a user to see its profile. You can get 15 - 25 xp once a minute.',
     usage: '(settings)',
     cooldown: 5,
     id: 15,
     async execute(bot, message, args) {
 
         let _user = message.mentions.users.first() || message.author;
+        if(_user.bot === true) return message.channel.send('🚫 Bots do not get xp.');
         Profile.findOne({
             userID: _user.id
         }, (err, profile) => {
@@ -61,11 +62,11 @@ module.exports = {
                         return message.reply('✅ Saved your description.');
                     } else if (args[1] && args[1].toLowerCase() === 'color') {
                         let color = args[2];
-                        if (!color) return message.channel.send('🚫 You didn\'t specify a color. Use `#0ffff0` for example.');
+                        if (!color) return message.channel.send('🚫 You didn\'t specify a color. Use `#0ffff0` or a css color for example.');
                         if (!color.startsWith('#') && color.length === 6) {
                             const testResult = parse(`#${color}`);
                             if (!testResult.hex) {
-                                return message.channel.send('🚫 Thats not a valid color. Use `#0ffff0` for example.');;
+                                return message.channel.send('🚫 Thats not a valid color. Use `#0ffff0` or a css color for example.');;
                             }
                             color = testResult;
                         } else {
@@ -89,10 +90,10 @@ module.exports = {
                         return message.reply('✅ Saved.');
                     } else {
                         message.channel.send(`**${message.author.username}'s** current profile settings:\n` +
-                            `**Info:** - \`\`\`${profile.shortDesc}\`\`\`\n` +
-                            `**Description:** - \`\`\`${profile.longDesc}\`\`\`\n` +
-                            `**Color:** - ${profile.color}\n` +
-                            `**Lvl-up-msgs:** - ${profile.lvlupMessage}`);
+                            `**Info:** - change with \`-profile settings info <text>\`\n\`\`\`${profile.shortDesc}\`\`\`\n` +
+                            `**Description:** - change with \`-profile settings description <text>\`\n\`\`\`${profile.longDesc}\`\`\`\n` +
+                            `**Color:** - change with \`-profile settings color <hex/css color>\` - ${profile.color}\n` +
+                            `**Lvl-up-msgs:** - change with \`-profile settings message <true/false> - \`${profile.lvlupMessage}`);
                     }
                 } else {
                     let _profile = new Discord.RichEmbed()
@@ -104,7 +105,7 @@ module.exports = {
                             '**Description:** - ' + profile.longDesc + '')
                         .addField('Level', `**${profile.lvl}**`, true)
                         .addField('XP', `**${commanumber(profile.xp)}/${commanumber(((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100))}**`, true)
-                        .setFooter('Edit: -profile settings | Profile created at');
+                        .setFooter('Edit: -profile settings | Profile created');
                     message.channel.send(_profile);
                 }
             }

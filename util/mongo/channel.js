@@ -15,7 +15,8 @@ const schema = mongoose.Schema({
     c11: Boolean,
     c12: Boolean,
     c13: Boolean,
-    c14: Boolean
+    c14: Boolean,
+    c15: Boolean
 })
 
 module.exports = mongoose.model('Channel', schema);

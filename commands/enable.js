@@ -36,7 +36,8 @@ module.exports = {
                     c11: false,
                     c12: false,
                     c13: false,
-                    c14: false
+                    c14: false,
+                    c15: false
                 })
                 ncchannel.save().catch(err => console.log(err));
                 return message.channel.send('🚫 You have no commands disabled in this channel. You can disable them by using `-disable <command>` or `-disable all`.');
@@ -66,6 +67,7 @@ module.exports = {
                         else if (commandID == 12) cchannel.c12 = false;
                         else if (commandID == 13) cchannel.c13 = false;
                         else if (commandID == 14) cchannel.c14 = false;
+                        else if (commandID == 15) cchannel.c15 = false;
                         //ende - phew
                         cchannel.save().catch(err => console.log(err));
                         message.channel.send('🖇 Successfully enabled command **' + command.name + '**.');
@@ -93,6 +95,7 @@ function listCommands(cchannel, commands) {
     if (cchannel.c12 == false) res.push(commands.find(m => m.id == 12).name);
     if (cchannel.c13 == false) res.push(commands.find(m => m.id == 13).name);
     if (cchannel.c14 == false) res.push(commands.find(m => m.id == 14).name);
+    if (cchannel.c15 == false) res.push(commands.find(m => m.id == 15).name);
     //ich habe wirklich keine ahnung wie ich das verbessern könnte
     if (res.length == 0) {
         res = 'none';
@@ -116,7 +119,8 @@ function enableAll(cchannel, message) {
         cchannel.c11 = false,
         cchannel.c12 = false,
         cchannel.c13 = false,
-        cchannel.c14 = false
+        cchannel.c14 = false,
+        cchannel.c15 = false
     cchannel.save().catch(err => console.log(err));
     return message.channel.send('🖇 Successfully enabled **all** commands in this channel!');
 }

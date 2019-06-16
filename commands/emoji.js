@@ -1,9 +1,9 @@
 const emoji = require('node-emoji');
 
 module.exports = {
-    name: 'emoji',
-    aliases: ['rnd'],
-    description: 'Get some random emojis! Use the extra argument `count`, ex.: 5, to get 5 random emojis.',
+    name: 'rndemoji',
+    aliases: ['randomemoji'],
+    description: 'Get some random emojis! You can use the extra argument **count**, ex.: `-rndemoji 5`, to get 5 random emojis.',
     usage: '(count)',
     cooldown: 1,
     id: 6,
@@ -32,7 +32,14 @@ module.exports = {
                     }
                     return res;
                 }
-                return message.channel.send(responses[rnd] + ', here are your random emoji(s): ' + returnemoji(count));
+
+                function plural(count) {
+                    let res = '';
+                    if (count === 1) res = ', here is your random emoji: ';
+                    else
+                        res = ', here are your random emojis: ';
+                }
+                return message.channel.send(responses[rnd] + plural(count) + returnemoji(count));
             }
         }
 

@@ -17,6 +17,7 @@ exports.cDisabled = (var1, var2, var3) => {
     else if(commandID == 12 && cchannel.c12 == true) isDisabled = true;
     else if(commandID == 13 && cchannel.c13 == true) isDisabled = true;
     else if(commandID == 14 && cchannel.c14 == true) isDisabled = true;
+    else if(commandID == 15 && cchannel.c15 == true) isDisabled = true;
 
     return isDisabled;
 }

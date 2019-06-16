@@ -8,9 +8,9 @@ let other = [':pizza:', ':hamburger:', ':fries:', ':hotdog:', ':popcorn:', ':bac
 let drink = [':milk:', ':coffee:', ':tea:', ':champagne:', ':wine_glass:', ':cocktail:', ':tropical_drink:', ':beer:', ':beers:', ':champagne_glass:', ':tumbler_glass:'];
 
 module.exports = {
-    name: 'food',
-    aliases: ['getfood', 'f'],
-    description: 'Get some random food. Available types: fruit, vegetable, drink, other. If no parameter given, random food will be chosen.',
+    name: 'rndfood',
+    aliases: ['getfood', 'f', 'randomfood'],
+    description: 'Get some random food. Available types: **fruit, vegetable, drink, other**, ex.: `-rndfood vegetable` to get one vegetable. If no parameter given, random food will be chosen.',
     usage: '(type)',
     cooldown: 1,
     id: 8,
