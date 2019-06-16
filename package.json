@@ -3,11 +3,15 @@
     "author": {
         "name": "spaghetti"
     },
-    "start": "node .",
+    "start": "node index.js",
+    "scripts": {
+        "start": "node ."
+    },
     "dependencies": {
         "comma-number": "^2.0.1",
         "discord.js": "^11.5.1",
         "dotenv": "^8.0.0",
+        "express": "^4.17.1",
         "he": "^1.2.0",
         "letter-count": "^2.8.9",
         "moment": "^2.22.2",

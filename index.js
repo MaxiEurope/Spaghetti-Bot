@@ -12,6 +12,7 @@ bot.commands = new Discord.Collection(); //{commands} object
 const fs = require('fs'); //node filesystem
 const config = require('./config/config.json'); //config file = prefix + owner
 const disableCommand = require('./util/disableCommand.js'); //command disable check
+const uptimeHandler = require('./util/uptimeHandler.js'); //uptimeHandler
 const mongoose = require('mongoose'); //unsere database
 mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
     useNewUrlParser: true
@@ -35,12 +36,14 @@ for (const file of cmdf) {
 let cooldowns = new Discord.Collection();
 let xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
 
+bot.login(process.env.TOKEN); //bot login
+uptimeHandler.ping();
+
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
     bot.user.setActivity('boiling spaghetti', {
         type: 'LISTENING'
     }); //Playing 'game'
-
 })
 
 bot.on('message', async message => { //message event
@@ -109,7 +112,7 @@ bot.on('message', async message => { //message event
         if (message.content.startsWith(prefixes[0])) prefixnum = prefixes[0].length; //wenn prefix '-' ist, länge herausfinden
         else if (message.content.startsWith(prefixes[1])) prefixnum = prefixes[1].length; //wenn prefix custom ist, länge herausfinden
         let args = message.content.slice(prefixnum).trim().split(/ +/g), //unsere argumente, ein einfacher array
-            commandName = args.shift().toLowerCase() //ein argument vom args array wegnehmen, und alle zeichen klein machen
+            commandName = args.shift().toLowerCase(), //ein argument vom args array wegnehmen, und alle zeichen klein machen
         command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //command namen lesen, evt aliases lesen
         if (!command) return; //wenn kein command unter diesem namen gefunden wurde, stoppen (evt user bescheid geben)
         /**
@@ -170,4 +173,6 @@ bot.on('error', err => { //wenn der bot einen error hat
     console.log(err); //fangen wir ihn und loggen ihn
 })
 
-bot.login(process.env.TOKEN); //bot login
+process.on('uncaughtException', function (exception) { //falls wir einen uncaughtException error haben, loggen wir es
+    console.log(exception);
+});
