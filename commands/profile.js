@@ -106,7 +106,6 @@ module.exports = {
                             '**Description:** - ' + profile.longDesc + '')
                         .addField('Level', `**${profile.lvl}**`, true)
                         .addField('XP', `**${commanumber(profile.xp)}/${commanumber(((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100))}**`, true)
-                        .addField('Rank', showFeeds(Feed, message), true)
                         .setFooter('Edit: -profile settings | Profile created');
                     message.channel.send(_profile);
                 }
@@ -114,18 +113,3 @@ module.exports = {
         })
     },
 };
-
-function showFeeds(Feed, message){
-    let res;
-    Feed.findOne({
-        userID: message.author.id
-    }, (err, feed) => {
-        if(err) console.log(err);
-        if(!feed){
-            res = 'Start with `-feed` to get stats.';
-        }else{
-            res = 'You fed me **'+feed.totalFeeds+'** times.';
-        }  
-    })
-    return res;
-}

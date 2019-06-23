@@ -50,6 +50,7 @@ module.exports = {
                 if (!args.length) {
                     return message.channel.send('🖇 Disabled commands in this channel.\n' + '`' + listCommands(cchannel, commands) + '`');
                 } else {
+                    if (!message.member.permissions.has('MANAGE_CHANNELS')) return message.channel.send('🚫 You need the `MANAGE_CHANNELS` permission!');
                     if (args[0] === 'all') {
                         disableAll(cchannel, message);
                     } else {
