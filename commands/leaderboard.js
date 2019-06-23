@@ -19,63 +19,67 @@ module.exports = {
     id: 16,
     async execute(bot, message, args) {
 
-        if (args.length && args[0].toLowerCase() === 'coins' || args[0].toLowerCase() === 'c') {
-            Coins.find({
-                getIndex: 0
-            }).sort([
-                ['coins', 'descending']
-            ]).exec((err, res) => {
-                if (err) console.log(err);
+        if (args.length) {
+            if (args[0].toLowerCase() === 'coins' || args[0].toLowerCase() === 'c') {
+                Coins.find({
+                    getIndex: 0
+                }).sort([
+                    ['coins', 'descending']
+                ]).exec((err, res) => {
+                    if (err) console.log(err);
 
-                /*
-                //disabled
-                let serverGlobal = args[1]; //server oder global leaderboard check
-                if (!serverGlobal) serverGlobal = 'server';
-                else if (serverGlobal !== '-g') serverGlobal = 'server';
-                else serverGlobal = '-g';
-                */
+                    /*
+                    //disabled
+                    let serverGlobal = args[1]; //server oder global leaderboard check
+                    if (!serverGlobal) serverGlobal = 'server';
+                    else if (serverGlobal !== '-g') serverGlobal = 'server';
+                    else serverGlobal = '-g';
+                    */
 
-                let result = new Discord.RichEmbed()
-                    .setTitle('Coins leaderboard');
+                    let result = new Discord.RichEmbed()
+                        .setTitle('Coins leaderboard');
 
-                if (res.length === 0) {
-                    result.setColor('#ff0000')
-                        .setDescription('No users found!')
-                        .setTimestamp();
-                } else if (res.length < 10) {
-                    result.setColor('#00ff00')
-                        .setTimestamp();
-                    for (i = 0; i < res.length; i++) {
-                        let member;
-                        try {
-                            member = bot.users.get(res[i].userID).username;
-                        } catch (err) {
-                            member = 'Unknown User';
+                    if (res.length === 0) {
+                        result.setColor('#ff0000')
+                            .setDescription('No users found!')
+                            .setTimestamp();
+                    } else if (res.length < 10) {
+                        result.setColor('#00ff00')
+                            .setTimestamp();
+                        for (let i = 0; i < res.length; i++) {
+                            let member;
+                            try {
+                                member = bot.users.get(res[i].userID).username;
+                            } catch (err) {
+                                member = 'Unknown User';
+                            }
+                            if (member) {
+                                result.addField(`${i + 1}. ${member}`, `**Coins:** ${cm(res[i].coins)} 💰`);
+                            }
                         }
-                        if (member) {
-                            result.addField(`${i + 1}. ${member}`, `**Coins:** ${cm(res[i].coins)} 💰`);
+                    } else {
+                        result.setColor('#00ff00')
+                            .setTimestamp();
+                        for (let i = 0; i < 10; i++) {
+                            let member;
+                            try {
+                                member = bot.users.get(res[i].userID).username;
+                            } catch (err) {
+                                member = 'Unknown User';
+                            }
+                            if (member) {
+                                result.addField(`${i + 1}. ${member}`, `**Coins:** ${cm(res[i].coins)} 💰`);
+                            }
                         }
                     }
-                } else {
-                    result.setColor('#00ff00')
-                        .setTimestamp();
-                    for (i = 0; i < 10; i++) {
-                        let member;
-                        try {
-                            member = bot.users.get(res[i].userID).username;
-                        } catch (err) {
-                            member = 'Unknown User';
-                        }
-                        if (member) {
-                            result.addField(`${i + 1}. ${member}`, `**Coins:** ${cm(res[i].coins)} 💰`);
-                        }
-                    }
-                }
 
-                message.channel.send(result);
+                    message.channel.send(result);
 
-            })
-        }else {
+                })
+            } else {
+                message.channel.send('🚫 We are sorry, the coin leaderboard is the only one availabe for now. `-leaderboard coins`');
+            }
+        } else {
             message.channel.send('🚫 We are sorry, the coin leaderboard is the only one availabe for now. `-leaderboard coins`');
         }
     },
