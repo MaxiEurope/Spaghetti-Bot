@@ -14,7 +14,7 @@ bot.commands = new Discord.Collection(); //{commands} object
 const fs = require('fs'); //node filesystem
 const config = require('./config/config.json'); //config file = prefix + owner
 const disableCommand = require('./util/disableCommand.js'); //command disable check
-const uptimeHandler = require('./util/uptimeHandler.js'); //uptimeHandler
+const Vote = require('./util/voteHandler.js'); //voteHandler
 const mongoose = require('mongoose'); //unsere database
 mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
     useNewUrlParser: true
@@ -62,17 +62,19 @@ setInterval(() => {
  * Discord Bot list webhook
  */
 const DBL = require('dblapi.js');
-const dbl = new DBL(process.env.dbl, {
+const dbl = new DBL(process.env.DBL, {
     webhookServer: listener,
-    webhookAuth: 'z7n493ctwm98tx0349c53w8n'
+    webhookAuth: '9hmr34cgrfc983g4mn7gv823deg8m9rc34m08h'
 }, bot);
-dbl.webhook.on('ready', hook => {
+dbl.webhook.on('ready', () => {
     console.log('DBL - Webhook ready.');
 });
 dbl.on('posted', () => {
     console.log('DBL - Server count posted.');
 })
-
+dbl.webhook.on('vote', vote => {
+    Vote.handler(dbl, bot, vote); //vote
+})
 
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
