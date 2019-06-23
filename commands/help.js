@@ -20,7 +20,8 @@ module.exports = {
 			'❓ **Quiz**\n `-quiz`\n'+
 			'🖇 **Extra**\n `-translate` `-prefix` `-profile` `-enable` `-disable`')
 			.addField('Additional Info', `[Invite me!](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) `+
-			`[Server](https://discord.gg/W5Zj3G2)`)
+			`[Server!](https://discord.gg/W5Zj3G2) [Vote for coins!](https://discordbots.org/bot/585142238217240577/vote)`)
+			.addField('Latest News 📬', '- added coins leaderboard\n- vote to get coins')
 			.setImage('https://cdn.discordapp.com/attachments/554429868276711433/590529678461239304/chrome_mRyhlKq5CL.png')
             .setFooter(`You can use '${prefix}help <command name>' to get info about a command. | () - optional arguments | <> - required arguments`)
 			.setColor('#00ff00')

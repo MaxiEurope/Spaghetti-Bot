@@ -125,7 +125,7 @@ function showFeeds(Feed, message){
             res = 'Start with `-feed` to get stats.';
         }else{
             res = 'You fed me **'+feed.totalFeeds+'** times.';
-        }
-        return res;
+        }  
     })
+    return res;
 }

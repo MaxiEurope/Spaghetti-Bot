@@ -39,7 +39,40 @@ let cooldowns = new Discord.Collection();
 let xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
 
 bot.login(process.env.TOKEN); //bot login
-uptimeHandler.ping();
+
+/**
+ * Online Zeugs
+ */
+
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+    console.log("📋 " + Date.now() + " ping received");
+    response.sendStatus(200);
+});
+const listener = app.listen(process.env.PORT, function () {
+    console.log('Server is listening on port ' + listener.address().port);
+});
+setInterval(() => {
+    http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
+/**
+ * Discord Bot list webhook
+ */
+const DBL = require('dblapi.js');
+const dbl = new DBL(process.env.dbl, {
+    webhookServer: listener,
+    webhookAuth: 'z7n493ctwm98tx0349c53w8n'
+}, bot);
+dbl.webhook.on('ready', hook => {
+    console.log('DBL - Webhook ready.');
+});
+dbl.on('posted', () => {
+    console.log('DBL - Server count posted.');
+})
+
 
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
@@ -47,6 +80,20 @@ bot.once('ready', () => { //ready event
         type: 'LISTENING'
     }); //Playing 'game'
 })
+
+bot.on("guildCreate", (guild) => { //neuer server
+    let owner = bot.users.get('393096318123245578');
+    owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
+        `👫**members: ${guild.memberCount}**\n` +
+        `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
+});
+
+bot.on("guildDelete", (guild) => { //server geleavt
+    let owner = bot.users.get('393096318123245578');
+    owner.send(`📤**name: ${guild.name} | ID: ${guild.id}**\n` +
+        `👫**members: ${guild.memberCount}**\n` +
+        `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
+});
 
 bot.on('message', async message => { //message event
     /**

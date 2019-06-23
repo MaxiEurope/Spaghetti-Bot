@@ -39,7 +39,7 @@ module.exports = {
                 if (!user) {
                     let nuser = new User({
                         userID: message.author.id,
-                        dailyMulti: 10,
+                        dailyMulti: 5,
                         dailyStreak: 1,
                         dailyLast: Date.now(),
                         patreonTF: false
@@ -64,7 +64,8 @@ module.exports = {
                 if (!coins) {
                     let ncoins = new Coins({
                         userID: message.author.id,
-                        coins: 100
+                        coins: 100,
+                        getIndex: 0
                     })
                     ncoins.save().catch(err => console.log(err));
                 } else {
