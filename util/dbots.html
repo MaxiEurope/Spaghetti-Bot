@@ -2,56 +2,33 @@
 <html>
 <head>
     <style>
+        /* bg */
+        .content {
+            background: #000000 !important;
+        }
+        .content {
+	        background-color: rgba(0, 0, 0, 0.4) !important;
+	        box-shadow: 0 0 0 0 !important;
+        }
         body {
-            color: white;
+	        background: #000000;
+	        color: #fff;
         }
-        section#bot-details-page {
-            background-color: black;
+        #bot-details-page .shapes-1 {
+	        background-image: url() !important;
         }
-        .longdescription .content {
-            min-height: 50px;
-            position: relative;
-            padding: 20px;
-            background: #36393f;
-            flex-direction: column;
-            flex-wrap: nowrap;
+        .page-title {
+	        display: none !important;
         }
-        img {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 50%;
+        #bot-details-page #details .container {
+	        border-bottom: none;
+	        border-top: none;
+	        padding-top: 20px!important;
         }
-        blockquote {
-            background: #36393f;
-            color: black;
-        }
-        blockquote::before {
-            color: #00ff00;
-        }
-        blockquote p {
-            color: black;
-        }
-        p {
-            color: white;
-        }
-        code {
-            background-color: transparent !important;
-            color: white;
-            padding: 0.25em 0.5em 0.25em;
-        }
-        .bot-name {
-            color: white;
-        }
-        .maincon .content {
-            box-shadow: 4px 4px 0 0 black, inset 4px 4px 0 0 black, inset -4px -4px 0 0 black;
-        }
-        section#bot-details-page {
-            background-color: rgb(0, 0, 0);
-        }
-        #libclick::before {
-			content: "Coded using ";
-		}
+        /* Top - pfp, status, name, votes, lib */
+        #botprofileicon {
+		    display: none !important;
+	    }
         #details .status:after {
     		content: 'RIGHT NOW';
     		white-space: nowrap;
@@ -62,6 +39,25 @@
   			color: #7289da !important;
   			padding-right: 6px;
 		}
+        #libclick::before {
+			content: "Coded using ";
+		}
+        /* buttons, created by */
+        .column .bot-img, .botpagebutton {
+	        background-color: transparent !important;
+	        box-shadow: 0 0 0 0 !important;
+	        color: #008ae2 !important;
+        }
+        #bot-details-page .bot-img {
+	        box-shadow: 1px 1px 241px 1px!important;
+	        color: #008ae2!important;
+        }
+        .bot-name {
+            color: white;
+        }
+        .bot-img img {
+	        padding: 5px;
+        }
         .atag {
             background: transparent;
             transition: all 0.8s;
@@ -81,24 +77,53 @@
             transform: scale(1.05);
             color: white;
         }
-        .btn-orange {
-            animation-name: bannercolor;
-            transition: all 0.8s;
-            animation-duration: 18s;
-            animation-iteration-count: infinite;
-            animation-direction: alternate;
-	        letter-spacing: .5px;
-            background-color: #e3e3e3
+        .table {
+            background: rgb(79,75,75);
+            color: white;
         }
-        .btn-orange:hover {
-            animation-name: bannercolor;
-            animation-duration: 18s;
-            animation-iteration-count: infinite;
-            animation-direction: alternate;
-	        letter-spacing: .5px;
-            background-color: #e3e3e3;
-            transform: scale(1.05);
+        .table tr:hover {
+            color: rgb(89,236,119);
+            background: rgb(88,88,88) !important;
         }
+        .votebutton:hover {
+            background-color: rgb(54,187,54);
+        }
+        /* desc */
+        /* .longdescription .content {
+            background: #36393f;
+        } */
+        blockquote {
+            background: #36393f;
+            color: black;
+        }
+        blockquote::before {
+            color: #00ff00;
+        }
+        blockquote p {
+            color: black;
+        }
+        p {
+            color: white;
+        }
+        code {
+            background-color: transparent !important;
+            color: white;
+            padding: 0.25em 0.5em 0.25em;
+        }
+        section#bot-details-page {
+            background-color: rgb(0, 0, 0);
+        }
+        th {
+            color: rgb(213,211,211) !important; 
+        }
+        #cmd-title {
+            background: #132028;
+        }
+        #cmd-desc {
+            background: rgb(66,62,62);
+            color: lightgrey;
+        }
+        /* scroll */
         ::-webkit-scrollbar {
             width: 11px;
         }
@@ -117,7 +142,7 @@
     </style>
 </head>
 <body>
-    <p><img src="https://cdn.discordapp.com/attachments/554429868276711433/589541605665538058/1.png">
+    <p><img src="https://cdn.discordapp.com/attachments/475276057013125130/590317703437352961/1.png">
     </p>
     <blockquote>
         <h1>🍝 Spaghetti Bot</h1>
@@ -129,7 +154,7 @@
     </blockquote>
     <blockquote>
         <h1>📢 Updates</h1>
-        <p><a href="https://discordapp.com/invite/W5Zj3G2">Support server</a></p>
+        <p><a href="https://discord.gg/adrRzgQ">Support server</a></p>
     </blockquote>
     <blockquote>
         <h1>📂 Features</h1>
@@ -145,7 +170,7 @@
                 href="https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520">Invite
                 me to your server</a><br>
             <a target="_blank" onclick="trackCampaignWebClick('', 'description');" rel="nofollow"
-                href="https://discordapp.com/invite/W5Zj3G2">Support server</a><br></p>
+                href="https://discord.gg/adrRzgQ">Support server</a><br></p>
     </blockquote>
 </body>
 </html>

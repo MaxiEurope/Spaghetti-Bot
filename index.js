@@ -6,7 +6,9 @@
 require('dotenv').config(); //.env file laden
 //djs client
 const Discord = require('discord.js'); //modul djs laden
-const bot = new Discord.Client(); //djs client erschaffen
+const bot = new Discord.Client({
+    fetchAllMembers: true
+}); //djs client erschaffen
 bot.commands = new Discord.Collection(); //{commands} object
 //other
 const fs = require('fs'); //node filesystem
@@ -73,7 +75,7 @@ bot.on('message', async message => { //message event
                     profile.xp = profile.xp + randomXp; //wir geben es dem user
                     profile.save().catch(err => console.log(err)); //und speichern
                 } else { //level up
-                    profile.xp = profile.xp + randomXp;
+                    profile.xp = 0;
                     if (profile.lvlupMessage === true) { // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
                         let lvlUp = new Discord.RichEmbed()
                             .setAuthor('Level Up!', message.author.displayAvatarURL)
@@ -113,7 +115,7 @@ bot.on('message', async message => { //message event
         else if (message.content.startsWith(prefixes[1])) prefixnum = prefixes[1].length; //wenn prefix custom ist, länge herausfinden
         let args = message.content.slice(prefixnum).trim().split(/ +/g), //unsere argumente, ein einfacher array
             commandName = args.shift().toLowerCase(), //ein argument vom args array wegnehmen, und alle zeichen klein machen
-        command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //command namen lesen, evt aliases lesen
+            command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //command namen lesen, evt aliases lesen
         if (!command) return; //wenn kein command unter diesem namen gefunden wurde, stoppen (evt user bescheid geben)
         /**
          * Channel disable command

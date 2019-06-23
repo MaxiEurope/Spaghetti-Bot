@@ -37,7 +37,12 @@ module.exports = {
                     c12: false,
                     c13: false,
                     c14: false,
-                    c15: false
+                    c15: false,
+                    c16: false,
+                    c17: false,
+                    c18: false,
+                    c19: false,
+                    c20: false
                 })
                 ncchannel.save().catch(err => console.log(err));
                 return message.channel.send('🚫 You have no commands disabled in this channel. You can disable them by using `-disable <command>` or `-disable all`.');
@@ -68,6 +73,11 @@ module.exports = {
                         else if (commandID == 13) cchannel.c13 = true;
                         else if (commandID == 14) cchannel.c14 = true;
                         else if (commandID == 15) cchannel.c15 = true;
+                        else if (commandID == 16) cchannel.c15 = true;
+                        else if (commandID == 17) cchannel.c15 = true;
+                        else if (commandID == 18) cchannel.c15 = true;
+                        else if (commandID == 19) cchannel.c15 = true;
+                        else if (commandID == 20) cchannel.c15 = true;
                         //ende - phew
                         cchannel.save().catch(err => console.log(err));
                         message.channel.send('🖇 Successfully disabled command **' + command.name + '**.');
@@ -96,6 +106,11 @@ function listCommands(cchannel, commands) {
     if (cchannel.c13 == true) res.push(commands.find(m => m.id == 13).name);
     if (cchannel.c14 == true) res.push(commands.find(m => m.id == 14).name);
     if (cchannel.c15 == true) res.push(commands.find(m => m.id == 15).name);
+    if (cchannel.c16 == true) res.push(commands.find(m => m.id == 16).name);
+    if (cchannel.c17 == true) res.push(commands.find(m => m.id == 17).name);
+    if (cchannel.c18 == true) res.push(commands.find(m => m.id == 18).name);
+    if (cchannel.c19 == true) res.push(commands.find(m => m.id == 19).name);
+    if (cchannel.c20 == true) res.push(commands.find(m => m.id == 20).name);
     //ich habe wirklich keine ahnung wie ich das verbessern könnte
     if (res.length == 0) {
         res = 'none';
@@ -120,7 +135,12 @@ function disableAll(cchannel, message) {
         cchannel.c12 = true,
         cchannel.c13 = true,
         cchannel.c14 = true,
-        cchannel.c15 = true
+        cchannel.c15 = true,
+        cchannel.c16 = true,
+        cchannel.c17 = true,
+        cchannel.c18 = true,
+        cchannel.c19 = true,
+        cchannel.c20 = true
     cchannel.save().catch(err => console.log(err));
     return message.channel.send('🖇 Successfully disabled **all** commands in this channel!');
 }

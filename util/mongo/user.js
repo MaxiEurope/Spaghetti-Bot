@@ -5,7 +5,8 @@ const schema = mongoose.Schema({
     dailyMulti: Number,
     dailyStreak: Number,
     dailyLast: Number,
-    patreonTF: Boolean
+    patreonTF: Boolean,
+    getIndex: Number
 })
 
 module.exports = mongoose.model('User', schema);

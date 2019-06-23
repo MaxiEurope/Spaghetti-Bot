@@ -29,7 +29,7 @@ module.exports = {
         function avlang() {
             let langs = '';
             var done = false;
-            for (key in translate.languages) {
+            for (let key in translate.languages) {
                 if (key == "zu")
                     done = true;
                 if (!done)

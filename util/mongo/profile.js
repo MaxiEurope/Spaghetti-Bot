@@ -8,7 +8,8 @@ const schema = mongoose.Schema({
     shortDesc: String,
     longDesc: String,
     color: String,
-    lvlupMessage: Boolean
+    lvlupMessage: Boolean,
+    getIndex: Number
 })
 
 module.exports = mongoose.model('Profile', schema);

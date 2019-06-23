@@ -5,7 +5,8 @@ const schema = mongoose.Schema({
     totalFeeds: Number,
     multiTF: Boolean,
     multi: Number,
-    multiRounds: Number
+    multiRounds: Number,
+    getIndex: Number
 })
 
 module.exports = mongoose.model('Feed', schema);
