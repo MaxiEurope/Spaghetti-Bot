@@ -1,8 +1,4 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
-    useNewUrlParser: true
-});
 const Coins = require('../util/mongo/coins.js');
 const User = require('../util/mongo/user.js');
 const moment = require('moment');
@@ -19,7 +15,7 @@ function gNow() {
 module.exports = {
     name: 'daily',
     description: 'Get your daily amount of coins every 24 h. Resets at midnight (timezone: Vienna/Europe).',
-    cooldown: 10,
+    cooldown: 15,
     id: 5,
     async execute(bot, message, args) {
 
@@ -81,6 +77,5 @@ module.exports = {
 
             })
         })
-
     },
 };

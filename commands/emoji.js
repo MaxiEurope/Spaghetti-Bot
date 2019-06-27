@@ -22,7 +22,7 @@ module.exports = {
                 return message.channel.send(responses[rnd] + ', here\'s your random emoji: ' + emoji.random().emoji);
             } else { //wenn doch
                 Math.round(args[0]); //runden
-                if (args[0] < 1 || args[0] > 25) return message.channel.send('😒 OOF, make sure your number is between **1 and 25**!'); //wenn die angebene nummer kleiner 1 oder größer 25 ist: return
+                if (args[0] < 1 || args[0] > 50) return message.channel.send('😒 OOF, make sure your number is between **1 and 50**!'); //wenn die angebene nummer kleiner 1 oder größer 50 ist: return
                 count = args[0];
 
                 function returnemoji(count) {
@@ -34,10 +34,9 @@ module.exports = {
                 }
 
                 function plural(count) {
-                    let res = '';
-                    if (count === 1) res = ', here is your random emoji: ';
-                    else
-                        res = ', here are your random emojis: ';
+                    let res = ', here is your random emoji: ';
+                    if (count >= 2) res = ', here are your random emojis: ';
+                    return res;
                 }
                 return message.channel.send(responses[rnd] + plural(count) + returnemoji(count));
             }

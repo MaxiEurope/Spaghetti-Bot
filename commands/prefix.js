@@ -1,8 +1,4 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
-    useNewUrlParser: true
-});
 const Guild = require('../util/mongo/guild.js');
 const config = require('../config/config.json');
 const lettercount = require('letter-count');

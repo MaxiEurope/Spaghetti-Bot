@@ -1,8 +1,4 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
-    useNewUrlParser: true
-});
 const Channel = require('../util/mongo/channel.js');
 
 module.exports = {

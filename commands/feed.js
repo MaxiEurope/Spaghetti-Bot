@@ -1,8 +1,4 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
-    useNewUrlParser: true
-});
 const Coins = require('../util/mongo/coins.js');
 const Feed = require('../util/mongo/feed.js');
 const Bot = require('../util/mongo/bot.js');
@@ -53,6 +49,7 @@ module.exports = {
                                 multiRounds: 0
                             })
                             nfeed.save().catch(err => console.log(err));
+                            message.channel.send('🛍 I gave you some shooping bags. You can start feeding me!');
                         } else {
                             if (feed.multiTF === true && feed.multiRounds > 0) {
                                 finalCount = count * feed.multi;
@@ -68,25 +65,25 @@ module.exports = {
                                 feed.totalFeeds = feed.totalFeeds + finalCount;
                                 feed.save().catch(err => console.log(err));
                             }
+                            Bot.findOne({
+                                botID: bot.user.id
+                            }, (err, bbot) => {
+                                if (err) console.log(err);
+                                if (!bbot) {
+                                    let nbbot = new Bot({
+                                        botID: bot.user.id,
+                                        totalGFeeds: finalCount
+                                    })
+                                    nbbot.save().catch(err => console.log(err));
+                                } else {
+                                    bbot.totalGFeeds = bbot.totalGFeeds + finalCount;
+                                    bbot.save().catch(err => console.log(err));
+                                }
+                                coins.coins = coins.coins + (finalCount - 2);
+                                coins.save().catch(err => console.log(err));
+                                message.channel.send('🤤 YUM! You fed me ' + emitEmoji(finalCount) + '! **+' + finalCount + ' points** ' + extraRound);
+                            })
                         }
-                        Bot.findOne({
-                            botID: bot.user.id
-                        }, (err, bbot) => {
-                            if (err) console.log(err);
-                            if (!bbot) {
-                                let nbbot = new Bot({
-                                    botID: bot.user.id,
-                                    totalGFeeds: finalCount
-                                })
-                                nbbot.save().catch(err => console.log(err));
-                            } else {
-                                bbot.totalGFeeds = bbot.totalGFeeds + finalCount;
-                                bbot.save().catch(err => console.log(err));
-                            }
-                            coins.coins = coins.coins + (finalCount - 2);
-                            coins.save().catch(err => console.log(err));
-                            message.channel.send('🤤 YUM! You fed me ' + emitEmoji(finalCount) + '! **+' + finalCount + ' points** ' + extraRound);
-                        })
                     })
                 }
             }

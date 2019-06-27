@@ -88,7 +88,11 @@ module.exports = {
                                     await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, that\'s **wrong**! Try again.');
                                     ended = true;
                                 }
-                                await msg.clearReactions();
+                                try {
+                                    await msg.clearReactions();
+                                } catch (e) {
+                                    console.log('quiz.js - no perms to remove reactions.');
+                                }
                             } else if (c.emoji.name == no) {
                                 if (body.results[0].correct_answer === 'False') {
                                     await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.!');
@@ -97,19 +101,27 @@ module.exports = {
                                     await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, it was **false**. Try again.');
                                     ended = true;
                                 }
-                                await msg.clearReactions();
+                                try {
+                                    await msg.clearReactions();
+                                } catch (e) {
+                                    console.log('quiz.js - no perms to remove reactions.');
+                                }
                             }
                         })
                         collector.on('end', async function (ce) {
                             if (ended === false) {
                                 await msg.edit('⏲ Aw, time expired. Try again!');
-                                return await msg.clearReactions();
+                                try {
+                                    await msg.clearReactions();
+                                } catch (e) {
+                                    console.log('quiz.js - no perms to remove reactions.');
+                                }
+                                return;
                             }
                         });
                     }));
         } catch (e) {
             return message.channel.send('🚫 The quiz API seems not working. We\'re sorry, try again later.');
         }
-
     },
 };

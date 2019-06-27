@@ -78,7 +78,7 @@ dbl.webhook.on('vote', vote => {
 
 bot.once('ready', () => { //ready event
     console.log(bot.user.username + ' is online!'); //console
-    bot.user.setActivity('boiling spaghetti', {
+    bot.user.setActivity('boiling spaghetti | -help', {
         type: 'LISTENING'
     }); //Playing 'game'
 })
