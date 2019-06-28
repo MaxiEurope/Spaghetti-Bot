@@ -41,7 +41,7 @@ module.exports = {
                     c20: false
                 })
                 ncchannel.save().catch(err => console.log(err));
-                return message.channel.send('🚫 You have no commands disabled in this channel. You can disable them by using `-disable <command>` or `-disable all`.');
+                return message.channel.send('🖇 Setup for this channel completed! You can disable commands by using `-disable <command>` or `-disable all`.');
             } else {
                 if (!args.length) {
                     return message.channel.send('🖇 Disabled commands in this channel.\n' + '`' + listCommands(cchannel, commands) + '`');
@@ -52,7 +52,7 @@ module.exports = {
                     } else {
                         const name = args[0].toLowerCase();
                         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
-                        if (!command) return message.channel.send('🚫 **' + name + '** is not a valid command! List disable commands by using `-disable`.');
+                        if (!command) return message.channel.send('🚫 **' + name + '** is not a valid command! List enabled commands by using `-enable`.');
                         const commandID = command.id;
                         //i hate this - will change that... warum kommentiere ich das jz auf englisch tf
                         if (commandID == 1) cchannel.c1 = true;
