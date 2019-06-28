@@ -1,5 +1,6 @@
 require('dotenv').config()
 const Coins = require('../util/mongo/coins.js');
+const cm = require('comma-number');
 
 module.exports = {
     name: 'coins',
@@ -15,9 +16,9 @@ module.exports = {
             if (err) console.log(err);
 
             if (!coins) {
-                message.channel.send('🏦 Ugh, you have no money.\nTry using the daily command.');
+                message.channel.send('🏦 Ugh, you have no money.\nTry using the daily command or vote for me!');
             } else {
-                message.channel.send('🏦 Your current coin balance: **' + coins.coins + '** 💰.');
+                message.channel.send('🏦 Your current coin balance: **' + cm(coins.coins) + '** 💰.');
             }
 
         })
