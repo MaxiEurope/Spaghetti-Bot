@@ -72,9 +72,9 @@ module.exports = {
                         else if (commandID == 15) cchannel.c15 = false;
                         else if (commandID == 16) cchannel.c16 = false;
                         else if (commandID == 17) cchannel.c17 = false;
-                        else if (commandID == 18) cchannel.c18 = false;
-                        else if (commandID == 19) cchannel.c19 = false;
-                        else if (commandID == 20) cchannel.c20 = false;
+                        // else if (commandID == 18) cchannel.c18 = false;
+                        // else if (commandID == 19) cchannel.c19 = false;
+                        // else if (commandID == 20) cchannel.c20 = false;
                         //ende - phew
                         cchannel.save().catch(err => console.log(err));
                         message.channel.send('🖇 Successfully enabled command **' + command.name + '**.');
@@ -105,9 +105,9 @@ function listCommands(cchannel, commands) {
     if (cchannel.c15 == false) res.push(commands.find(m => m.id == 15).name);
     if (cchannel.c16 == false) res.push(commands.find(m => m.id == 16).name);
     if (cchannel.c17 == false) res.push(commands.find(m => m.id == 17).name);
-    if (cchannel.c18 == false) res.push(commands.find(m => m.id == 18).name);
-    if (cchannel.c19 == false) res.push(commands.find(m => m.id == 19).name);
-    if (cchannel.c20 == false) res.push(commands.find(m => m.id == 20).name);
+    // if (cchannel.c18 == false) res.push(commands.find(m => m.id == 18).name);
+    // if (cchannel.c19 == false) res.push(commands.find(m => m.id == 19).name);
+    // if (cchannel.c20 == false) res.push(commands.find(m => m.id == 20).name);
     //ich habe wirklich keine ahnung wie ich das verbessern könnte
     if (res.length == 0) {
         res = 'none';

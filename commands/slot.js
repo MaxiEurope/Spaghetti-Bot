@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['slots'],
     description: 'Start the slotting machine and have good luck!',
     usage: '(amount)',
-    cooldown: 13,
+    cooldown: 10,
     id: 17,
     async execute(bot, message, args) {
 

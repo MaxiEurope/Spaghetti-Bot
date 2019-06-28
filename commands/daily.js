@@ -41,13 +41,13 @@ module.exports = {
                         patreonTF: false
                     })
                     nuser.save().catch(err => console.log(err));
-                    text += 'Here are your daily **100** 💰.\nGet your next daily in **' + gNow() + '**.';
+                    text += 'Here is your daily **100** 💰.\nGet your next daily in **' + gNow() + '**.';
                     total = 100;
                 } else if (user.dailyLast > moment().tz('Europe/Vienna').startOf('day')) {
                     return message.channel.send('⏰ You next daily is in **' + gNow() + '**');
                 } else {
                     total = 100 + (user.dailyMulti * user.dailyStreak);
-                    text += 'Here are your daily **' + total + '** 💰.\nGet your next daily in **' + gNow() + '**.';
+                    text += 'Here is your daily **' + total + '** 💰.\nGet your next daily in **' + gNow() + '**.';
                     user.dailyLast = Date.now();
                     user.dailyStreak = user.dailyStreak + 1;
                     user.save().catch(err => console.log(err));
