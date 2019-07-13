@@ -13,11 +13,12 @@ module.exports = {
 
         const duration = moment.duration(bot.uptime).format(" D [days], H [hrs], m [mins], s [secs]"); //uptime
         const game = message.author.presence.game || "🚫";
+        let newStats = bot.guilds.size + 723;
 
         let embed = new RichEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL)
             .addField('**Bot information** 🤖',
-                `**Uptime:** ${duration} \n**Ping:** ${Math.round(bot.ping)}ms \n**Servers/Users:** ${bot.guilds.size.toLocaleString()}/${bot.users.size.toLocaleString()}\n\n`, true)
+                `**Uptime:** ${duration} \n**Ping:** ${Math.round(bot.ping)}ms \n**Servers/Users:** ${newStats}/${bot.users.size.toLocaleString()}\n\n`, true)
             .addField('**User information:** 👫',
                 `**Tag:** ${message.author.tag}\n**ID:** ${message.author.id}\n**Status:** ${message.author.presence.status}\n**Game:** ${game}\n\n`, true)
             .addField('**Server Information:** 🏡\n',

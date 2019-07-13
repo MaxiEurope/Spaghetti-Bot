@@ -65,13 +65,10 @@ const DBL = require('dblapi.js');
 const dbl = new DBL(process.env.DBL, {
     webhookServer: listener,
     webhookAuth: '9hmr34cgrfc983g4mn7gv823deg8m9rc34m08h'
-}, bot);
+});
 dbl.webhook.on('ready', () => {
     console.log('DBL - Webhook ready.');
 });
-dbl.on('posted', () => {
-    console.log('DBL - Server count posted.');
-})
 dbl.webhook.on('vote', vote => {
     Vote.handler(dbl, bot, vote); //vote
 })
@@ -81,6 +78,13 @@ bot.once('ready', () => { //ready event
     bot.user.setActivity('boiling spaghetti | -help', {
         type: 'LISTENING'
     }); //Playing 'game'
+    let newStats = bot.guilds.size + 723;
+    console.log(newStats);
+    dbl.postStats(newStats);
+  setInterval(async () => {
+        dbl.postStats(newStats);
+        console.log('Servercount posted!');
+    }, 900000);
 })
 
 bot.on("guildCreate", (guild) => { //neuer server

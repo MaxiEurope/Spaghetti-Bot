@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const he = require('he'); //html decoder
+const Coins = require('../util/mongo/coins.js');
 
 module.exports = {
     name: 'quiz',
@@ -13,6 +14,7 @@ module.exports = {
         let rnd = emojis[Math.floor(Math.random() * emojis.length)];
         let category;
         let difficulty;
+        let multiplier = 1;
 
         /**
          * general: 9, games: 15, computers: 18, vehicles: 28, history: 23, tv: 14, music: 12
@@ -53,8 +55,10 @@ module.exports = {
                     difficulty = 'easy';
                 } else if (args[1] === 'medium') {
                     difficulty = 'medium';
+                    multiplier = 2;
                 } else if (args[1] === 'hard') {
                     difficulty = 'hard';
+                    multiplier = 5;
                 } else {
                     return message.channel.send('🚫 **' + args[1] + '** is not a valid difficulty.\n' +
                         'Available difficulties: **easy, medium, hard**.');
@@ -66,8 +70,17 @@ module.exports = {
             message.channel.startTyping();
             fetch(`https://opentdb.com/api.php?amount=1&category=${category}&difficulty=${difficulty}&type=boolean`)
                 .then(async res => res.json())
-                .then(async body => //async function question() {
+                .then(async body =>
                     await message.channel.send(`${rnd} **Here's your question:**\n${he.decode(body.results[0].question)}`).then(async msg => {
+                        Coins.findOne({
+                            userID: message.author.id
+                        }, (err, coins) => {
+                            if (err) console.log(err);
+
+                            let earnedMoney = 1;
+                            let correct = false;
+
+                        })
                         let yes = '✅',
                             no = '⛔',
                             ended = false;
@@ -82,11 +95,16 @@ module.exports = {
                         collector.on('collect', async function (c) {
                             if (c.emoji.name == yes) {
                                 if (body.results[0].correct_answer === 'True') {
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ That\'s **correct**!');
                                     ended = true;
+                                    earnedMoney = 10;
+                                    correct = true;
+                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ That\'s **correct**! - ' +
+                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                 } else {
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, that\'s **wrong**! Try again.');
                                     ended = true;
+                                    correct = false;
+                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, that\'s **wrong**! Try again. - ' +
+                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                 }
                                 try {
                                     await msg.clearReactions();
@@ -95,11 +113,16 @@ module.exports = {
                                 }
                             } else if (c.emoji.name == no) {
                                 if (body.results[0].correct_answer === 'False') {
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.!');
                                     ended = true;
+                                    earnedMoney = 10;
+                                    correct = true;
+                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.! - ' +
+                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                 } else {
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, it was **false**. Try again.');
                                     ended = true;
+                                    correct = false;
+                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, it was **false**. Try again. - ' +
+                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                 }
                                 try {
                                     await msg.clearReactions();
@@ -119,6 +142,24 @@ module.exports = {
                                 return;
                             }
                         });
+
+                        /** money */
+                        if (!coins) {
+                            let ncoins = new Coins({
+                                userID: message.author.id,
+                                coins: 100,
+                                getIndex: 0
+                            })
+                            ncoins.save().catch(err => console.log(err));
+                        } else {
+                            if (correct === true) {
+                                coins.coins = coins.coins + (earnedMoney * multiplier);
+                                coins.save().catch(err => console.log(err));
+                            } else {
+                                coins.coins = coins.coins + earnedMoney;
+                                coins.save().catch(err => console.log(err));
+                            }
+                        }
                     }));
         } catch (e) {
             return message.channel.send('🚫 The quiz API seems not working. We\'re sorry, try again later.');

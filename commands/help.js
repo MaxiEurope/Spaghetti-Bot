@@ -1,54 +1,61 @@
-const { prefix } = require('../config/config.json');
-const { RichEmbed } = require('discord.js');
+const {
+    prefix
+} = require('../config/config.json');
+const {
+    RichEmbed
+} = require('discord.js');
 
 module.exports = {
-	name: 'help',
-	description: 'List all of my commands or info about a specific command.',
-	aliases: ['commands'],
-	usage: '<command-name>',
-	cooldown: 1,
-	id: 9,
-	async execute(bot, message, args) {
-		let embed = new RichEmbed();
-		const { commands } = message.client;
+    name: 'help',
+    description: 'List all of my commands or info about a specific command.',
+    aliases: ['commands'],
+    usage: '<command-name>',
+    cooldown: 1,
+    id: 9,
+    async execute(bot, message, args) {
+        let embed = new RichEmbed();
+        const {
+            commands
+        } = message.client;
 
-		if (!args.length) {
-			embed.setAuthor('Here\'s a list of my commands', bot.user.displayAvatarURL)
-			.setDescription('🗒 **Basic**\n `-avatar` `-help` `-ping` `-stats`\n'+
-			'😂 **Fun**\n `-advice` `-rndemoji` `-rndfood`\n'+
-			'💰 **Economy**\n `-daily` `-coins` `-buy` `-feed` `-leaderboard` `-slots`\n'+
-			'❓ **Quiz**\n `-quiz`\n'+
-			'🖇 **Extra**\n `-translate` `-prefix` `-profile` `-enable` `-disable`')
-			.addField('Additional Info', `[• Invite me!](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) `+
-			`[• Server!](https://discord.gg/W5Zj3G2) [• Vote for coins!](https://discordbots.org/bot/585142238217240577/vote)`)
-			.addField('Latest News 📬', '- added coins leaderboard\n- vote to get coins\n- added slots')
-			.setImage('https://cdn.discordapp.com/attachments/554429868276711433/590529678461239304/chrome_mRyhlKq5CL.png')
-            .setFooter(`You can use '${prefix}help <command name>' to get info about a command. | () - optional arguments | <> - required arguments`)
-			.setColor('#00ff00')
-            .setTimestamp();
+        if (!args.length) {
+            embed.setAuthor('Here\'s a list of my commands', bot.user.displayAvatarURL)
+                .setDescription('🗒 **Basic**\n `-avatar` `-help` `-ping` `-stats`\n' +
+                    '😂 **Fun**\n `-advice` `-rndemoji` `-rndfood`\n' +
+                    '💰 **Economy**\n `-daily` `-coins` `-buy` `-feed` `-leaderboard` `-slots`\n' +
+                    '❓ **Quiz**\n `-quiz`\n' +
+                    '🖇 **Extra**\n `-translate` `-prefix` `-profile` `-enable` `-disable`')
+                .addField('Additional Info', `[• Invite me!](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ` +
+                    `[• Server!](https://discord.gg/W5Zj3G2) [• Vote for coins!](https://discordbots.org/bot/585142238217240577/vote)`)
+                .addField('Latest News 📬', '- **Wow!** Thank you for your help, the bot\'s growing exponentially fast.\n' +
+                    '- you can now win money by doing quizzes\n- added coins leaderboard\n- vote to get coins\n- added slots')
+                .setImage('https://cdn.discordapp.com/attachments/554429868276711433/590529678461239304/chrome_mRyhlKq5CL.png')
+                .setFooter(`You can use '${prefix}help <command name>' to get info about a command. | () - optional arguments | <> - required arguments`)
+                .setColor('#00ff00')
+                .setTimestamp();
 
-			return message.channel.send(embed);
-		}
+            return message.channel.send(embed);
+        }
 
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+        const name = args[0].toLowerCase();
+        const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
-		if (!command) {
-            return message.channel.send('🚫 **'+name+'** is not a valid command.\n'+
-            '📢 Available commands: **'+commands.map(cmd => cmd.name).join(', ')+'**');
-		}
+        if (!command) {
+            return message.channel.send('🚫 **' + name + '** is not a valid command.\n' +
+                '📢 Available commands: **' + commands.map(cmd => cmd.name).join(', ') + '**');
+        }
 
         embed.setAuthor(`Name: ${command.name}`, bot.user.displayAvatarURL);
 
-		if (command.aliases) embed.addField('Aliases: 🏷',  `${command.aliases.join(', ')}`);
-		if (command.description) embed.addField('Description: 📋', `${command.description}`);
-		if (command.usage) embed.addField('Usage: 🔋', `${prefix}${command.name} ${command.usage}`);
+        if (command.aliases) embed.addField('Aliases: 🏷', `${command.aliases.join(', ')}`);
+        if (command.description) embed.addField('Description: 📋', `${command.description}`);
+        if (command.usage) embed.addField('Usage: 🔋', `${prefix}${command.name} ${command.usage}`);
 
-		embed.addField('Cooldown: ⏰', `${command.cooldown || 3} second(s)`)
-		.setFooter(`() - optional arguments | <> - required arguments`)
-        .setColor('#00ff00')
-        .setTimestamp();
+        embed.addField('Cooldown: ⏰', `${command.cooldown || 3} second(s)`)
+            .setFooter(`() - optional arguments | <> - required arguments`)
+            .setColor('#00ff00')
+            .setTimestamp();
 
-		message.channel.send(embed);
-	},
+        message.channel.send(embed);
+    },
 };
