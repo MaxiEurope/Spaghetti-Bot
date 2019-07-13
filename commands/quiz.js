@@ -55,10 +55,8 @@ module.exports = {
                     difficulty = 'easy';
                 } else if (args[1] === 'medium') {
                     difficulty = 'medium';
-                    multiplier = 2;
                 } else if (args[1] === 'hard') {
                     difficulty = 'hard';
-                    multiplier = 5;
                 } else {
                     return message.channel.send('🚫 **' + args[1] + '** is not a valid difficulty.\n' +
                         'Available difficulties: **easy, medium, hard**.');
@@ -66,100 +64,105 @@ module.exports = {
             }
         }
 
+        /** multiplier */
+        if (difficulty === 'easy') multiplier = 1;
+        else if (difficulty === 'medium') multiplier = 2;
+        else multiplier = 3;
+
         try {
             message.channel.startTyping();
             fetch(`https://opentdb.com/api.php?amount=1&category=${category}&difficulty=${difficulty}&type=boolean`)
                 .then(async res => res.json())
                 .then(async body =>
                     await message.channel.send(`${rnd} **Here's your question:**\n${he.decode(body.results[0].question)}`).then(async msg => {
+                        let earnedMoney = 1;
+                        let correct = false;
                         Coins.findOne({
                             userID: message.author.id
-                        }, (err, coins) => {
+                        }, async (err, coins) => {
                             if (err) console.log(err);
 
-                            let earnedMoney = 1;
-                            let correct = false;
-
-                        })
-                        let yes = '✅',
-                            no = '⛔',
-                            ended = false;
-                        let mcontent = `${rnd} **Here's your question:**\n${he.decode(body.results[0].question)}`;
-                        await msg.react(yes);
-                        await msg.react(no);
-                        await msg.channel.stopTyping();
-                        let filter = (reaction, user) => (reaction.emoji.name === yes || reaction.emoji.name === no) && user.id === message.author.id;
-                        let collector = await msg.createReactionCollector(filter, {
-                            time: 30000
-                        });
-                        collector.on('collect', async function (c) {
-                            if (c.emoji.name == yes) {
-                                if (body.results[0].correct_answer === 'True') {
-                                    ended = true;
-                                    earnedMoney = 10;
-                                    correct = true;
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ That\'s **correct**! - ' +
-                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                            let yes = '✅',
+                                no = '⛔',
+                                ended = false;
+                            let mcontent = `${rnd} **Here's your question:**\n${he.decode(body.results[0].question)}`;
+                            await msg.react(yes);
+                            await msg.react(no);
+                            await msg.channel.stopTyping();
+                            let filter = (reaction, user) => (reaction.emoji.name === yes || reaction.emoji.name === no) && user.id === message.author.id;
+                            let collector = await msg.createReactionCollector(filter, {
+                                time: 30000
+                            });
+                            collector.on('collect', async function (c) {
+                                if (c.emoji.name == yes) {
+                                    if (body.results[0].correct_answer === 'True') {
+                                        ended = true;
+                                        earnedMoney = 10;
+                                        correct = true;
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ That\'s **correct**! - ' +
+                                            'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                                    } else {
+                                        ended = true;
+                                        earnedMoney = 1;
+                                        correct = false;
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, that\'s **wrong**! Try again. - ' +
+                                            'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                                    }
+                                    try {
+                                        await msg.clearReactions();
+                                    } catch (e) {
+                                        console.log('quiz.js - no perms to remove reactions.');
+                                    }
+                                } else if (c.emoji.name == no) {
+                                    if (body.results[0].correct_answer === 'False') {
+                                        ended = true;
+                                        earnedMoney = 10;
+                                        correct = true;
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.! - ' +
+                                            'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                                    } else {
+                                        ended = true;
+                                        earnedMoney = 1;
+                                        correct = false;
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, it was **false**. Try again. - ' +
+                                            'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                                    }
+                                    try {
+                                        await msg.clearReactions();
+                                    } catch (e) {
+                                        console.log('quiz.js - no perms to remove reactions.');
+                                    }
+                                }
+                                /** money */
+                                if (!coins) {
+                                    let ncoins = new Coins({
+                                        userID: message.author.id,
+                                        coins: 100,
+                                        getIndex: 0
+                                    })
+                                    ncoins.save().catch(err => console.log(err));
                                 } else {
-                                    ended = true;
-                                    correct = false;
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, that\'s **wrong**! Try again. - ' +
-                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
+                                    if (correct === true) {
+                                        coins.coins = coins.coins + (earnedMoney * multiplier);
+                                        coins.save().catch(err => console.log(err));
+                                    } else {
+                                        coins.coins = coins.coins + earnedMoney;
+                                        coins.save().catch(err => console.log(err));
+                                    }
                                 }
-                                try {
-                                    await msg.clearReactions();
-                                } catch (e) {
-                                    console.log('quiz.js - no perms to remove reactions.');
-                                }
-                            } else if (c.emoji.name == no) {
-                                if (body.results[0].correct_answer === 'False') {
-                                    ended = true;
-                                    earnedMoney = 10;
-                                    correct = true;
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.! - ' +
-                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
-                                } else {
-                                    ended = true;
-                                    correct = false;
-                                    await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n⛔ Aw, it was **false**. Try again. - ' +
-                                        'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
-                                }
-                                try {
-                                    await msg.clearReactions();
-                                } catch (e) {
-                                    console.log('quiz.js - no perms to remove reactions.');
-                                }
-                            }
-                        })
-                        collector.on('end', async function (ce) {
-                            if (ended === false) {
-                                await msg.edit('⏲ Aw, time expired. Try again!');
-                                try {
-                                    await msg.clearReactions();
-                                } catch (e) {
-                                    console.log('quiz.js - no perms to remove reactions.');
-                                }
-                                return;
-                            }
-                        });
-
-                        /** money */
-                        if (!coins) {
-                            let ncoins = new Coins({
-                                userID: message.author.id,
-                                coins: 100,
-                                getIndex: 0
                             })
-                            ncoins.save().catch(err => console.log(err));
-                        } else {
-                            if (correct === true) {
-                                coins.coins = coins.coins + (earnedMoney * multiplier);
-                                coins.save().catch(err => console.log(err));
-                            } else {
-                                coins.coins = coins.coins + earnedMoney;
-                                coins.save().catch(err => console.log(err));
-                            }
-                        }
+                            collector.on('end', async function (ce) {
+                                if (ended === false) {
+                                    await msg.edit('⏲ Aw, time expired. Try again!');
+                                    try {
+                                        await msg.clearReactions();
+                                    } catch (e) {
+                                        console.log('quiz.js - no perms to remove reactions.');
+                                    }
+                                    return;
+                                }
+                            });
+                        })
                     }));
         } catch (e) {
             return message.channel.send('🚫 The quiz API seems not working. We\'re sorry, try again later.');
