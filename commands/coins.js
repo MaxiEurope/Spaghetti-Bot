@@ -8,7 +8,7 @@ module.exports = {
     description: 'View your current coin balance.',
     cooldown: 2,
     id: 4,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         Coins.findOne({
             userID: message.author.id
@@ -20,8 +20,6 @@ module.exports = {
             } else {
                 message.channel.send('🏦 Your current coin balance: **' + cm(coins.coins) + '** 💰.');
             }
-
         })
-
     },
 };

@@ -1,8 +1,7 @@
-exports.cDisabled = (var1, var2, var3) => {
+exports.cDisabled = (var1, var2) => {
 
     let cchannel = var1,
-        commandID = var2,
-        message = var3;
+        commandID = var2;
     let isDisabled = false;
 
     if (commandID == 1 && cchannel.c1 == true) isDisabled = true;

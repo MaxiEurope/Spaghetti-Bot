@@ -5,7 +5,7 @@ module.exports = {
     description: 'Gives you some useful advice.',
     cooldown: 5,
     id: 1,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         let emojis = ['🤵', '💁', '👁', '🤞', '🕯', '🏝'];
         let rnd = emojis[Math.floor(Math.random() * emojis.length)];
@@ -17,6 +17,5 @@ module.exports = {
         } catch (e) {
             return message.channel.send('🚫 The advice API seems not working. We\'re sorry, try again later.');
         }
-
     },
 };

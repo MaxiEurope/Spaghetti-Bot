@@ -3,6 +3,7 @@
  * Das ist dein discord bot. Ich werde ihn immer auf deutsch //kommentieren, die commands an sich aber englisch machen.
  * Ich könnte ihn ja auf discordbots.org submitten und du wirst bekannt 😉.
  */
+/* eslint-disable no-undef */
 require('dotenv').config(); //.env file laden
 //djs client
 const Discord = require('discord.js'); //modul djs laden
@@ -181,7 +182,7 @@ bot.on('message', async message => { //message event
             if (!cchannel) {
                 //nichts
             } else {
-                if (disableCommand.cDisabled(cchannel, commandID, message) === true) {
+                if (disableCommand.cDisabled(cchannel, commandID) === true) {
                     return message.channel.send('🚫 **That command is disabled in this channel.**').then(m => {
                         m.delete(4000);
                     })

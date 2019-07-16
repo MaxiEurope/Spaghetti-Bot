@@ -1,9 +1,6 @@
 require('dotenv').config()
 const Discord = require('discord.js');
 const Coins = require('../util/mongo/coins.js');
-const Feed = require('../util/mongo/feed.js');
-const Profile = require('../util/mongo/profile.js');
-const Bot = require('../util/mongo/bot.js');
 const cm = require('comma-number');
 
 module.exports = {
@@ -23,14 +20,6 @@ module.exports = {
                     ['coins', 'descending']
                 ]).exec((err, res) => {
                     if (err) console.log(err);
-
-                    /*
-                    //disabled
-                    let serverGlobal = args[1]; //server oder global leaderboard check
-                    if (!serverGlobal) serverGlobal = 'server';
-                    else if (serverGlobal !== '-g') serverGlobal = 'server';
-                    else serverGlobal = '-g';
-                    */
 
                     let result = new Discord.RichEmbed()
                         .setTitle('Coins leaderboard');

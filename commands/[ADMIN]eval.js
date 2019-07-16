@@ -1,7 +1,7 @@
 module.exports = {
     name: 'eval',
     cooldown: 1,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         if (message.author.id !== '393096318123245578') return;
         try {

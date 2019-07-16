@@ -151,7 +151,7 @@ module.exports = {
                                     }
                                 }
                             })
-                            collector.on('end', async function (ce) {
+                            collector.on('end', async function () {
                                 if (ended === false) {
                                     await msg.edit('⏲ Aw, time expired. Try again!');
                                     try {

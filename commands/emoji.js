@@ -25,22 +25,26 @@ module.exports = {
                 if (args[0] < 1 || args[0] > 50) return message.channel.send('😒 OOF, make sure your number is between **1 and 50**!'); //wenn die angebene nummer kleiner 1 oder größer 50 ist: return
                 count = args[0];
 
-                function returnemoji(count) {
-                    let res = '';
-                    for (let i = 0; i < count; i++) {
-                        res += emoji.random().emoji;
-                    }
-                    return res;
-                }
 
-                function plural(count) {
-                    let res = ', here is your random emoji: ';
-                    if (count >= 2) res = ', here are your random emojis: ';
-                    return res;
-                }
+
+
                 return message.channel.send(responses[rnd] + plural(count) + returnemoji(count));
             }
         }
 
     },
 };
+
+function plural(count) {
+    let res = ', here is your random emoji: ';
+    if (count >= 2) res = ', here are your random emojis: ';
+    return res;
+}
+
+function returnemoji(count) {
+    let res = '';
+    for (let i = 0; i < count; i++) {
+        res += emoji.random().emoji;
+    }
+    return res;
+}

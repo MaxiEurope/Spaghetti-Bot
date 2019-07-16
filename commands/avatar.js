@@ -5,12 +5,11 @@ module.exports = {
     usage: '(@User)',
     cooldown: 5,
     id: 2,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         let user = message.mentions.users.first() || message.author;
         message.channel.send(`This is **${user.tag}**'s avatar!`, {
             files: [user.displayAvatarURL.split("?")[0]]
         })
-
     },
 };

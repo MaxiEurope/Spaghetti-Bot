@@ -1,8 +1,7 @@
 require('dotenv').config()
 const Coins = require('../util/mongo/coins.js');
 const User = require('../util/mongo/user.js');
-const moment = require('moment');
-const tz = require('moment-timezone');
+const moment = require('moment-timezone');
 let total = 0;
 let text = '';
 
@@ -17,7 +16,7 @@ module.exports = {
     description: 'Get your daily amount of coins every 24 h. Resets at midnight (timezone: Vienna/Europe).',
     cooldown: 15,
     id: 5,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         User.findOne({
             userID: message.author.id
@@ -74,7 +73,6 @@ module.exports = {
                  */
 
                 message.channel.send(text);
-
             })
         })
     },

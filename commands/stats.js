@@ -9,7 +9,7 @@ module.exports = {
     description: 'Get some info about the bot, server and about you.',
     cooldown: 5,
     id: 13,
-    async execute(bot, message, args) {
+    async execute(bot, message) {
 
         const duration = moment.duration(bot.uptime).format(" D [days], H [hrs], m [mins], s [secs]"); //uptime
         const game = message.author.presence.game || "🚫";

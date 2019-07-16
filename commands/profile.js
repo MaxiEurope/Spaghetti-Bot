@@ -1,6 +1,5 @@
 require('dotenv').config()
 const Profile = require('../util/mongo/profile.js');
-const Feed = require('../util/mongo/feed.js');
 const Discord = require('discord.js');
 const lettercount = require('letter-count');
 const commanumber = require('comma-number');
@@ -15,7 +14,7 @@ module.exports = {
     async execute(bot, message, args) {
 
         let _user = message.mentions.users.first() || message.author;
-        if(_user.bot === true) return message.channel.send('🚫 Bots do not get xp.');
+        if (_user.bot === true) return message.channel.send('🚫 Bots do not get xp.');
         Profile.findOne({
             userID: _user.id
         }, (err, profile) => {
@@ -63,14 +62,14 @@ module.exports = {
                         if (!color.startsWith('#') && color.length === 6) {
                             const testResult = parse(`#${color}`);
                             if (!testResult.hex) {
-                                return message.channel.send('🚫 Thats not a valid color. Use `#0ffff0` or a css color for example.');;
+                                return message.channel.send('🚫 Thats not a valid color. Use `#0ffff0` or a css color for example.');
                             }
                             color = testResult;
                         } else {
                             color = parse(color);
                         }
                         if (!color.cmyk || !color.rgb || !color.hsv || !color.hsl || !color.hex) {
-                            return message.channel.send('🚫 This color seems invalid. Use a hex color instead or search for css colors.');;
+                            return message.channel.send('🚫 This color seems invalid. Use a hex color instead or search for css colors.');
                         }
                         profile.color = color.hex;
                         profile.save().catch(err => console.log(err));

@@ -45,6 +45,7 @@ module.exports = {
                 message.channel.send('✅ Successfully translated **' + message.author.username + '\'s** message.\n➡ ' + res.join(' '))
             }).catch(e => {
                 message.channel.send('🚫 Seems like an invalide language. Here\'s a list of supported languages:\n' + avlang());
+                console.log('User tried to use the `translate` command, invalid language!' + e);
             })
         } catch (e) {
             return message.channel.send('🚫 The translator API seems not working. We\'re sorry, try again later.');
