@@ -39,19 +39,25 @@ let xpCooldowns = new Set(); // xp only once per minute
 
 bot.login(process.env.TOKEN); //login
 
-/** server */
+/** server */ 
 const express = require('express');
 const app = express();
+app.get("/", (request, response) => {
+    console.log("📋 " + Date.now() + " ping received");
+    response.sendStatus(200);
+});
+const listener = app.listen(process.env.PORT, function () {
+    console.log('Server is listening on port ' + listener.address().port);
+});
 const server = require('./server.js');
-const serverListener = server.serverListener(app);
-server.server(app);
+server.server();
 
 /**
  * Discord Bot list webhook
  */
 const DBL = require('dblapi.js');
 const dbl = new DBL(process.env.DBL, {
-    webhookServer: serverListener,
+    webhookServer: listener,
     webhookAuth: process.env.DBLAUTH
 });
 dbl.webhook.on('ready', () => {
