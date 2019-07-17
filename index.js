@@ -33,6 +33,9 @@ for (const file of cmdf) {
     const command = require(`./commands/${file}`);
     bot.commands.set(command.name, command);
 }
+/** datadoghq */
+// const StatsD = require('node-dogstatsd').StatsD;
+// const dogstatsd = new StatsD()
 /**
  * command and xp cooldown
  */
@@ -96,6 +99,7 @@ bot.on("guildDelete", (guild) => { //guild left
 });
 /** Bot message event */
 bot.on('message', async message => {
+    // dogstatsd.increment(message.guild.id);
     /**
      * basic things
      */
@@ -226,4 +230,8 @@ bot.on('error', err => {
 /** Process uncaughtException event */
 process.on('uncaughtException', function (exception) {
     console.log(exception);
+});
+/** Process UnhandledPromiseRejectionWarning event */
+process.on('UnhandledPromiseRejectionWarning', function (RejectionWarning) {
+    console.log(RejectionWarning);
 });
