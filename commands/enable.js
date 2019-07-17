@@ -54,7 +54,7 @@ module.exports = {
                         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
                         if (!command) return message.channel.send('🚫 **' + name + '** is not a valid command! List disabled commands by using `-disable`.');
                         const commandID = command.id;
-                        //i hate this - will change that... warum kommentiere ich das jz auf englisch tf
+                        //i hate this - will change that... 
                         if (commandID == 1) cchannel.c1 = false;
                         else if (commandID == 2) cchannel.c2 = false;
                         else if (commandID == 3) cchannel.c3 = false;
@@ -75,7 +75,6 @@ module.exports = {
                         // else if (commandID == 18) cchannel.c18 = false;
                         // else if (commandID == 19) cchannel.c19 = false;
                         // else if (commandID == 20) cchannel.c20 = false;
-                        //ende - phew
                         cchannel.save().catch(err => console.log(err));
                         message.channel.send('🖇 Successfully enabled command **' + command.name + '**.');
                     }
@@ -87,7 +86,9 @@ module.exports = {
 
 function listCommands(cchannel, commands) {
     let res = [];
-    //einfach unten ignorieren
+    /**
+     * IGNORE THIS THING BELOW
+     */
     if (cchannel.c1 == false) res.push(commands.find(m => m.id == 1).name);
     if (cchannel.c2 == false) res.push(commands.find(m => m.id == 2).name);
     if (cchannel.c3 == false) res.push(commands.find(m => m.id == 3).name);
@@ -108,7 +109,6 @@ function listCommands(cchannel, commands) {
     // if (cchannel.c18 == false) res.push(commands.find(m => m.id == 18).name);
     // if (cchannel.c19 == false) res.push(commands.find(m => m.id == 19).name);
     // if (cchannel.c20 == false) res.push(commands.find(m => m.id == 20).name);
-    //ich habe wirklich keine ahnung wie ich das verbessern könnte
     if (res.length == 0) {
         res = 'none';
     } else {

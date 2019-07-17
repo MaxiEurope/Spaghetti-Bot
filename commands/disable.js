@@ -54,7 +54,7 @@ module.exports = {
                         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
                         if (!command) return message.channel.send('🚫 **' + name + '** is not a valid command! List enabled commands by using `-enable`.');
                         const commandID = command.id;
-                        //i hate this - will change that... warum kommentiere ich das jz auf englisch tf
+                        //i hate this - will change that... could just add an array including disabled commandIDs
                         if (commandID == 1) cchannel.c1 = true;
                         else if (commandID == 2) cchannel.c2 = true;
                         else if (commandID == 3) cchannel.c3 = true;
@@ -75,7 +75,6 @@ module.exports = {
                         // else if (commandID == 18) cchannel.c18 = true;
                         // else if (commandID == 19) cchannel.c19 = true;
                         // else if (commandID == 20) cchannel.c20 = true;
-                        //ende - phew
                         cchannel.save().catch(err => console.log(err));
                         message.channel.send('🖇 Successfully disabled command **' + command.name + '**.');
                     }
@@ -87,7 +86,9 @@ module.exports = {
 
 function listCommands(cchannel, commands) {
     let res = [];
-    //einfach unten ignorieren
+    /**
+     * IGNORE THIS BULLSHIT BELOW FFS
+     */
     if (cchannel.c1 == true) res.push(commands.find(m => m.id == 1).name);
     if (cchannel.c2 == true) res.push(commands.find(m => m.id == 2).name);
     if (cchannel.c3 == true) res.push(commands.find(m => m.id == 3).name);

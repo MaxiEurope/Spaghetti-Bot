@@ -18,10 +18,10 @@ module.exports = {
 
         let res;
         if (!args[0]) {
-            res = allfood[Math.floor(Math.random() * allfood.length)]; //wenn keine args
+            res = allfood[Math.floor(Math.random() * allfood.length)];
 
         } else {
-            args[0] = args[0].toLowerCase(); //alles klein für mobile users
+            args[0] = args[0].toLowerCase();
             if (args[0] === 'fruit' || args[0] === 'fruits') {
                 res = fruit[Math.floor(Math.random() * fruit.length)];
             } else if (args[0] === 'vegetable' || args[0] === 'vegetables') {
@@ -31,11 +31,11 @@ module.exports = {
             } else if (args[0] === 'other' || args[0] === 'other') {
                 res = other[Math.floor(Math.random() * other.length)];
             } else {
-                res = allfood[Math.floor(Math.random() * allfood.length)]; //wenn undefined args
+                res = allfood[Math.floor(Math.random() * allfood.length)];
             }
         }
 
-        message.channel.send('😋 I gave you **' + res + '**! Enjoy.'); //send
+        message.channel.send('😋 I gave you **' + res + '**! Enjoy.');
 
     },
 };

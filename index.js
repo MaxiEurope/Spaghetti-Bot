@@ -1,32 +1,30 @@
 /**
- * Hallo Spaghetti!
- * Das ist dein discord bot. Ich werde ihn immer auf deutsch //kommentieren, die commands an sich aber englisch machen.
- * Ich könnte ihn ja auf discordbots.org submitten und du wirst bekannt 😉.
+ * Welcome! This is spaghetti bot!
  */
+
 /* eslint-disable no-undef */
-require('dotenv').config(); //.env file laden
+require('dotenv').config(); //.env file loading
 //djs client
-const Discord = require('discord.js'); //modul djs laden
-const bot = new Discord.Client({
+const Discord = require('discord.js'); //main module for our bot
+const bot = new Discord.Client({ //the discord client
     fetchAllMembers: true
-}); //djs client erschaffen
-bot.commands = new Discord.Collection(); //{commands} object
+});
+bot.commands = new Discord.Collection();
 //other
-const fs = require('fs'); //node filesystem
-const config = require('./config/config.json'); //config file = prefix + owner
-const disableCommand = require('./util/disableCommand.js'); //command disable check
-const Vote = require('./util/voteHandler.js'); //voteHandler
-const mongoose = require('mongoose'); //unsere database
+const fs = require('fs');
+const config = require('./config/config.json');
+const disableCommand = require('./util/disableCommand.js');
+const Vote = require('./util/voteHandler.js');
+const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
     useNewUrlParser: true
 });
-const Guild = require('./util/mongo/guild.js'); //guild database für prefix
-const Channel = require('./util/mongo/channel.js'); //channel database für disabled commands
-const Profile = require('./util/mongo/profile.js'); //profile database für xp
+const Guild = require('./util/mongo/guild.js'); //guild database - prefix
+const Channel = require('./util/mongo/channel.js'); //channel database - disabled commands
+const Profile = require('./util/mongo/profile.js'); //profile database - xp
 /**
- * wir lesen das verzeichnis 'commands' und filtern alle dateien mit der endung '.js'
- * anschließend gehen wir mit einer for schleife durch alles files
- * laden sie, loggen sie und setzen sie in das commands object
+ * we read the ./commands directory and filter files which name ends with .js
+ * load and set them into the commands collection
  */
 const cmdf = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of cmdf) {
@@ -34,103 +32,90 @@ for (const file of cmdf) {
     bot.commands.set(command.name, command);
 }
 /**
- * jetzt kommt das cooldown und xp-cooldown system, eine djs collection
+ * command and xp cooldown
  */
 let cooldowns = new Discord.Collection();
-let xpCooldowns = new Set(); //man darf nur einmal in der minute xp bekommen
+let xpCooldowns = new Set(); // xp only once per minute
 
-bot.login(process.env.TOKEN); //bot login
+bot.login(process.env.TOKEN); //login
 
-/**
- * Online Zeugs
- */
-
-const http = require('http');
+/** server */
 const express = require('express');
 const app = express();
-app.get("/", (request, response) => {
-    console.log("📋 " + Date.now() + " ping received");
-    response.sendStatus(200);
-});
-const listener = app.listen(process.env.PORT, function () {
-    console.log('Server is listening on port ' + listener.address().port);
-});
-setInterval(() => {
-    http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);
+const server = require('./server.js');
+const serverListener = server.serverListener(app);
+server.server(app);
 
 /**
  * Discord Bot list webhook
  */
 const DBL = require('dblapi.js');
 const dbl = new DBL(process.env.DBL, {
-    webhookServer: listener,
-    webhookAuth: '9hmr34cgrfc983g4mn7gv823deg8m9rc34m08h'
+    webhookServer: serverListener,
+    webhookAuth: process.env.DBLAUTH
 });
 dbl.webhook.on('ready', () => {
     console.log('DBL - Webhook ready.');
 });
 dbl.webhook.on('vote', vote => {
-    Vote.handler(dbl, bot, vote); //vote
+    Vote.handler(dbl, bot, vote); //voteHanlder
 })
 
-bot.once('ready', () => { //ready event
-    console.log(bot.user.username + ' is online!'); //console
+/** Bot ready event */
+bot.once('ready', () => {
+    console.log(bot.user.username + ' is online!');
     bot.user.setActivity('boiling spaghetti | -help', {
         type: 'LISTENING'
     }); //Playing 'game'
-    let newStats = bot.guilds.size + 723;
-    console.log(newStats);
-    dbl.postStats(newStats);
-  setInterval(async () => {
-        dbl.postStats(newStats);
+    setInterval(async () => {
+        dbl.postStats(bot.guilds.size);
         console.log('Servercount posted!');
     }, 900000);
 })
-
-bot.on("guildCreate", (guild) => { //neuer server
+/** Bot guildCreate event */
+bot.on("guildCreate", (guild) => { //new guild
     let owner = bot.users.get('393096318123245578');
     owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
         `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
 });
-
-bot.on("guildDelete", (guild) => { //server geleavt
+/** Bot guildDelete event */
+bot.on("guildDelete", (guild) => { //guild left
     let owner = bot.users.get('393096318123245578');
     owner.send(`📤**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
         `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
 });
-
-bot.on('message', async message => { //message event
+/** Bot message event */
+bot.on('message', async message => {
     /**
-     * basic sachen, wir brauchen diese, um den bot steuern zu können
+     * basic things
      */
-    if (message.author.bot) return; //wenn der user ein bot ist, nicht weiter lassen
-    if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //wenn und jemand eine DM schreibt, loggen
+    if (message.author.bot) return; //if bot, return
+    if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //if channel type dm, return
     /**
-     * xp - system
+     * xp system
      */
     Profile.findOne({
         userID: message.author.id
     }, (err, profile) => {
         if (err) console.log(err);
         if (!profile) {
-            //ignorieren, da der user sein Profil erst erstellen muss
+            //ignore, user has to create profile by using the profile command
         } else if (profile.xp >= 0) {
             let isOnCooldown;
             if (xpCooldowns.has(message.author.id)) {
                 isOnCooldown = true;
-                //keine xp
+                //no xp, cooldown
             } else {
-                xpCooldowns.add(message.author.id); //wir geben cooldown
-                let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp von 15 bis 25
+                xpCooldowns.add(message.author.id); //add cooldown
+                let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp 15-25
                 if (profile.xp + randomXp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
-                    profile.xp = profile.xp + randomXp; //wir geben es dem user
-                    profile.save().catch(err => console.log(err)); //und speichern
+                    profile.xp = profile.xp + randomXp; //add xp to user profile
+                    profile.save().catch(err => console.log(err)); //save
                 } else { //level up
                     profile.xp = 0;
-                    if (profile.lvlupMessage === true) { // optional - nachricht senden, wenn es in den profile settings erlaubt wurde
+                    if (profile.lvlupMessage === true) { // optional - send message if enabled in profile settings
                         let lvlUp = new Discord.RichEmbed()
                             .setAuthor('Level Up!', message.author.displayAvatarURL)
                             .setDescription(message.author + ' is now level ' + (profile.lvl + 1))
@@ -145,15 +130,15 @@ bot.on('message', async message => { //message event
             }
             if (isOnCooldown === false) {
                 setTimeout(() => {
-                    xpCooldowns.delete(message.author.id); //wir löschen den cooldown
-                }, 60000); //jede minute kann man xp bekommen
+                    xpCooldowns.delete(message.author.id); //delete xp cooldown
+                }, 60000); //allow giving xp every minute
             }
         }
     })
     /**
-     * Da drunter ist die custom prefix funktion.
+     * guild prefix function
      */
-    let prefixes = [config.prefix]; //wir erstellen einen array und fügen den default prefix hinzu
+    let prefixes = [config.prefix]; //new array
     Guild.findOne({
         serverID: message.guild.id
     }, (err, guild) => {
@@ -164,13 +149,13 @@ bot.on('message', async message => { //message event
             prefixes.push(guild.prefix);
         }
         let prefixnum;
-        if (!message.content.startsWith(prefixes[0]) && !message.content.startsWith(prefixes[1])) return; //wenn die nachricht nicht mit dem prefix beginnt, stoppen
-        if (message.content.startsWith(prefixes[0])) prefixnum = prefixes[0].length; //wenn prefix '-' ist, länge herausfinden
-        else if (message.content.startsWith(prefixes[1])) prefixnum = prefixes[1].length; //wenn prefix custom ist, länge herausfinden
-        let args = message.content.slice(prefixnum).trim().split(/ +/g), //unsere argumente, ein einfacher array
-            commandName = args.shift().toLowerCase(), //ein argument vom args array wegnehmen, und alle zeichen klein machen
-            command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //command namen lesen, evt aliases lesen
-        if (!command) return; //wenn kein command unter diesem namen gefunden wurde, stoppen (evt user bescheid geben)
+        if (!message.content.startsWith(prefixes[0]) && !message.content.startsWith(prefixes[1])) return; //if no prefix in message, return
+        if (message.content.startsWith(prefixes[0])) prefixnum = prefixes[0].length; //if prefix = '-', get length
+        else if (message.content.startsWith(prefixes[1])) prefixnum = prefixes[1].length; //if guild prefix, get length
+        let args = message.content.slice(prefixnum).trim().split(/ +/g), //args, an array
+            commandName = args.shift().toLowerCase(), //take an argument from the array and lowercase it
+            command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //get commandname or aliases
+        if (!command) return; //if no command found, return
         /**
          * Channel disable command
          */
@@ -189,46 +174,48 @@ bot.on('message', async message => { //message event
                 }
             }
             /**
-             * nun kommt das cooldown system
+             * command cooldown function
              */
-            if (!cooldowns.has(command.name)) { //wenn der user keinen cooldown hat...
-                cooldowns.set(command.name, new Discord.Collection()); //...einen für den command hinzufügen
+            if (!cooldowns.has(command.name)) { //if no command cooldown...
+                cooldowns.set(command.name, new Discord.Collection()); //...add one!
             }
-            const now = Date.now(); //jetzt...
-            const timestamps = cooldowns.get(command.name); //...nehmen wir den command-cooldown...
-            const cooldownAmount = (command.cooldown || 3) * 1000; //...und multiplizieren ihn mit 1000 (js verwendet millisekunden für timeouts) - falls wir keinen cooldown eingestellt haben, automatisch 3 sekunden nehmen
+            const now = Date.now(); //now...
+            const timestamps = cooldowns.get(command.name); //...we take the command cooldown...
+            const cooldownAmount = (command.cooldown || 3) * 1000; //...multiply with 1000 (ms), if no command cooldown, default 3 seconds
 
-            if (timestamps.has(message.author.id)) { //wenn cooldown...
-                const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //...nehmen wir die zeit...
+            if (timestamps.has(message.author.id)) { //if cooldown...
+                const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //...take time...
 
-                if (now < expirationTime) { //...schauen ob der cooldown noch gilt...
-                    const timeLeft = (expirationTime - now) / 1000; //...nehmen die wartezeit...
-                    return message.channel.send(`🚫 **${message.author.username}**, calm down 😓! **${timeLeft.toFixed(2)}** second(s) left.`).then(m => { //...und sagen es unserem ungeduldigen freund
-                        m.delete(3500); //und löschen es nach 3.5 sekunden
+                if (now < expirationTime) {
+                    const timeLeft = (expirationTime - now) / 1000;
+                    return message.channel.send(`🚫 **${message.author.username}**, calm down 😓! **${timeLeft.toFixed(2)}** second(s) left.`).then(m => { //return
+                        m.delete(3500); //delete message after 3.5 seconds
                     })
                 }
             }
 
-            timestamps.set(message.author.id, now); //setzen cooldown für den user, falls er keinen cooldown hat
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //timeout funktion, nehmen nach der zeit anschließend cooldown weg
+            timestamps.set(message.author.id, now); //set cooldown, if user has no cooldown
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
             /**
-             * jetzt können endlich unsere commands genutzt werden
+             * run command function
              */
             try {
-                command.execute(bot, message, args); //commands können nun genutzt werden
+                command.execute(bot, message, args); //try executing command
             } catch (error) {
-                console.error(error); //falls was schiefläuft, loggen wir es...
-                message.reply('an error occured! Please contact our staff!'); //...und sagen dem user bescheid
+                console.error(error); //if error, console it
+                message.reply('an error occured! Please contact our staff!');
             }
         })
     })
 })
 
-bot.on('error', err => { //wenn der bot einen error hat
-    console.log(err); //fangen wir ihn und loggen ihn
+/** Bot error event */
+bot.on('error', err => {
+    console.log(err); //catch
 })
 
-process.on('uncaughtException', function (exception) { //falls wir einen uncaughtException error haben, loggen wir es
+/** Process uncaughtException event */
+process.on('uncaughtException', function (exception) {
     console.log(exception);
 });

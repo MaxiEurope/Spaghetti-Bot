@@ -51,6 +51,5 @@ module.exports = {
             return message.channel.send('🚫 The translator API seems not working. We\'re sorry, try again later.');
         }
 
-
     },
 };

@@ -1,5 +1,8 @@
 exports.cDisabled = (var1, var2) => {
-
+    /**
+     * could just use an array including disabled command IDs
+     * will change in future
+     */
     let cchannel = var1,
         commandID = var2;
     let isDisabled = false;

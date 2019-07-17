@@ -16,17 +16,14 @@ module.exports = {
             count = 1;
             return message.channel.send(responses[rnd] + ', here\'s your random emoji: ' + emoji.random().emoji);
         } else {
-            args[0] = args[0].toLowerCase(); //alles klein für mobile users
-            if (isNaN(args[0])) { //wenn args[0] keine nummer ist
+            args[0] = args[0].toLowerCase();
+            if (isNaN(args[0])) {
                 count = 1;
                 return message.channel.send(responses[rnd] + ', here\'s your random emoji: ' + emoji.random().emoji);
-            } else { //wenn doch
-                Math.round(args[0]); //runden
-                if (args[0] < 1 || args[0] > 50) return message.channel.send('😒 OOF, make sure your number is between **1 and 50**!'); //wenn die angebene nummer kleiner 1 oder größer 50 ist: return
+            } else {
+                Math.round(args[0]);
+                if (args[0] < 1 || args[0] > 50) return message.channel.send('😒 OOF, make sure your number is between **1 and 50**!');
                 count = args[0];
-
-
-
 
                 return message.channel.send(responses[rnd] + plural(count) + returnemoji(count));
             }
