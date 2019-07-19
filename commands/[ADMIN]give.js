@@ -6,7 +6,8 @@ module.exports = {
     cooldown: 2,
     async execute(bot, message, args) {
 
-        if (message.author.id !== '393096318123245578' || message.author.id !== '335489881163825152') return;
+        let mods = ['393096318123245578', '335489881163825152'];
+        if (!mods.includes(message.author.id)) return;
         let user;
         try {
             user = bot.users.get(args[0]).id;
