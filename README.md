@@ -27,4 +27,5 @@
 
 ### Status
 
+[![Crystalbotlist](https://crystalbotlist.uk/api/bot/585142238217240577/widget)](https://crystalbotlist.uk/bots/585142238217240577)
 [![Discord Bots](https://discordbots.org/api/widget/585142238217240577.svg)](https://discordbots.org/bot/585142238217240577)

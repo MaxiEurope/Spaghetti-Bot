@@ -44,7 +44,7 @@ let xpCooldowns = new Set(); // xp only once per minute
 
 bot.login(process.env.TOKEN); //login
 
-/** server */ 
+/** server to receive webhooks */ 
 const express = require('express');
 const app = express();
 app.get("/", (request, response) => {
@@ -57,6 +57,21 @@ const listener = app.listen(process.env.PORT, function () {
 const server = require('./server.js');
 server.server();
 
+/** Crystal bot list servercount */
+function postToCrystal(count) {
+    const fetch = require('node-fetch');
+    fetch(`https://crystalbotlist.uk/api/bot/${bot.user.id}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': process.env.crystalbotlist_TOKEN,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                server_count: count
+            })
+        }).then(() => console.log('Posted server count to crystalbotlist.uk!'))
+        .catch(err => console.log('Posting to crystalbotlist.uk failed!\n' + err.message));
+}
 /**
  * Discord Bot list webhook
  */
@@ -78,8 +93,10 @@ bot.once('ready', () => {
     bot.user.setActivity('boiling spaghetti | -help', {
         type: 'LISTENING'
     }); //Playing 'game'
+    postToCrystal(bot.guilds.size);
     setInterval(async () => {
         dbl.postStats(bot.guilds.size);
+        postToCrystal(bot.guilds.size);
         console.log('Servercount posted!');
     }, 900000);
 })
