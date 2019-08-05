@@ -9,7 +9,7 @@ let drink = [':milk:', ':coffee:', ':tea:', ':champagne:', ':wine_glass:', ':coc
 
 module.exports = {
     name: 'rndfood',
-    aliases: ['getfood', 'f', 'randomfood'],
+    aliases: ['getfood', 'randomfood'],
     description: 'Get some random food. Available types: **fruit, vegetable, drink, other**, ex.: `-rndfood vegetable` to get one vegetable. If no parameter given, random food will be chosen.',
     usage: '(type)',
     cooldown: 1,

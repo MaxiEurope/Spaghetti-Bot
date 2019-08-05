@@ -118,7 +118,7 @@ module.exports = {
                                         ended = true;
                                         earnedMoney = 10;
                                         correct = true;
-                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.! - ' +
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**! - ' +
                                             'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                     } else {
                                         ended = true;
