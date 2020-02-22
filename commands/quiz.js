@@ -91,7 +91,8 @@ module.exports = {
                             await msg.channel.stopTyping();
                             let filter = (reaction, user) => (reaction.emoji.name === yes || reaction.emoji.name === no) && user.id === message.author.id;
                             let collector = await msg.createReactionCollector(filter, {
-                                time: 30000
+                                time: 30000,
+                                max: 1
                             });
                             collector.on('collect', async function (c) {
                                 if (c.emoji.name == yes) {
@@ -118,7 +119,7 @@ module.exports = {
                                         ended = true;
                                         earnedMoney = 10;
                                         correct = true;
-                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**! - ' +
+                                        await msg.edit(mcontent + ' - edit: **' + body.results[0].correct_answer + '**' + '\n✅ Yay, you\'re **right**.! - ' +
                                             'difficulty: `' + difficulty + '` **+' + (earnedMoney * multiplier) + ' 💰**');
                                     } else {
                                         ended = true;

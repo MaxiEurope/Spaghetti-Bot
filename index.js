@@ -9,7 +9,8 @@ require('dotenv').config(); //.env file loading
 //djs client
 const Discord = require('discord.js'); //main module for our bot
 const bot = new Discord.Client({ //the discord client
-    fetchAllMembers: true
+    fetchAllMembers: true,
+    disableEveryone: true
 });
 bot.commands = new Discord.Collection();
 //other
@@ -44,7 +45,7 @@ let xpCooldowns = new Set(); // xp only once per minute
 
 bot.login(process.env.TOKEN); //login
 
-/** server to receive webhooks */ 
+/** server to receive webhooks */
 const express = require('express');
 const app = express();
 app.get("/", (request, response) => {
@@ -57,21 +58,6 @@ const listener = app.listen(process.env.PORT, function () {
 const server = require('./server.js');
 server.server();
 
-/** Crystal bot list servercount */
-function postToCrystal(count) {
-    const fetch = require('node-fetch');
-    fetch(`https://crystalbotlist.uk/api/bot/${bot.user.id}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': process.env.crystalbotlist_TOKEN,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                server_count: count
-            })
-        }).then(() => console.log('Posted server count to crystalbotlist.uk!'))
-        .catch(err => console.log('Posting to crystalbotlist.uk failed!\n' + err.message));
-}
 /**
  * Discord Bot list webhook
  */
@@ -93,15 +79,14 @@ bot.once('ready', () => {
     bot.user.setActivity('boiling spaghetti | -help', {
         type: 'LISTENING'
     }); //Playing 'game'
-    postToCrystal(bot.guilds.size);
     setInterval(async () => {
         dbl.postStats(bot.guilds.size);
-        postToCrystal(bot.guilds.size);
         console.log('Servercount posted!');
     }, 900000);
 })
 /** Bot guildCreate event */
 bot.on("guildCreate", (guild) => { //new guild
+    if (guild.available === false) return;
     let owner = bot.users.get('393096318123245578');
     owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
@@ -109,6 +94,7 @@ bot.on("guildCreate", (guild) => { //new guild
 });
 /** Bot guildDelete event */
 bot.on("guildDelete", (guild) => { //guild left
+    if (guild.available === false) return;
     let owner = bot.users.get('393096318123245578');
     owner.send(`📤**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
@@ -116,7 +102,6 @@ bot.on("guildDelete", (guild) => { //guild left
 });
 /** Bot message event */
 bot.on('message', async message => {
-    // dogstatsd.increment(message.guild.id);
     /**
      * basic things
      */
