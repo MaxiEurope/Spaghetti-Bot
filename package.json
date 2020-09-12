@@ -24,7 +24,7 @@
         "mongoose": "^5.7.5",
         "node-dogstatsd": "0.0.7",
         "node-emoji": "^1.10.0",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "parse-color": "^1.0.0",
         "translate-google": "^1.3.5"
     },
