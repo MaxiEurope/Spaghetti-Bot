@@ -1,0 +1,55 @@
+const Discord = require('discord.js');
+
+module.exports = {
+    name: 'help',
+    description: 'List my commands or get some info about a specific command.',
+    aliases: ['commands'],
+    usage: ['-help <command>'],
+    cooldown: 2,
+    async execute(bot, message, args) {
+
+        const embed = new Discord.MessageEmbed();
+
+        if (!args.length) {
+            embed.setAuthor('List of my commands', bot.user.displayAvatarURL())
+                .addField('🗒 General', '`avatar` `help` `ping` `stats`')
+                .addField('😂 Fun', '`advice` `emoji` `food`')
+                .addField('💰 Economy', '`coins` `daily` `feed` `leaderboard` `slots`')
+                .addField('❓ Quiz', '`quiz`')
+                .addField('🖼 Profile', '`profile`')
+                .addField('🖇 Util', '`enable` `disable` `prefix` `translate`')
+                .setDescription('My prefix is `-`. Run commands with `-<command>`.\n' +
+                    'Need help 🤔? Use `-help <command>`.\n' +
+                    'Make sure to replace `<command>` with a command name.')
+                .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
+                    '◽ [Support server](https://discord.gg/W5Zj3G2) ' +
+                    '◽ [Vote for more coins on top.gg](https://top.gg/bot/585142238217240577/vote)')
+                .addField('Latest news - 27th oct 2020', '```recoded bot :^)```')
+                .setFooter('Arguments between <> are required')
+                .setColor('#00ff00');
+            message.channel.send(embed).catch(() => {});
+        } else {
+            const {
+                commands
+            } = message.client;
+
+            const name = args[0].toLowerCase();
+            const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+
+            if (!command) return message.channel.send('⛔ Command not found. Get a list of available commands by simply running `-help`.').catch(() => {});
+
+            embed.setAuthor(`Help for command: ${command.name}`, bot.user.displayAvatarURL())
+                .setColor('#00ff00')
+                .setFooter('Arguments between <> are required, () are optional');
+
+            if (command.aliases) embed.addField('🏷 Aliases:', `\`${command.aliases.join('` `')}\``);
+            if (command.cooldown) embed.addField('⏰ Cooldown:', `\`${command.cooldown} second(s)\``);
+            if (command.example) embed.addField('💡 Example:', `\`${command.example.join('`\n`')}\``);
+            if (command.description) embed.addField('📋 Description:', command.description);
+            if (command.usage) embed.addField('🔋 Usage:', `\`${command.usage}\``);
+
+            message.channel.send(embed).catch(() => {});
+        }
+
+    },
+};

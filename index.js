@@ -1,239 +1,242 @@
 /**
  * 
- * Welcome! This is spaghetti bot!
+ * Spaghetti bot for discord lol
  * 
  */
-
-/* eslint-disable no-undef */
-require('dotenv').config(); //.env file loading
-//djs client
-const Discord = require('discord.js'); //main module for our bot
-const bot = new Discord.Client({ //the discord client
-    fetchAllMembers: true,
-    disableEveryone: true
-});
-bot.commands = new Discord.Collection();
-//other
+require('dotenv').config();
+require('moment-duration-format');
+/** load modules */
 const fs = require('fs');
-const config = require('./config/config.json');
-const disableCommand = require('./util/disableCommand.js');
-const Vote = require('./util/voteHandler.js');
-const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
-    useNewUrlParser: true
+const topgg = require('dblapi.js');
+const bfd = require('bfdapi.js');
+const util = require('./src/util/util.js');
+/** discord + client */
+const Discord = require('discord.js-light');
+const bot = new Discord.Client({
+    cacheChannels: false,
+    cacheEmojis: false,
+    cacheGuilds: true,
+    cacheOverwrites: false,
+    cachePresences: false,
+    cacheRoles: true,
+    fetchAllMembers: false,
+    messageSweepInterval: 15,
+    messageCacheMaxSize: 0,
+    disableMentions: 'all',
+    ws: {
+        intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS']
+    },
+    presence: {
+        activity: {
+            name: '-help 🍝',
+            type: 'LISTENING'
+        }
+    },
+    disabledEvents: [
+        'INVITE_CREATE',
+        'INVITE_DELETE',
+        'GUILD_MEMBER_UPDATE',
+        'GUILD_MEMBER_AVAILABLE',
+        'GUILD_MEMBER_SPEAKING',
+        'GUILD_INTEGRATIONS_UPDATE',
+        'GUILD_ROLE_CREATE',
+        'GUILD_ROLE_DELETE',
+        'GUILD_ROLE_UPDATE',
+        'GUILD_BAN_ADD',
+        'GUILD_BAN_REMOVE',
+        'GUILD_EMOJIS_UPDATE',
+        'CHANNEL_DELETE',
+        'CHANNEL_UPDATE',
+        'GUILD_EMOJI_CREATE',
+        'GUILD_EMOJI_DELETE',
+        'CHANNEL_PINS_UPDATE',
+        'MESSAGE_DELETE',
+        'MESSAGE_UPDATE',
+        'MESSAGE_DELETE_BULK',
+        'MESSAGE_BULK_DELETE',
+        'MESSAGE_REACTION_REMOVE_ALL',
+        'MESSAGE_REACTION_REMOVE_EMOJI',
+        'PRESENCE_UPDATE',
+        'TYPING_START',
+        'TYPING_STOP',
+        'VOICE_BROADCAST_SUBSCRIBE',
+        'VOICE_BROADCAST_UNSUBSCRIBE',
+        'VOICE_STATE_UPDATE',
+        'VOICE_SERVER_UPDATE',
+        'WEBHOOKS_UPDATE'
+    ]
 });
-const Guild = require('./util/mongo/guild.js'); //guild database - prefix
-const Channel = require('./util/mongo/channel.js'); //channel database - disabled commands
-const Profile = require('./util/mongo/profile.js'); //profile database - xp
-/**
- * we read the ./commands directory and filter files which name ends with .js
- * load and set them into the commands collection
- */
-const cmdf = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-for (const file of cmdf) {
-    const command = require(`./commands/${file}`);
+bot.login(process.env.DISCORD_TOKEN).catch(e => util.log(e));
+/** load commands */
+bot.commands = new Discord.Collection();
+const commandsInDir = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
+for (const file of commandsInDir) {
+    const command = require(`./src/commands/${file}`);
     bot.commands.set(command.name, command);
 }
-/** datadoghq */
-// const StatsD = require('node-dogstatsd').StatsD;
-// const dogstatsd = new StatsD()
-/**
- * command and xp cooldown
+/** mongoose */
+const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify:false
+});
+const Profile = require('./src/util/mongo/profile.js');
+/** topgg / votinghandler*/
+const topggClient = new topgg(process.env.TOPGG_TOKEN);
+const bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
+const vote = require('./src/util/vote.js');
+/** cooldowns / prefixes*/
+const cmdCooldown = new Map();
+const xpCooldown = new Set();
+const defaultPrefix = '-';
+const guildPrefixes = new Map();
+/** 
+ * bot events
  */
-let cooldowns = new Discord.Collection();
-let xpCooldowns = new Set(); // xp only once per minute
-
-bot.login(process.env.TOKEN); //login
-
-/** server to receive webhooks */
-const express = require('express');
-const app = express();
-app.get("/", (request, response) => {
-    console.log("📋 " + Date.now() + " ping received");
-    response.sendStatus(200);
-});
-const listener = app.listen(process.env.PORT, function () {
-    console.log('Server is listening on port ' + listener.address().port);
-});
-const server = require('./server.js');
-server.server();
-
-/**
- * Discord Bot list webhook
- */
-const DBL = require('dblapi.js');
-const dbl = new DBL(process.env.DBL, {
-    webhookServer: listener,
-    webhookAuth: process.env.DBLAUTH
-});
-dbl.webhook.on('ready', () => {
-    console.log('DBL - Webhook ready.');
-});
-dbl.webhook.on('vote', vote => {
-    Vote.handler(dbl, bot, vote); //voteHanlder
-})
-
-/** Bot ready event */
+/** ready */
 bot.once('ready', () => {
-    console.log(bot.user.username + ' is online!');
-    bot.user.setActivity('boiling spaghetti | -help', {
-        type: 'LISTENING'
-    }); //Playing 'game'
-    setInterval(async () => {
-        dbl.postStats(bot.guilds.size);
-        console.log('Servercount posted!');
+    util.log(`${bot.user.tag} is now online!`);
+    bot.users.fetch('393096318123245578', true);
+    /** load prefixes */
+    bot.guilds.cache.forEach(async g => {
+        const _prefix = await util.getPrefix(g.id);
+        if (_prefix) {
+            guildPrefixes.set(g.id, _prefix);
+        }
+    });
+    /** load emojis */
+    bot.coin = '<:coin:770386683471331438>';
+    bot.clear = '<:TEclear:538475982542340163>';
+    /** vote handler & post server count */
+    vote.handler(bot, topggClient);
+    setInterval(() => {
+        topggClient.postStats(bot.guilds.cache.size).then(() => {
+            util.log('Posted server count to top.gg');
+        }).catch(() => {});
+        bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
+            util.log('Posted stats to botsfordiscord.com');
+        }).catch(() => {});
     }, 900000);
-})
-/** Bot guildCreate event */
-bot.on("guildCreate", (guild) => { //new guild
-    if (guild.available === false) return;
-    let owner = bot.users.get('393096318123245578');
+});
+/** guildCreate */
+bot.on('guildCreate', (guild) => {
+    if (!guild.available) return;
+    const owner = bot.users.cache.get('393096318123245578');
     owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
-        `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
+        `👑**owner:  ${guild.owner} | ID: ${guild.ownerID}**`);
 });
-/** Bot guildDelete event */
-bot.on("guildDelete", (guild) => { //guild left
-    if (guild.available === false) return;
-    let owner = bot.users.get('393096318123245578');
+/** guildDelete */
+bot.on('guildDelete', (guild) => {
+    if (!guild.available) return;
+    const owner = bot.users.cache.get('393096318123245578');
     owner.send(`📤**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
-        `🏡**owner: ${bot.users.get(guild.ownerID).username} | ${guild.ownerID} | ${guild.owner}**`);
+        `👑**owner:  ${guild.owner} | ID: ${guild.ownerID}**`);
 });
-/** Bot message event */
+/** message */
 bot.on('message', async message => {
-    /**
-     * basic things
-     */
-    if (message.author.bot) return; //if bot, return
-    if (message.channel.type === 'dm') return console.log('New message from ' + message.author.username + ': ' + message.content + ''); //if channel type dm, return
-    /**
-     * xp system
-     */
-    Profile.findOne({
+    if (message.channel.type !== 'text') return;
+    /** xp system */
+    const res = await Profile.findOne({
         userID: message.author.id
-    }, (err, profile) => {
-        if (err) console.log(err);
-        if (!profile) {
-            //ignore, user has to create profile by using the profile command
-        } else if (profile.xp >= 0) {
-            let isOnCooldown;
-            if (xpCooldowns.has(message.author.id)) {
-                isOnCooldown = true;
-                //no xp, cooldown
-            } else {
-                xpCooldowns.add(message.author.id); //add cooldown
-                let randomXp = Math.round(Math.random() * (25 - 15 + 1) + 15); //random xp 15-25
-                if (profile.xp + randomXp < ((5 * (Math.pow(profile.lvl, 2))) + (50 * profile.lvl) + 100)) {
-                    profile.xp = profile.xp + randomXp; //add xp to user profile
-                    profile.save().catch(err => console.log(err)); //save
-                } else { //level up
-                    profile.xp = 0;
-                    if (profile.lvlupMessage === true) { // optional - send message if enabled in profile settings
-                        let lvlUp = new Discord.RichEmbed()
-                            .setAuthor('Level Up!', message.author.displayAvatarURL)
-                            .setDescription(message.author + ' is now level ' + (profile.lvl + 1))
-                            .setColor(profile.color)
-                            .setFooter('Edit: -profile settings');
-                        message.channel.send(lvlUp);
+    });
+    if (res === null) {
+        await new Profile({
+            userID: message.author.id,
+            xp: 0,
+            lvl: 0,
+            creationDate: Date.now(),
+            shortDesc: 'A spy 🕵️',
+            longDesc: 'Noone knows 😱',
+            color: '#00ff00',
+            lvlupMessage: false
+        }).save().catch(() => {});
+    } else {
+        if (message.author.bot) return;
+        if (res.xp >= 0) {
+            if (!xpCooldown.has(message.author.id)) {
+                xpCooldown.add(message.author.id);
+                const rndXp = Math.round(Math.random() * (25 - 15 + 1) + 15);
+                if (res.xp + rndXp < ((5 * (Math.pow(res.lvl, 2))) + (50 * res.lvl) + 100)) {
+                    res.xp = res.xp + rndXp;
+                    await res.save().catch(() => {});
+                } else {
+                    res.xp = 0;
+                    if (res.lvlupMessage === true) {
+                        const embed = new Discord.MessageEmbed()
+                            .setAuthor('Level Up!', message.author.displayAvatarURL({
+                                dynamic: true
+                            }))
+                            .setDescription(`**${message.author.tag}** leveled up to lvl **${(res.lvl + 1)}**!`)
+                            .setColor(res.color)
+                            .setFooter('edit profile settings with: -profile settings');
+                        message.channel.send(embed);
                     }
-                    profile.lvl = profile.lvl + 1; //+ 1 level
-                    profile.save().catch(err => console.log(err));
+                    res.lvl = res.lvl + 1;
+                    await res.save().catch(() => {});
                 }
-                isOnCooldown = false;
-            }
-            if (isOnCooldown === false) {
                 setTimeout(() => {
-                    xpCooldowns.delete(message.author.id); //delete xp cooldown
-                }, 60000); //allow giving xp every minute
+                    xpCooldown.delete(message.author.id);
+                }, 60000);
             }
         }
-    })
-    /**
-     * guild prefix function
-     */
-    let prefixes = [config.prefix]; //new array
-    Guild.findOne({
-        serverID: message.guild.id
-    }, (err, guild) => {
-        if (err) console.log(err);
-        if (!guild || guild.active === false) {
-            prefixes.push(config.prefix);
-        } else {
-            prefixes.push(guild.prefix);
+    }
+    /** check prefix */
+    let prefix, prefixes = [defaultPrefix];
+    if (guildPrefixes.has(message.guild.id)) {
+        prefixes.push(guildPrefixes.get(message.guild.id));
+    }
+    for (const p of prefixes) {
+        if (message.content.toLowerCase().startsWith(p.toLowerCase())) {
+            prefix = p;
+            break;
         }
-        let prefixnum;
-        if (!message.content.startsWith(prefixes[0]) && !message.content.startsWith(prefixes[1])) return; //if no prefix in message, return
-        if (message.content.startsWith(prefixes[0])) prefixnum = prefixes[0].length; //if prefix = '-', get length
-        else if (message.content.startsWith(prefixes[1])) prefixnum = prefixes[1].length; //if guild prefix, get length
-        let args = message.content.slice(prefixnum).trim().split(/ +/g), //args, an array
-            commandName = args.shift().toLowerCase(), //take an argument from the array and lowercase it
-            command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //get commandname or aliases
-        if (!command) return; //if no command found, return
-        /**
-         * Channel disable command
-         */
-        const commandID = command.id;
-        Channel.findOne({
-            channelID: message.channel.id
-        }, (err, cchannel) => {
-            if (err) console.log(err);
-            if (!cchannel) {
-                //nichts
-            } else {
-                if (disableCommand.cDisabled(cchannel, commandID) === true) {
-                    return message.channel.send('🚫 **That command is disabled in this channel.**').then(m => {
-                        m.delete(4000);
-                    })
-                }
-            }
-            /**
-             * command cooldown function
-             */
-            if (!cooldowns.has(command.name)) { //if no command cooldown...
-                cooldowns.set(command.name, new Discord.Collection()); //...add one!
-            }
-            const now = Date.now(); //now...
-            const timestamps = cooldowns.get(command.name); //...we take the command cooldown...
-            const cooldownAmount = (command.cooldown || 3) * 1000; //...multiply with 1000 (ms), if no command cooldown, default 3 seconds
+    }
+    if (prefix === undefined) return;
+    /** args */
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const commandName = args.shift().toLowerCase();
+    /** get command */
+    const cmd = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    if (!cmd) return;
+    /** check if disabled */
+    const disabled = await util.isDisabled(message.channel.id, cmd.name);
+    if (disabled) return;
+    /** manage command cooldowns */
+    const commandCooldown = (cmd.cooldown || 3) * 1000;
+    if (!cmdCooldown.has(`${message.author.id}-${cmd.name}`)) {
+        cmdCooldown.set(`${message.author.id}-${cmd.name}`, Date.now() + commandCooldown);
+        /** run command */
+        try {
+            cmd.execute(bot, message, args);
+        } catch (e) {
+            util.log(e);
+        }
+        setTimeout(() => cmdCooldown.delete(`${message.author.id}-${cmd.name}`),commandCooldown);
+    } else {
+        const timeStamp = cmdCooldown.get(`${message.author.id}-${cmd.name}`);
+        if (Date.now() < timeStamp) {
+            const timeLeft = (timeStamp - Date.now());
+            return message.channel.send(`😓 Calm down a bit and wait \`${(timeLeft/1000).toFixed(2)}\`s before using **${cmd.name}**!`).then(msg => {
+                msg.delete({
+                    timeout: timeLeft + 3000
+                }).catch(() => {});
+            }).catch(() => {});
+        }
+    }
 
-            if (timestamps.has(message.author.id)) { //if cooldown...
-                const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //...take time...
-
-                if (now < expirationTime) {
-                    const timeLeft = (expirationTime - now) / 1000;
-                    return message.channel.send(`🚫 **${message.author.username}**, calm down 😓! **${timeLeft.toFixed(2)}** second(s) left.`).then(m => { //return
-                        m.delete(3500); //delete message after 3.5 seconds
-                    })
-                }
-            }
-
-            timestamps.set(message.author.id, now); //set cooldown, if user has no cooldown
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
-            /**
-             * run command function
-             */
-            try {
-                command.execute(bot, message, args); //try executing command
-            } catch (error) {
-                console.error(error); //if error, console it
-                message.reply('an error occured! Please contact our staff!');
-            }
-        })
-    })
-})
-
-/** Bot error event */
-bot.on('error', err => {
-    console.log(err); //catch
-})
-
-/** Process uncaughtException event */
-process.on('uncaughtException', function (exception) {
-    console.log(exception);
 });
-/** Process UnhandledPromiseRejectionWarning event */
-process.on('UnhandledPromiseRejectionWarning', function (RejectionWarning) {
-    console.log(RejectionWarning);
+/** error */
+bot.on('error', err => {
+    util.log(err);
+});
+/** process uncaughtException */
+process.on('uncaughtException', (exception) => {
+    util.log(exception.stack);
+});
+/** process unhandledRejection */
+process.on('unhandledRejection', (rejection) => {
+    util.log(rejection);
 });
