@@ -6,10 +6,11 @@ const validSettings = ['info', 'description', 'color', 'lvlup'];
 
 module.exports = {
     name: 'profile',
-    example: ['-profile @User', '-profile settings color #000000', '-profile settings info idk who I am'],
+    example: ['-profile @User', '-profile settings color #000000', '-profile settings info idk who I am', '-profile settings lvlup true'],
     description: 'Your profile. Earn xp and level up by chatting & using commands.' +
         'View and change your profile settings using `-profile settings`.\nYou can also view an users profile by mentioning them.\n' +
-        'You can earn a maximum of **25** xp once per minute.',
+        'You can earn a maximum of **25** xp once per minute.\n' +
+        `Valid settings: \`${validSettings.join('` `')}\``,
     usage: '-profile settings (setting) (value)',
     cooldown: 5,
     async execute(bot, message, args) {
@@ -31,7 +32,9 @@ module.exports = {
             viewProfile(message.author);
         }
 
-        function viewProfile(us) {
+        async function viewProfile(us) {
+            const coins = await util.addCoins(us.id, 0);
+            const cmds = await util.addCmd(us.id, 0);
             Profile.findOne({
                 userID: us.id
             }, (err, p) => {
@@ -46,6 +49,8 @@ module.exports = {
                         }))
                         .addField('Level', `\`${p.lvl}\``, true)
                         .addField('XP', `\`${util.comma(p.xp)} / ${util.comma(((5 * (Math.pow(p.lvl, 2))) + (50 * p.lvl) + 100))}\` ${bot.xp}`, true)
+                        .addField('Coins', `**${util.comma(coins)}** ${bot.coin}`, false)
+                        .addField('Commands ran', `**${util.comma(cmds)}**`, true)
                         .addField('Info', p.shortDesc, false)
                         .addField('Description', p.longDesc, true)
                         .setColor(p.color)

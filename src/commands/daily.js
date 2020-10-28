@@ -50,7 +50,7 @@ module.exports = {
                 const dur = moment.duration((res.last+86400000) - Date.now()).format(' H [H], m [M], s [S]', {
                     trim: 'both'
                 });
-                message.channel.send(`⛔ You can claim your daily in ${dur}.`).catch(() => {});
+                message.channel.send(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});
             }
         }
 

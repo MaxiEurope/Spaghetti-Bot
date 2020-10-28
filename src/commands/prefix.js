@@ -22,16 +22,29 @@ module.exports = {
             if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.channel.send('⛔ You require the permission `Manage Channels`!').catch(() => {});
             const prefix = args[0];
             if (prefix === '-') {
-                await Prefix.findByIdAndDelete({
+                await Prefix.findOneAndDelete({
                     serverID: message.guild.id
-                });
+                }).catch(() => {});
+                bot.guildPrefixes.delete(message.guild.id);
                 message.channel.send('✅ Set the server prefix to `-` (removed it).').catch(() => {});
             } else {
                 if (util.count(prefix) > 10) return message.channel.send('⛔ That\'s a bit too long! (`10` characters max)').catch(() => {});
-                await new Prefix({
-                    serverID: message.guild.id,
-                    prefix: prefix
-                }).save().catch(() => {});
+                const res = await Prefix.findOne({
+                    serverID: message.guild.id
+                });
+                if (!res) {
+                    await new Prefix({
+                        serverID: message.guild.id,
+                        prefix: prefix
+                    }).save().catch(() => {});
+                } else {
+                    await Prefix.findOneAndUpdate({
+                        serverID: message.guild.id
+                    }, {
+                        prefix: prefix
+                    }).catch(() => {});
+                }
+                bot.guildPrefixes.set(message.guild.id, prefix);
                 message.channel.send(`✅ Set the server prefix to \`${prefix}\`.`).catch(() => {});
             }
         }

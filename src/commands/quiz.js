@@ -11,7 +11,7 @@ module.exports = {
     async execute(bot, message) {
 
         const abcd = ['🇦', '🇧', '🇨', '🇩'];
-        const url = 'https://opentdb.com/api.php?amount=1&difficulty=medium&type=multiple';
+        const url = 'https://opentdb.com/api.php?amount=1&type=multiple';
         let multiplier = 0;
         let ended = false;
         let res = 0;
@@ -67,12 +67,12 @@ module.exports = {
                             const index = abcd.indexOf(r.emoji.name);
 
                             if (answers[index] === correctAnswer) {
-                                res = 15000-Math.round(((Date.now() - start) / 2000) * multiplier);
+                                res = 15000 - Math.round(((Date.now() - start) / 2000) * multiplier);
                                 msg.edit(`🎉 Correct! You got **${util.comma(res)}** ${bot.coin}.`, {
                                     embed: null
                                 }).catch(() => {});
                             } else {
-                                res = (1000 * multiplier) * (-1);
+                                res = (150 * multiplier) * (-1);
                                 msg.edit(`😒 Wrong! You lost **${util.comma(res*(-1))}** ${bot.coin}.`, {
                                     embed: null
                                 }).catch(() => {});

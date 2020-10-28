@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema({
     userID: String,
     xp: Number,
-    totXp:Number,
+    totXp: Number,
     lvl: Number,
     creationDate: Number,
     shortDesc: String,

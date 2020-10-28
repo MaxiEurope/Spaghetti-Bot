@@ -67,6 +67,10 @@ const bot = new Discord.Client({
     ]
 });
 bot.login(process.env.DISCORD_TOKEN).catch(e => util.log(e));
+/** load emojis */
+bot.coin = '<:coin:770386683471331438>';
+bot.clear = '<:TEclear:538475982542340163>';
+bot.xp = '<:xp:771001757631381535>';
 /** load commands */
 bot.commands = new Discord.Collection();
 const commandsInDir = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
@@ -88,7 +92,7 @@ const vote = require('./src/util/vote.js');
 const cmdCooldown = new Map();
 const xpCooldown = new Set();
 const defaultPrefix = '-';
-const guildPrefixes = new Map();
+bot.guildPrefixes = new Map();
 /** 
  * bot events
  */
@@ -100,13 +104,9 @@ bot.once('ready', () => {
     bot.guilds.cache.forEach(async g => {
         const _prefix = await util.getPrefix(g.id);
         if (_prefix) {
-            guildPrefixes.set(g.id, _prefix);
+            bot.guildPrefixes.set(g.id, _prefix);
         }
     });
-    /** load emojis */
-    bot.coin = '<:coin:770386683471331438>';
-    bot.clear = '<:TEclear:538475982542340163>';
-    bot.xp = '<:xp:771001757631381535>';
     /** vote clients */
     bot.topggClient = new topgg(process.env.TOPGG_TOKEN);
     bot.bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
@@ -117,17 +117,21 @@ bot.once('ready', () => {
             util.log('Posted server count to top.gg');
         }).catch(() => {});
         bot.bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
-            util.log('Posted stats to botsfordiscord.com');
+            util.log('Posted server count to botsfordiscord.com');
         }).catch(() => {});
     }, 900000);
 });
 /** guildCreate */
-bot.on('guildCreate', (guild) => {
+bot.on('guildCreate', async (guild) => {
     if (!guild.available) return;
     const owner = bot.users.cache.get('393096318123245578');
     owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
         `👫**members: ${guild.memberCount}**\n` +
         `👑**owner:  ${guild.owner} | ID: ${guild.ownerID}**`);
+    const _prefix = await util.getPrefix(guild.id);
+    if (_prefix) {
+        bot.guildPrefixes.set(guild.id, _prefix);
+    }
 });
 /** guildDelete */
 bot.on('guildDelete', (guild) => {
@@ -156,6 +160,7 @@ bot.on('message', async message => {
             color: '#00ff00',
             lvlupMessage: false
         }).save().catch(() => {});
+        if (message.author.bot) return;
     } else {
         if (message.author.bot) return;
         if (res.xp >= 0) {
@@ -190,16 +195,16 @@ bot.on('message', async message => {
     }
     /** check prefix */
     let prefix, prefixes = [defaultPrefix];
-    if (guildPrefixes.has(message.guild.id)) {
-        prefixes.push(guildPrefixes.get(message.guild.id));
+    if (bot.guildPrefixes.has(message.guild.id)) {
+        prefixes.push(bot.guildPrefixes.get(message.guild.id));
     }
     for (const p of prefixes) {
-        if (message.content.toLowerCase().startsWith(p.toLowerCase())) {
+        if (message.content.startsWith(p)) {
             prefix = p;
             break;
         }
     }
-    if (prefix === undefined) return;
+    if(!prefix) return;
     /** args */
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
@@ -216,6 +221,7 @@ bot.on('message', async message => {
             /** run command */
             try {
                 cmd.execute(bot, message, args);
+                util.addCmd(message.author.id, 1);
             } catch (e) {
                 util.log(e);
             }

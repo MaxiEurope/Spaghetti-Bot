@@ -15,10 +15,6 @@ exports.handler = (bot, dbl) => {
             });
         }
 
-        res.status(200).send({
-            status: 200
-        });
-
         const body = JSON.parse(req.body);
         const multi = (await dbl.isWeekend()) ? 2 : 1;
         const rndCoins = Math.round(Math.random() * (1100 - 700 + 1) + 700) * multi;
@@ -27,11 +23,15 @@ exports.handler = (bot, dbl) => {
         const user = await util.getUser(bot, body.user);
         if (user) {
             try {
-                user.send(`🍝 **Thank you for voting!** You received **${util.comma(rndCoins)}** ${bot.coin}`);
+                user.send(`🍝 **Thank you for voting!** You received **${util.comma(rndCoins)}** ${bot.coin}`).catch(() => {});
             } catch (e) {
-                return;
+                //
             }
         }
+
+        res.status(200).send({
+            status: 200
+        });
 
     });
 

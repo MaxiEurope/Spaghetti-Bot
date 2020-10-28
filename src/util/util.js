@@ -1,6 +1,7 @@
 /** modules */
 const momentTimezone = require('moment-timezone');
 const Coins = require('./mongo/coins.js');
+const Commands = require('./mongo/commands.js');
 const Channel = require('./mongo/channel.js');
 const Feed = require('./mongo/feed.js');
 const Prefix = require('./mongo/prefix.js');
@@ -96,6 +97,26 @@ exports.addFeed = async (ID, amount) => {
         return amount;
     } else {
         await Feed.findOneAndUpdate({
+            userID: ID
+        }, {
+            total: res.total + amount
+        });
+        return res.total + amount;
+    }
+};
+
+exports.addCmd = async (ID, amount) => {
+    const res = await Commands.findOne({
+        userID: ID
+    });
+    if (res === null) {
+        await new Commands({
+            userID: ID,
+            total: amount
+        }).save().catch(() => {});
+        return amount;
+    } else {
+        await Commands.findOneAndUpdate({
             userID: ID
         }, {
             total: res.total + amount

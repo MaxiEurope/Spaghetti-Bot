@@ -25,8 +25,8 @@ module.exports = {
             }
         }]).exec();
 
-        message.channel.send(`😋 You gave **Discord Wumpus** 1x ${rndEmo}. Hungry thing... (+ **${rndCoi}** ${bot.coin})\n` +
-            `${bot.clear} [total/global points] \`[${now}/${total[0].total})\``).catch(() => {});
+        message.channel.send(`😋 You gave **Discord Wumpus** 1x ${rndEmo}. (+ **${rndCoi}** ${bot.coin})\n` +
+            `${bot.clear} [your/global] points: \`[${now}/${total[0].total}]\``).catch(() => {});
 
     },
 };
