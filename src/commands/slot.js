@@ -12,7 +12,7 @@ module.exports = {
 
         const coins = await util.addCoins(message.author.id, 0);
 
-        if (!args.length) return message.channel.send(`ℹ Usage: \`${this.example}\``).catch(() => {});
+        if (!args.length) return message.channel.send(`ℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
         let amount = 0;
         if (!util.isNum(args[0])) {

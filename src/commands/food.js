@@ -9,8 +9,8 @@ module.exports = {
     name: 'food',
     aliases: ['randomfood'],
     example: ['-food fruits'],
-    description: 'Will give you some random food. Available types: `fruits`, `vegetables`, `drinks`, `fatfood`... yea, fatfood. Some hamburgers will make you feel fat.',
-    usage: '-food (type)',
+    description: 'Will give you some random food. Available categories: `fruits`, `vegetables`, `drinks`, `fatfood`... yea, fatfood. Some hamburgers will make you feel fat.',
+    usage: '-food (category)',
     cooldown: 1,
     async execute(bot, message, args) {
 

@@ -51,6 +51,18 @@ exports.getUser = async (bot, arg) => {
     }
 };
 
+exports.maxMinus = (x) => {
+    return ((5 * (Math.pow(x - 1, 2))) + (50 * (x - 1)) + 100);
+};
+
+exports.totXP = (lvl, xp) => {
+    let res = xp;
+    for (let i = 0; i < lvl; i++) {
+        res += this.maxMinus(i);
+    }
+    return res;
+};
+
 /** db methods */
 exports.addCoins = async (ID, amount) => {
     const res = await Coins.findOne({

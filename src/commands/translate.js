@@ -3,13 +3,13 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'translate',
-    example: ['-translate This bot sucks /de'],
+    example: ['-translate How are you? /de'],
     description: 'Translate your message in whatever language you like. English is the default language, if nothing else is chosen.',
     usage: '<text> (/language)',
     cooldown: 5,
     async execute(bot, message, args) {
 
-        if (!args.length) return message.channel.send(`⛔ How about providing a message?\nℹ Usage: \`${this.example}\``).catch(() => {});
+        if (!args.length) return message.channel.send(`⛔ How about providing a message?\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
         let language = args[args.length - 1];
         if (language.charAt(0) == '/') {

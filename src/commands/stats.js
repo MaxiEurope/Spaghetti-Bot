@@ -21,7 +21,8 @@ module.exports = {
                 `Uptime: \`${duration}\`\n` +
                 `Ping: \`${(bot.ws.ping)}ms\`\n` +
                 `Total servers: \`${bot.guilds.cache.size}\`\n` +
-                `Cached users: \`${bot.users.cache.size}\``, true)
+                `Cached users: \`${bot.users.cache.size}\`\n`+
+                `RAM usage: \`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / 500 MB\``, true)
             .addField('🏡 Server stats \n',
                 `Name: ${message.guild.name}\n` +
                 `ID: \`${message.guild.id}\`\n` +

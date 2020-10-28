@@ -5,6 +5,7 @@ module.exports = {
     name: 'prefix',
     example: ['-prefix sp!'],
     description: 'Set an additional prefix for your server. You can remove your prefix by using `-prefix -`, which will basically set it to the default one.',
+    usage: '-prefix (newprefix)',
     cooldown: 5,
     async execute(bot, message, args) {
 

@@ -44,8 +44,8 @@ module.exports = {
                         .setThumbnail(us.displayAvatarURL({
                             dynamic: true
                         }))
-                        .addField('Level', p.lvl, true)
-                        .addField('XP', `${util.comma(p.xp)}/${util.comma(((5 * (Math.pow(p.lvl, 2))) + (50 * p.lvl) + 100))}`, true)
+                        .addField('Level', `\`${p.lvl}\``, true)
+                        .addField('XP', `\`${util.comma(p.xp)} / ${util.comma(((5 * (Math.pow(p.lvl, 2))) + (50 * p.lvl) + 100))}\` ${bot.xp}`, true)
                         .addField('Info', p.shortDesc, false)
                         .addField('Description', p.longDesc, true)
                         .setColor(p.color)

@@ -14,21 +14,21 @@ module.exports = {
             commands
         } = message.client;
         let allCmds = [];
-        commands.forEach(c => {
+        await commands.forEach(c => {
             if (!['eval', 'enable', 'disable'].some(e => c.name === e)) {
                 allCmds.push(c.name);
             }
         });
 
-        let channel = message.channel;
-        if (message.mentions.channels) {
-            channel = message.mentions.channels.first();
+        let channel = message.channel.id;
+        if (message.mentions.channels.size > 0) {
+            channel = message.mentions.channels.first().id;
         }
 
         if (!args.length) {
-            listCommands(channel.id);
+            listCommands(channel);
         } else {
-            enableCommands(channel.id, args);
+            enableCommands(channel, args);
         }
 
         async function enableCommands(ID, args) {
@@ -53,7 +53,10 @@ module.exports = {
                     disabled: []
                 }).save().catch(() => {});
             } else {
-                const arrayDone = res.disabled.filter(e => !tmp.includes(e));
+                let arrayDone = res.disabled.filter(e => !tmp.includes(e));
+                if (args[0].toLowerCase() === 'all') {
+                    arrayDone = tmp;
+                }
                 await Channel.findOneAndUpdate({
                     channelID: ID
                 }, {
@@ -77,7 +80,7 @@ module.exports = {
                     tmp.push((res.disabled.includes(c) ? `~~${c}~~` : c));
                 });
             }
-            message.channel.send(`🖇️ Commands for channel <#${ID}>: ${tmp.join(', ')}`).catch(() => {});
+            message.channel.send(`🖇️ Commands for channel <#${ID}>:\n${bot.clear} ${tmp.join(', ')}`).catch(() => {});
         }
 
     },

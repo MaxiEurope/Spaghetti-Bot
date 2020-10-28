@@ -79,7 +79,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify:false
+    useFindAndModify: false
 });
 const Profile = require('./src/util/mongo/profile.js');
 /** topgg / votinghandler*/
@@ -108,6 +108,7 @@ bot.once('ready', () => {
     /** load emojis */
     bot.coin = '<:coin:770386683471331438>';
     bot.clear = '<:TEclear:538475982542340163>';
+    bot.xp = '<:xp:771001757631381535>';
     /** vote handler & post server count */
     vote.handler(bot, topggClient);
     setInterval(() => {
@@ -146,6 +147,7 @@ bot.on('message', async message => {
         await new Profile({
             userID: message.author.id,
             xp: 0,
+            totXp:0,
             lvl: 0,
             creationDate: Date.now(),
             shortDesc: 'A spy 🕵️',
@@ -160,10 +162,10 @@ bot.on('message', async message => {
                 xpCooldown.add(message.author.id);
                 const rndXp = Math.round(Math.random() * (25 - 15 + 1) + 15);
                 if (res.xp + rndXp < ((5 * (Math.pow(res.lvl, 2))) + (50 * res.lvl) + 100)) {
+                    res.totXp = util.totXP(res.lvl,res.xp+rndXp);
                     res.xp = res.xp + rndXp;
                     await res.save().catch(() => {});
                 } else {
-                    res.xp = 0;
                     if (res.lvlupMessage === true) {
                         const embed = new Discord.MessageEmbed()
                             .setAuthor('Level Up!', message.author.displayAvatarURL({
@@ -174,6 +176,8 @@ bot.on('message', async message => {
                             .setFooter('edit profile settings with: -profile settings');
                         message.channel.send(embed);
                     }
+                    res.totXp = util.totXP(res.lvl+1,rndXp);
+                    res.xp = rndXp;
                     res.lvl = res.lvl + 1;
                     await res.save().catch(() => {});
                 }
@@ -201,25 +205,30 @@ bot.on('message', async message => {
     /** get command */
     const cmd = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!cmd) return;
-    /** check if disabled */
-    const disabled = await util.isDisabled(message.channel.id, cmd.name);
-    if (disabled) return;
     /** manage command cooldowns */
     const commandCooldown = (cmd.cooldown || 3) * 1000;
     if (!cmdCooldown.has(`${message.author.id}-${cmd.name}`)) {
-        cmdCooldown.set(`${message.author.id}-${cmd.name}`, Date.now() + commandCooldown);
-        /** run command */
-        try {
-            cmd.execute(bot, message, args);
-        } catch (e) {
-            util.log(e);
+        cmdCooldown.set(`${message.author.id}-${cmd.name}`, [Date.now() + commandCooldown, false]);
+        /** check if disabled */
+        const disabled = await util.isDisabled(message.channel.id, cmd.name);
+        if (!disabled) {
+            /** run command */
+            try {
+                cmd.execute(bot, message, args);
+            } catch (e) {
+                util.log(e);
+            }
+        } else {
+            await message.channel.send('⛔ This command has been disabled for this channel.').catch(() => {});
         }
-        setTimeout(() => cmdCooldown.delete(`${message.author.id}-${cmd.name}`),commandCooldown);
+        setTimeout(() => cmdCooldown.delete(`${message.author.id}-${cmd.name}`), commandCooldown);
     } else {
-        const timeStamp = cmdCooldown.get(`${message.author.id}-${cmd.name}`);
-        if (Date.now() < timeStamp) {
-            const timeLeft = (timeStamp - Date.now());
-            return message.channel.send(`😓 Calm down a bit and wait \`${(timeLeft/1000).toFixed(2)}\`s before using **${cmd.name}**!`).then(msg => {
+        const cd = cmdCooldown.get(`${message.author.id}-${cmd.name}`);
+        if (Date.now() < cd[0]) {
+            const timeLeft = (cd[0] - Date.now());
+            if (cd[1] === true) return;
+            cmdCooldown.set(`${message.author.id}-${cmd.name}`, [cd[0], true]);
+            return message.channel.send(`😔 Calm down a bit and wait \`${(timeLeft/1000).toFixed(2)}\`s before using the command **${cmd.name}**!`).then(msg => {
                 msg.delete({
                     timeout: timeLeft + 3000
                 }).catch(() => {});

@@ -6,25 +6,27 @@
     "scripts": {
         "start": "node ."
     },
+    "engines": {
+        "node": "12.16.3"
+    },
     "dependencies": {
         "bfdapi.js": "^2.0.1",
         "body-parser": "^1.19.0",
         "dblapi.js": "^2.4.1",
-        "discord.js": "^12.3.1",
-        "discord.js-light": "^3.2.11",
+        "discord.js": "^12.4.1",
+        "discord.js-light": "^3.3.3",
         "dotenv": "^8.2.0",
+        "eslint": "^7.12.1",
         "express": "^4.17.1",
         "he": "^1.2.0",
         "moment": "^2.29.1",
         "moment-duration-format": "^2.3.2",
         "moment-timezone": "^0.5.31",
-        "mongoose": "^5.10.10",
+        "mongoose": "^5.10.11",
         "node-emoji": "^1.10.0",
         "node-fetch": "^2.6.1",
         "parse-color": "^1.0.0",
-        "translate-google": "^1.3.5"
+        "translate-google": "WetterEurope/NODE_GOOGLE_TRANSLATE"
     },
-    "devDependencies": {
-        "eslint": "^6.0.1"
-    }
+    "devDependencies": {}
 }

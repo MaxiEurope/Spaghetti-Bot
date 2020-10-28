@@ -2,9 +2,10 @@ const Discord = require('discord.js');
 
 module.exports = {
     name: 'help',
-    description: 'List my commands or get some info about a specific command.',
     aliases: ['commands'],
-    usage: ['-help <command>'],
+    example: ['-help leaderboard'],
+    description: 'List my commands or get some info about a specific command.',
+    usage: ['-help (command)'],
     cooldown: 2,
     async execute(bot, message, args) {
 

@@ -8,10 +8,10 @@ module.exports = {
     cooldown: 15,
     async execute(bot, message, args) {
 
-        if (!args.length) return message.channel.send(`ℹ Usage: \`${this.example}\``).catch(() => {});
+        if (!args.length) return message.channel.send(`ℹ Example: \`${this.example.join('`\n`')}\``).catch(() => {});
 
         const user = await util.getUser(bot, args[0]);
-        if (!user) return message.channel.send(`⛔ User not found!\nℹ Usage: \`${this.example}\``).catch(() => {});
+        if (!user) return message.channel.send(`⛔ User not found!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
         if (user.id === message.author.id) return message.channel.send('❓ Why tho').catch(() => {});
 
