@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const fetch = require('node-fetch');
 const he = require('he');
 const util = require('../util/util.js');

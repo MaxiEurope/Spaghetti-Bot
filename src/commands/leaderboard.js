@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const Coins = require('../util/mongo/coins.js');
 const Feed = require('../util/mongo/feed.js');
 const Profile = require('../util/mongo/profile.js');

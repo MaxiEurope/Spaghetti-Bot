@@ -83,8 +83,6 @@ mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk4
 });
 const Profile = require('./src/util/mongo/profile.js');
 /** topgg / votinghandler*/
-const topggClient = new topgg(process.env.TOPGG_TOKEN);
-const bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
 const vote = require('./src/util/vote.js');
 /** cooldowns / prefixes*/
 const cmdCooldown = new Map();
@@ -109,13 +107,16 @@ bot.once('ready', () => {
     bot.coin = '<:coin:770386683471331438>';
     bot.clear = '<:TEclear:538475982542340163>';
     bot.xp = '<:xp:771001757631381535>';
+    /** vote clients */
+    bot.topggClient = new topgg(process.env.TOPGG_TOKEN);
+    bot.bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
     /** vote handler & post server count */
-    vote.handler(bot, topggClient);
+    vote.handler(bot, bot.topggClient);
     setInterval(() => {
-        topggClient.postStats(bot.guilds.cache.size).then(() => {
+        bot.topggClient.postStats(bot.guilds.cache.size).then(() => {
             util.log('Posted server count to top.gg');
         }).catch(() => {});
-        bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
+        bot.bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
             util.log('Posted stats to botsfordiscord.com');
         }).catch(() => {});
     }, 900000);
@@ -147,7 +148,7 @@ bot.on('message', async message => {
         await new Profile({
             userID: message.author.id,
             xp: 0,
-            totXp:0,
+            totXp: 0,
             lvl: 0,
             creationDate: Date.now(),
             shortDesc: 'A spy 🕵️',
@@ -162,7 +163,7 @@ bot.on('message', async message => {
                 xpCooldown.add(message.author.id);
                 const rndXp = Math.round(Math.random() * (25 - 15 + 1) + 15);
                 if (res.xp + rndXp < ((5 * (Math.pow(res.lvl, 2))) + (50 * res.lvl) + 100)) {
-                    res.totXp = util.totXP(res.lvl,res.xp+rndXp);
+                    res.totXp = util.totXP(res.lvl, res.xp + rndXp);
                     res.xp = res.xp + rndXp;
                     await res.save().catch(() => {});
                 } else {
@@ -176,7 +177,7 @@ bot.on('message', async message => {
                             .setFooter('edit profile settings with: -profile settings');
                         message.channel.send(embed);
                     }
-                    res.totXp = util.totXP(res.lvl+1,rndXp);
+                    res.totXp = util.totXP(res.lvl + 1, rndXp);
                     res.xp = rndXp;
                     res.lvl = res.lvl + 1;
                     await res.save().catch(() => {});

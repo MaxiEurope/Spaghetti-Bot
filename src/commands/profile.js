@@ -1,5 +1,5 @@
 const Profile = require('../util/mongo/profile.js');
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 const parse = require('parse-color');
 const util = require('../util/util.js');
 const validSettings = ['info', 'description', 'color', 'lvlup'];

@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js-light');
 
 module.exports = {
     name: 'help',
@@ -13,7 +13,7 @@ module.exports = {
 
         if (!args.length) {
             embed.setAuthor('List of my commands', bot.user.displayAvatarURL())
-                .addField('🗒 General', '`avatar` `help` `ping` `stats`')
+                .addField('🗒 General', '`avatar` `help` `invite` `ping` `stats` `vote`')
                 .addField('😂 Fun', '`advice` `emoji` `food`')
                 .addField('💰 Economy', '`coins` `daily` `feed` `leaderboard` `slots`')
                 .addField('❓ Quiz', '`quiz`')
