@@ -3,9 +3,9 @@ const util = require('../util/util.js');
 module.exports = {
     name: 'avatar',
     aliases: ['pfp'],
-    example: ['-avatar @User'],
+    example: ['sp!avatar @User'],
     description: 'Get an users (or your) profile picture.',
-    usage: '-avatar <user>',
+    usage: 'sp!avatar <user>',
     cooldown: 5,
     async execute(bot, message, args) {
 

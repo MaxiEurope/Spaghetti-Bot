@@ -2,9 +2,10 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'give',
-    example: ['-give @User 100'],
+    aliases:['share'],
+    example: ['sp!give @User 100'],
     description: 'Share some coins with users.',
-    usage: '-give <user> <coins>',
+    usage: 'sp!give <user> <coins>',
     cooldown: 15,
     async execute(bot, message, args) {
 

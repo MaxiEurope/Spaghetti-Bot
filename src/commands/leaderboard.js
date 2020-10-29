@@ -9,9 +9,9 @@ const numbers = [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':sev
 module.exports = {
     name: 'leaderboard',
     aliases: ['top'],
-    example: ['-top coins', '-top feed', '-top xp', '-top cmds'],
+    example: ['sp!top coins', 'sp!top feed', 'sp!top xp', 'sp!top cmds'],
     description: 'Display the leaderboard of top ranked users. Categories: `coins` `cmds` `feed` `xp`',
-    usage: '-top <category>',
+    usage: 'sp!top <category>',
     cooldown: 10,
     async execute(bot, message, args) {
 

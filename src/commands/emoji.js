@@ -5,9 +5,9 @@ const util = require('../util/util.js');
 module.exports = {
     name: 'emoji',
     aliases: ['randomemoji'],
-    example: ['-emoji 100'],
+    example: ['sp!emoji 100'],
     description: 'Want some emojis? lol',
-    usage: '-emoji (count)',
+    usage: 'sp!emoji (count)',
     cooldown: 2,
     async execute(bot, message, args) {
 

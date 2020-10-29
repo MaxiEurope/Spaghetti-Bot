@@ -19,9 +19,9 @@
 
 ### Usage
 
-Prefix: `-`
+Prefix: `sp!`
 
-Need help? Use `-help <command>` (replace `<command>` with an actual command name)
+Need help? Use `sp!help <command>` (replace `<command>` with an actual command name)
 
 ### Updates & more help
 

@@ -3,9 +3,9 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'prefix',
-    example: ['-prefix sp!'],
-    description: 'Set an additional prefix for your server. You can remove your prefix by using `-prefix -`, which will basically set it to the default one.',
-    usage: '-prefix (newprefix)',
+    example: ['sp!prefix sp!'],
+    description: 'Set an additional prefix for your server. You can remove your prefix by using `sp!prefix sp!`, which will basically set it to the default one.',
+    usage: 'sp!prefix (newprefix)',
     cooldown: 5,
     async execute(bot, message, args) {
 
@@ -16,17 +16,17 @@ module.exports = {
             if (res) {
                 message.channel.send(`🖇️ This servers prefix is set to \`${res.prefix}\``).catch(() => {});
             } else {
-                message.channel.send('🖇️ The default prefix `-`. You can set one using `-prefix sp!` for example.').catch(() => {});
+                message.channel.send('🖇️ The default prefix `sp!`. You can also mention me. You can set a prefix using `sp!prefix +` for example.').catch(() => {});
             }
         } else {
             if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.channel.send('⛔ You require the permission `Manage Channels`!').catch(() => {});
             const prefix = args[0];
-            if (prefix === '-') {
+            if (prefix === 'sp!') {
                 await Prefix.findOneAndDelete({
                     serverID: message.guild.id
                 }).catch(() => {});
                 bot.guildPrefixes.delete(message.guild.id);
-                message.channel.send('✅ Set the server prefix to `-` (removed it).').catch(() => {});
+                message.channel.send('✅ Set the server prefix to `sp!` (removed it).').catch(() => {});
             } else {
                 if (util.count(prefix) > 10) return message.channel.send('⛔ That\'s a bit too long! (`10` characters max)').catch(() => {});
                 const res = await Prefix.findOne({

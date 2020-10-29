@@ -4,9 +4,9 @@ const wait = require('util').promisify(setTimeout);
 module.exports = {
     name: 'slot',
     aliases: ['slots', 's'],
-    example: ['-slots 100'],
+    example: ['sp!slots 100'],
     description: 'Spin the wheel.',
-    usage: '-slots <coins>',
+    usage: 'sp!slots <coins>',
     cooldown: 10,
     async execute(bot, message, args) {
 

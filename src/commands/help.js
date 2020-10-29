@@ -3,9 +3,9 @@ const Discord = require('discord.js-light');
 module.exports = {
     name: 'help',
     aliases: ['commands'],
-    example: ['-help leaderboard'],
+    example: ['sp!help leaderboard'],
     description: 'List my commands or get some info about a specific command.',
-    usage: ['-help (command)'],
+    usage: ['sp!help (command)'],
     cooldown: 2,
     async execute(bot, message, args) {
 
@@ -19,8 +19,8 @@ module.exports = {
                 .addField('❓ Quiz', '`quiz`')
                 .addField('🖼 Profile', '`profile`')
                 .addField('🖇 Util', '`enable` `disable` `prefix` `translate`')
-                .setDescription('My prefix is `-`. Run commands with `-<command>`.\n' +
-                    'Need help 🤔? Use `-help <command>`.\n' +
+                .setDescription('My prefix is `sp!`. Run commands with `-<command>`.\n' +
+                    'Need help 🤔? Use `sp!help <command>`.\n' +
                     'Make sure to replace `<command>` with a command name.')
                 .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
                     '◽ [Support server](https://discord.gg/W5Zj3G2) ' +

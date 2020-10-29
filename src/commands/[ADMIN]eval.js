@@ -1,7 +1,7 @@
 module.exports = {
     name: 'eval',
     description: 'Evaluate some code.',
-    usage: '-eval <code>',
+    usage: 'sp!eval <code>',
     cooldown: 1,
     async execute(bot, message) {
 

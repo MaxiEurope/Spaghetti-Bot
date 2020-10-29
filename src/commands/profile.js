@@ -6,12 +6,12 @@ const validSettings = ['info', 'description', 'color', 'lvlup'];
 
 module.exports = {
     name: 'profile',
-    example: ['-profile @User', '-profile settings color #000000', '-profile settings info idk who I am', '-profile settings lvlup true'],
+    example: ['sp!profile @User', 'sp!profile settings color #000000', 'sp!profile settings info idk who I am', 'sp!profile settings lvlup true'],
     description: 'Your profile. Earn xp and level up by chatting & using commands.' +
-        'View and change your profile settings using `-profile settings`.\nYou can also view an users profile by mentioning them.\n' +
+        'View and change your profile settings using `sp!profile settings`.\nYou can also view an users profile by mentioning them.\n' +
         'You can earn a maximum of **25** xp once per minute.\n' +
         `Valid settings: \`${validSettings.join('` `')}\``,
-    usage: '-profile settings (setting) (value)',
+    usage: 'sp!profile settings (setting) (value)',
     cooldown: 5,
     async execute(bot, message, args) {
 
@@ -80,7 +80,7 @@ module.exports = {
                 const setting = args[1].toLowerCase();
                 if (setting === validSettings[0]) {
                     const info = args.slice(2).join(' ');
-                    if (!info) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `-profile settings info someone`').catch(() => {});
+                    if (!info) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `sp!profile settings info someone`').catch(() => {});
                     if (util.count(info) > 50) return message.channel.send('⛔ That\'s a bit too long! (`50` characters max)').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
@@ -90,7 +90,7 @@ module.exports = {
                     message.channel.send('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[1]) {
                     const description = args.slice(2).join(' ');
-                    if (!description) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `-profile settings description spaghetti bot user`').catch(() => {});
+                    if (!description) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `sp!profile settings description spaghetti bot user`').catch(() => {});
                     if (util.count(description) > 750) return message.channel.send('⛔ That\'s a bit too long! (`750` characters max)').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
@@ -100,8 +100,8 @@ module.exports = {
                     message.channel.send('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[2]) {
                     const color = args[2].toLowerCase();
-                    if (!color) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `-profile settings color #000000`').catch(() => {});
-                    if (!parse(color).hex) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `-profile settings color #000000`').catch(() => {});
+                    if (!color) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
+                    if (!parse(color).hex) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
@@ -110,8 +110,8 @@ module.exports = {
                     message.channel.send('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[3]) {
                     const lvlupMessage = args[2].toLowerCase();
-                    if (!lvlupMessage) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `-profile settings lvlup true`').catch(() => {});
-                    if (!['true', 'false'].some(e => lvlupMessage === e)) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `-profile settings lvlup true`').catch(() => {});
+                    if (!lvlupMessage) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
+                    if (!['true', 'false'].some(e => lvlupMessage === e)) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {

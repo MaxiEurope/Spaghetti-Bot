@@ -2,9 +2,9 @@ const Channel = require('../util/mongo/channel.js');
 
 module.exports = {
     name: 'disable',
-    example: ['-disable all', '-disable slots daily', '-disable avatar #general'],
+    example: ['sp!disable all', 'sp!disable slots daily', 'sp!disable avatar #general'],
     description: 'Disable commands for a channel.',
-    usage: '-disable (command/all) (#channel)',
+    usage: 'sp!disable (command/all) (#channel)',
     cooldown: 3,
     async execute(bot, message, args) {
 

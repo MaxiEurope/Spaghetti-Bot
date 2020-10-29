@@ -19,7 +19,7 @@ const bot = new Discord.Client({
     cacheOverwrites: false,
     cachePresences: false,
     cacheRoles: true,
-    fetchAllMembers: false,
+    fetchAllMembers: true,
     messageSweepInterval: 15,
     messageCacheMaxSize: 0,
     disableMentions: 'all',
@@ -28,8 +28,8 @@ const bot = new Discord.Client({
     },
     presence: {
         activity: {
-            name: '-help 🍝',
-            type: 'LISTENING'
+            name: 'sp!help 🍝',
+            type: 'WATCHING'
         }
     },
     disabledEvents: [
@@ -91,7 +91,7 @@ const vote = require('./src/util/vote.js');
 /** cooldowns / prefixes*/
 const cmdCooldown = new Map();
 const xpCooldown = new Set();
-const defaultPrefix = '-';
+const defaultPrefixes = ['sp!', '<@585142238217240577>', '<@!585142238217240577>'];
 bot.guildPrefixes = new Map();
 /** 
  * bot events
@@ -144,6 +144,8 @@ bot.on('guildDelete', (guild) => {
 /** message */
 bot.on('message', async message => {
     if (message.channel.type !== 'text') return;
+    /** add user who sent this message - testing */
+    bot.users.add(message.author, true);
     /** xp system */
     const res = await Profile.findOne({
         userID: message.author.id
@@ -193,8 +195,10 @@ bot.on('message', async message => {
             }
         }
     }
+    /** mention */
+    if ([defaultPrefixes[1], defaultPrefixes[2]].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
     /** check prefix */
-    let prefix, prefixes = [defaultPrefix];
+    let prefix, prefixes = defaultPrefixes;
     if (bot.guildPrefixes.has(message.guild.id)) {
         prefixes.push(bot.guildPrefixes.get(message.guild.id));
     }
@@ -204,7 +208,7 @@ bot.on('message', async message => {
             break;
         }
     }
-    if(!prefix) return;
+    if (!prefix) return;
     /** args */
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();

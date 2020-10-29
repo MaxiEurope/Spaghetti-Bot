@@ -3,9 +3,9 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'translate',
-    example: ['-translate How are you? /de'],
+    example: ['sp!translate How are you? /de'],
     description: 'Translate your message in whatever language you like. English is the default language, if nothing else is chosen.',
-    usage: '<text> (/language)',
+    usage: 'sp!translate <text> (/language)',
     cooldown: 5,
     async execute(bot, message, args) {
 

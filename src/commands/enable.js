@@ -2,9 +2,9 @@ const Channel = require('../util/mongo/channel.js');
 
 module.exports = {
     name: 'enable',
-    example: ['-enable all', '-enable slots daily', '-enable avatar #general'],
+    example: ['sp!enable all', 'sp!enable slots daily', 'sp!enable avatar #general'],
     description: 'Enable commands for a channel.',
-    usage: '-enable (command/all) (#channel)',
+    usage: 'sp!enable (command/all) (#channel)',
     cooldown: 3,
     async execute(bot, message, args) {
 
