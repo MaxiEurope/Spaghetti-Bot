@@ -19,7 +19,7 @@ module.exports = {
                 .addField('❓ Quiz', '`quiz`')
                 .addField('🖼 Profile', '`profile`')
                 .addField('🖇 Util', '`enable` `disable` `prefix` `translate`')
-                .setDescription('My prefix is `sp!`. Run commands with `-<command>`.\n' +
+                .setDescription('My prefix is `sp!`. Run commands with `sp!<command>`.\n' +
                     'Need help 🤔? Use `sp!help <command>`.\n' +
                     'Make sure to replace `<command>` with a command name.')
                 .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
