@@ -2,7 +2,7 @@
 
 [![Discord Bots](https://discordbots.org/api/widget/status/585142238217240577.svg)](https://discordbots.org/bot/585142238217240577) [![Discord Bots](https://top.gg/api/widget/servers/585142238217240577.svg)](https://top.gg/bot/585142238217240577) [![Discord Bots](https://top.gg/api/widget/owner/585142238217240577.svg)](https://top.gg/bot/585142238217240577)
 
-**You love quizzes, want a simple economy, and leveling system? This bot is for ya!**
+**You love quizzes, want a simple economy, and leveling system? This bot is for you!**
 
 - [Invite me to your server](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520)
 
@@ -15,7 +15,7 @@
 - Easy to use, due to advanced help command.
 - Balanced economy, ranking (leaderboard) a slotting machine.
 - Thousand of quizzes, utility commands like a built-in translator.
-- Fun commands - emojis and feed Wumpus. 
+- Fun commands - emojis and feed Wumpus.
 
 ### Usage
 

@@ -35,7 +35,7 @@
     		margin-left: 5px;
   		}
         #upvotebutton::after {
-  			content: " 🍝 votes" !important;
+  			content: " 🍝" !important;
   			color: #7289da !important;
   			padding-right: 6px;
 		}
@@ -103,12 +103,14 @@
             color: black;
         }
         p {
-            color: white;
+            color: black;
         }
         code {
             background-color: transparent !important;
-            color: white;
             padding: 0.25em 0.5em 0.25em;
+        }
+        code p {
+            color: black;
         }
         section#bot-details-page {
             background-color: rgb(0, 0, 0);
@@ -133,44 +135,40 @@
         ::-webkit-scrollbar-thumb {
             border-radius: 75px;
             height: 30px;
-            background: rgb(197, 195, 195);
+            background: #1e1e1e;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgb(197, 195, 195);
+            background: #1a1818;
             border-radius: 50px;
         }
     </style>
 </head>
 <body>
-    <p><img src="https://cdn.discordapp.com/attachments/475276057013125130/590317703437352961/1.png">
-    </p>
     <blockquote>
         <h1>🍝 Spaghetti Bot</h1>
-        <p>Spaghetti Bot is a very hungry bot.<br>The main features are economy, quiz and utility commands.</p>
-    </blockquote>
-    <blockquote>
-        <h1>📋 Usage</h1>
-        <p>-help &lt;command-name&gt;</p>
-    </blockquote>
-    <blockquote>
-        <h1>📢 Updates</h1>
-        <p><a href="https://discord.gg/W5Zj3G2">Support server</a></p>
+        <p>Simple economy system, leveling system and customizable profiles.</p>
     </blockquote>
     <blockquote>
         <h1>📂 Features</h1>
         <ul>
-            <li>Easy to use, due to a advanced help command.<br></li>
-            <li>Minimum permissions requirement. Fair to invite.<br></li>
-            <li>Balanced economy, fair quizzes, useful util and custom profiles.<br></li>
+            <li>Easy to use, due to advanced help command.<br></li>
+            <li>Balanced economy, ranking (leaderboard) a slotting machine.<br></li>
+            <li>Thousand of quizzes, utility commands like a built-in translator.<br></li>
+            <li>Fun commands - emojis and feed Wumpus.</li>
         </ul>
     </blockquote>
     <blockquote>
-        <h1>🔗 Links</h1>
-        <p><a target="_blank" onclick="trackCampaignWebClick('', 'description');" rel="nofollow"
-                href="https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520">Invite
-                me to your server</a><br>
-            <a target="_blank" onclick="trackCampaignWebClick('', 'description');" rel="nofollow"
-                href="https://discord.gg/W5Zj3G2">Support server</a><br></p>
+        <h1>📋 Usage</h1>
+        <p>Prefix: <code>-</code><br><br>Need help? Use <code>-help &lt;command&gt;</code> (replace <code>&lt;command&gt;</code> with an actual command name)</p>
     </blockquote>
+    <blockquote>
+        <h1>📢 Updates & more help</h1>
+        <p><a href="https://discord.gg/W5Zj3G2">Support server</a></p>
+    </blockquote>
+    <blockquote>
+        <h1>🔗 Links</h1>
+        <p><a href="https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520">Invite me to your server</a><br>
+    </blockquote>
+    <img src="https://cdn.discordapp.com/attachments/554429868276711433/771195134633050112/Discord_xtT0jWO8Mp.png">
 </body>
 </html>
