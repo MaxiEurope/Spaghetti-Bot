@@ -36,7 +36,9 @@ exports.handler = (bot, dbl) => {
     });
 
     app.get('/', (req, res) => {
-        res.status(200).sendFile('../../index.html');
+        res.status(200).sendFile('index.html', {
+            root: __dirname
+        });
     });
 
     app.listen(process.env.PORT, () => {
