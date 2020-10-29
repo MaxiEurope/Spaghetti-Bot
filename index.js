@@ -172,7 +172,7 @@ bot.on('message', async message => {
                     res.xp = res.xp + rndXp;
                     await res.save().catch(() => {});
                 } else {
-                    if (res.lvlupMessage === true) {
+                    if (res.lvlupMessage === true && message.guild.id !== '264445053596991498') {
                         const embed = new Discord.MessageEmbed()
                             .setAuthor('Level Up!', message.author.displayAvatarURL({
                                 dynamic: true
