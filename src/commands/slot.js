@@ -26,7 +26,7 @@ module.exports = {
         }
 
         if (coins < amount) {
-            return message.channel.send(`⛔ You were about to spin the wheel with **${util.comma(amount)}** ${bot.coin} while only having **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
+            return message.channel.send(`⛔ You were about to play slots with **${util.comma(amount)}** ${bot.coin} while only having **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
         }
 
         let charts = ['🍇', '🔔', '🍒', '🍉', '💎'];

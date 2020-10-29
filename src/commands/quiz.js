@@ -53,7 +53,7 @@ module.exports = {
                         message.channel.stopTyping();
                         const start = Date.now();
                         abcd.forEach(async e => {
-                            await wait(250);
+                            await wait(50);
                             await msg.react(e).catch(() => {});
                         });
 
@@ -72,7 +72,7 @@ module.exports = {
                                     embed: null
                                 }).catch(() => {});
                             } else {
-                                res = (150 * multiplier) * (-1);
+                                res = (50 * multiplier) * (-1);
                                 msg.edit(`😒 Wrong! You lost **${util.comma(res*(-1))}** ${bot.coin}.`, {
                                     embed: null
                                 }).catch(() => {});

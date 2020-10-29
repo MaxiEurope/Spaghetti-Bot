@@ -31,8 +31,8 @@ module.exports = {
                 return message.channel.send(`⛔ You were about to give ${user.tag} **${util.comma(amount)}** ${bot.coin}, but you've got only **${util.comma(money)}** ${bot.coin}!`).catch(() => {});
             }
 
-            const receiverCoins = await util.addCoins(message.author.id, -money);
-            await util.addCoins(user.id, money);
+            await util.addCoins(message.author.id, amount * (-1));
+            const receiverCoins = await util.addCoins(user.id, amount);
 
             message.channel.send(`✅ You gave ${user.tag} **${util.comma(amount)}** ${bot.coin}. They now have **${util.comma(receiverCoins)}** ${bot.coin}.`).catch(() => {});
             try {

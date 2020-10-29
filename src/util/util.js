@@ -90,6 +90,7 @@ exports.addFeed = async (ID, amount) => {
         userID: ID
     });
     if (res === null) {
+        if (amount <= 0) return 0;
         await new Feed({
             userID: ID,
             total: amount
@@ -110,6 +111,7 @@ exports.addCmd = async (ID, amount) => {
         userID: ID
     });
     if (res === null) {
+        if (amount <= 0) return 0;
         await new Commands({
             userID: ID,
             total: amount
