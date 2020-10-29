@@ -35,6 +35,10 @@ exports.handler = (bot, dbl) => {
 
     });
 
+    app.get('/', (req, res) => {
+        res.status(200).sendFile('../../index.html');
+    });
+
     app.listen(process.env.PORT, () => {
         util.log(`Server started on port ${process.env.PORT}`);
     });

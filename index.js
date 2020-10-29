@@ -144,8 +144,6 @@ bot.on('guildDelete', (guild) => {
 /** message */
 bot.on('message', async message => {
     if (message.channel.type !== 'text') return;
-    /** add user who sent this message - testing */
-    bot.users.add(message.author, true);
     /** xp system */
     const res = await Profile.findOne({
         userID: message.author.id
@@ -195,6 +193,8 @@ bot.on('message', async message => {
             }
         }
     }
+    /** add user who sent this message - testing */
+    bot.users.add(message.author, true);
     /** mention */
     if ([defaultPrefixes[1], defaultPrefixes[2]].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
     /** check prefix */
