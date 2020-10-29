@@ -1,29 +1,31 @@
 # Spaghetti bot
 
-[![Discord Bots](https://discordbots.org/api/widget/status/585142238217240577.svg)](https://discordbots.org/bot/585142238217240577)
+[![Discord Bots](https://discordbots.org/api/widget/status/585142238217240577.svg)](https://discordbots.org/bot/585142238217240577) [![Discord Bots](https://top.gg/api/widget/servers/585142238217240577.svg)](https://top.gg/bot/585142238217240577) [![Discord Bots](https://top.gg/api/widget/owner/585142238217240577.svg)](https://top.gg/bot/585142238217240577)
 
-**Ever saw a hungry discord bot? Feed it, earn xp, climb the leaderboard and do quizzes.**
+**You love quizzes, want a simple economy, and leveling system? This bot is for ya!**
 
-## [Invite link to your server](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520)
+- [Invite me to your server](https://discordapp.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520)
 
-### What am I?
+### What do I offer?
 
-***Spaghetti Bot is a very hungry bot.***
-***The main features are economy, quiz and utility commands.***
+**Simple economy system, leveling system and customizable profiles.**
 
 ### Features
 
-- Easy to use, due to a advanced help command.
-- Minimum permissions requirement. Comfortable to invite.
-- Balanced economy, fair quizzes, useful util and custom profiles.
+- Easy to use, due to advanced help command.
+- Balanced economy, ranking (leaderboard) a slotting machine.
+- Thousand of quizzes, utility commands like a built-in translator.
+- Fun commands - emojis and feed Wumpus. 
 
 ### Usage
 
-> -help \<command-name\>
+Prefix: `-`
 
-### Updates
+Need help? Use `-help <command>` (replace `<command>` with an actual command name)
 
-**[Support server](https://discordapp.com/invite/W5Zj3G2)**
+### Updates & more help
+
+**[Support server](https://discord.com/invite/W5Zj3G2)**
 
 ### Status
 
