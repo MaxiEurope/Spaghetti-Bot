@@ -23,12 +23,8 @@ module.exports = {
             message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
             await util.addCoins(message.author.id, total);
         } else {
-            if ((Date.now() - res.last) < 86400000) {
-                const dur = moment.duration((res.last + 86400000) - Date.now()).format(' H [H], m [M], s [S]', {
-                    trim: 'both'
-                });
-                message.channel.send(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});
-            } else if ((Date.now() - res.last) > 172800000) {
+            if ((Date.now() - res.last) > 172800000) {
+                await util.addCoins(message.author.id, total);
                 Daily.findOneAndUpdate({
                     userID: message.author.id
                 }, {
@@ -36,9 +32,10 @@ module.exports = {
                     last: Date.now()
                 });
                 message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
-                await util.addCoins(message.author.id, total);
-            } else {
+
+            } else if ((Date.now() - res.last) > 86400000) {
                 total = 2500 + (res.streak * 83);
+                await util.addCoins(message.author.id, total);
                 Daily.findOneAndUpdate({
                     userID: message.author.id
                 }, {
@@ -46,7 +43,11 @@ module.exports = {
                     last: Date.now()
                 });
                 message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`${res.streak+1}\` daily streak)`).catch(() => {});
-                await util.addCoins(message.author.id, total);
+            } else {
+                const dur = moment.duration((res.last + 86400000) - Date.now()).format(' H [H], m [M], s [S]', {
+                    trim: 'both'
+                });
+                message.channel.send(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});
             }
         }
 
