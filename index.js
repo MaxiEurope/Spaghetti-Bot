@@ -91,7 +91,6 @@ const vote = require('./src/util/vote.js');
 /** cooldowns / prefixes*/
 const cmdCooldown = new Map();
 const xpCooldown = new Set();
-const defaultPrefixes = ['sp!', '<@585142238217240577>', '<@!585142238217240577>'];
 bot.guildPrefixes = new Map();
 /** 
  * bot events
@@ -196,19 +195,20 @@ bot.on('message', async message => {
     /** add user who sent this message - testing */
     bot.users.add(message.author, true);
     /** mention */
-    if ([defaultPrefixes[1], defaultPrefixes[2]].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
+    if (['<@585142238217240577>', '<@!585142238217240577>'].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
     /** check prefix */
-    let prefix, prefixes = defaultPrefixes;
+    let prefix;
+    let _prefixes = ['sp!', '<@585142238217240577>', '<@!585142238217240577>'];
     if (bot.guildPrefixes.has(message.guild.id)) {
-        prefixes.push(bot.guildPrefixes.get(message.guild.id));
+        _prefixes.push(bot.guildPrefixes.get(message.guild.id));
     }
-    for (const p of prefixes) {
+    for (const p of _prefixes) {
         if (message.content.startsWith(p)) {
             prefix = p;
             break;
         }
     }
-    if (!prefix) return;
+    if (!prefix || prefix === undefined) return;
     /** args */
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
