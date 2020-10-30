@@ -15,7 +15,7 @@ module.exports = {
         });
 
         if (res === null) {
-            new Daily({
+            await new Daily({
                 userID: message.author.id,
                 last: Date.now(),
                 streak: 1
@@ -25,18 +25,17 @@ module.exports = {
         } else {
             if ((Date.now() - res.last) > 172800000) {
                 await util.addCoins(message.author.id, total);
-                Daily.findOneAndUpdate({
+                await Daily.findOneAndUpdate({
                     userID: message.author.id
                 }, {
                     streak: 1,
                     last: Date.now()
                 });
                 message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
-
             } else if ((Date.now() - res.last) > 86400000) {
                 total = 2500 + (res.streak * 83);
                 await util.addCoins(message.author.id, total);
-                Daily.findOneAndUpdate({
+                await Daily.findOneAndUpdate({
                     userID: message.author.id
                 }, {
                     streak: res.streak + 1,
