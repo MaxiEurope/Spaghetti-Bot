@@ -25,7 +25,7 @@ module.exports = {
                 .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
                     '◽ [Support server](https://discord.gg/W5Zj3G2) ' +
                     '◽ [Vote for more coins on top.gg](https://top.gg/bot/585142238217240577/vote)')
-                .addField('Latest news - 27th oct 2020', '```recoded bot :^)```')
+                .addField('Latest news - 2nd nov 2020 📬', '```diff\n+ added slots cap (50k)\n- yeeted typos```')
                 .setFooter('Arguments between <> are required')
                 .setColor('#00ff00');
             message.channel.send(embed).catch(() => {});
@@ -37,7 +37,7 @@ module.exports = {
             const name = args[0].toLowerCase();
             const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
-            if (!command) return message.channel.send('⛔ Command not found. Get a list of available commands by simply running `-help`.').catch(() => {});
+            if (!command) return message.channel.send('⛔ Command not found. Get a list of available commands by simply running `sp!help`.').catch(() => {});
 
             embed.setAuthor(`Help for command: ${command.name}`, bot.user.displayAvatarURL())
                 .setColor('#00ff00')

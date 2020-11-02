@@ -4,7 +4,7 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'daily',
-    description: 'Claim your daily amount of coins every 24 hours obviously.',
+    description: 'Claim some coins every 24 hours.',
     cooldown: 5,
     async execute(bot, message) {
 

@@ -85,7 +85,7 @@ module.exports = {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle('Feed leaderboard')
-                .setDescription(`This leaderboard shows users which fed **Discord Wumpus** the most.\n\nWumpus was fed **${util.comma(tot[0].total)}** times in total.`)
+                .setDescription(`This leaderboard shows users which fed <:TEwumpusCrown:710996351042846720> **Wumpus** the most.\n\n**Wumpus** was fed **${util.comma(tot[0].total)}** times in total.`)
                 .setColor('#00ff00')
                 .setFooter(`Total users: ${size}`);
 
@@ -118,7 +118,7 @@ module.exports = {
             if (res === null) return message.channel.send('⛔ No data found. Please try again later!').catch(() => {});
 
             const embed = new Discord.MessageEmbed()
-                .setTitle('Feed leaderboard')
+                .setTitle('XP leaderboard')
                 .setDescription(`This leaderboard shows users with the highest EXP 🆙 + level.\n\nTotal EXP: **${util.comma(tot[0].totXp)}** ${bot.xp}`)
                 .setColor('#00ff00')
                 .setFooter(`Total users: ${size}`);

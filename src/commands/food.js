@@ -9,7 +9,7 @@ module.exports = {
     name: 'food',
     aliases: ['randomfood'],
     example: ['sp!food fruits'],
-    description: 'Will give you some random food. Available categories: `fruits`, `vegetables`, `drinks`, `fatfood`... yea, fatfood. Some hamburgers will make you feel fat.',
+    description: 'I\'ll give you some random food. Available categories: `fruits`, `vegetables`, `drinks`, `fatfood`... yea, fatfood. Some hamburgers will make you feel fat.',
     usage: 'sp!food (category)',
     cooldown: 1,
     async execute(bot, message, args) {
@@ -32,7 +32,7 @@ module.exports = {
             }
         }
 
-        message.channel.send(`😋 I chose ${res}, enjoy!`).catch(() => {});
+        message.channel.send(`😋 Here's some ${res}, enjoy!`).catch(() => {});
 
     },
 };

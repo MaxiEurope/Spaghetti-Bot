@@ -23,10 +23,10 @@ module.exports = {
         let channel = message.channel.id;
         if (message.mentions.channels.size > 0) {
             channel = message.mentions.channels.first().id;
-            args = args.pop();
+            args.pop();
         }
 
-        if (!args.length) {
+        if (!args.length || args.length === 0) {
             listCommands(channel);
         } else {
             disableCommands(channel, args);

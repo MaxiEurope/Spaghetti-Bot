@@ -6,7 +6,7 @@ module.exports = {
     name: 'emoji',
     aliases: ['randomemoji'],
     example: ['sp!emoji 100'],
-    description: 'Want some emojis? lol',
+    description: 'Y want some emojis?',
     usage: 'sp!emoji (count)',
     cooldown: 2,
     async execute(bot, message, args) {

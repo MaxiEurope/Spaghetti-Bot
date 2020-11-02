@@ -5,7 +5,7 @@ module.exports = {
     name: 'slot',
     aliases: ['slots', 's'],
     example: ['sp!slots 100'],
-    description: 'Spin the wheel.',
+    description: 'Spin the wheel. (max bet: 50k coins)',
     usage: 'sp!slots <coins>',
     cooldown: 10,
     async execute(bot, message, args) {
@@ -16,13 +16,23 @@ module.exports = {
 
         let amount = 0;
         if (!util.isNum(args[0])) {
-            amount = 1;
+            if (['all', 'max'].some(e => args[0].toLowerCase() === e)) {
+                if (coins > 50000) {
+                    amount = 50000;
+                } else {
+                    amount = coins;
+                }
+            } else {
+                amount = 1;
+            }
         } else {
             amount = parseInt(Math.round(args[0]));
         }
 
         if (amount < 1) {
             amount = 1;
+        } else if (amount > 50000) {
+            amount = 50000;
         }
 
         if (coins < amount) {
