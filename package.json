@@ -10,7 +10,7 @@
         "node": "12.16.3"
     },
     "dependencies": {
-        "bfdapi.js": "^2.0.1",
+        "bfdapi.js": "WetterEurope/bfdapi.js",
         "body-parser": "^1.19.0",
         "dblapi.js": "^2.4.1",
         "discord.js": "^12.4.1",
