@@ -22,7 +22,7 @@
         "moment": "^2.29.1",
         "moment-duration-format": "^2.3.2",
         "moment-timezone": "^0.5.31",
-        "mongoose": "^5.10.11",
+        "mongoose": "^5.11.10",
         "node-emoji": "^1.10.0",
         "node-fetch": "^2.6.1",
         "parse-color": "^1.0.0",
