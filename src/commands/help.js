@@ -23,9 +23,9 @@ module.exports = {
                     'Need help 🤔? Use `sp!help <command>`.\n' +
                     'Make sure to replace `<command>` with a command name.')
                 .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
-                    '◽ [Support server](https://discord.gg/W5Zj3G2) ' +
+                    '◽ [Support server](https://discord.gg/adrRzgQ) ' +
                     '◽ [Vote for more coins on top.gg](https://top.gg/bot/585142238217240577/vote)')
-                .addField('Latest news - 2nd nov 2020 📬', '```diff\n+ added slots cap (50k)\n- yeeted typos```')
+                .addField('Latest news - 7nd jan 2021 📬', '```diff\n+ lowered cooldowns\n- yeeted typos```')
                 .setFooter('Arguments between <> are required')
                 .setColor('#00ff00');
             message.channel.send(embed).catch(() => {});

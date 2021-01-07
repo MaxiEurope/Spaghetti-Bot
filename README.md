@@ -25,7 +25,7 @@ Need help? Use `sp!help <command>` (replace `<command>` with an actual command n
 
 ### Updates & more help
 
-**[Support server](https://discord.com/invite/W5Zj3G2)**
+**[Support server](https://discord.com/invite/adrRzgQ)**
 
 ### Status
 

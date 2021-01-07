@@ -4,7 +4,7 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'daily',
-    description: 'Claim some coins every 24 hours.',
+    description: 'Claim some coins every 23 hours.',
     cooldown: 5,
     async execute(bot, message) {
 
@@ -32,7 +32,7 @@ module.exports = {
                     last: Date.now()
                 });
                 message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
-            } else if ((Date.now() - res.last) > 86400000) {
+            } else if ((Date.now() - res.last) > 82800000) {
                 total = 2500 + (res.streak * 83);
                 await util.addCoins(message.author.id, total);
                 await Daily.findOneAndUpdate({
@@ -43,7 +43,7 @@ module.exports = {
                 });
                 message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`${res.streak+1}\` daily streak)`).catch(() => {});
             } else {
-                const dur = moment.duration((res.last + 86400000) - Date.now()).format(' H [H], m [M], s [S]', {
+                const dur = moment.duration((res.last + 82800000) - Date.now()).format(' H [H], m [M], s [S]', {
                     trim: 'both'
                 });
                 message.channel.send(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});

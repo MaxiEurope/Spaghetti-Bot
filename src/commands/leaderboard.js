@@ -12,7 +12,7 @@ module.exports = {
     example: ['sp!top coins', 'sp!top feed', 'sp!top xp', 'sp!top cmds'],
     description: 'Display the leaderboard of top ranked users. Categories: `coins` `cmds` `feed` `xp`',
     usage: 'sp!top <category>',
-    cooldown: 10,
+    cooldown: 7,
     async execute(bot, message, args) {
 
         if (!args.length) {
