@@ -6,6 +6,7 @@ const validSettings = ['info', 'description', 'color', 'lvlup'];
 
 module.exports = {
     name: 'profile',
+    aliases: ['level', 'lvl'],
     example: ['sp!profile @User', 'sp!profile settings color #000000', 'sp!profile settings info idk who I am', 'sp!profile settings lvlup true'],
     description: 'Your profile. Earn xp and level up by chatting & using commands.' +
         'View and change your profile settings using `sp!profile settings`.\nYou can also view an users profile by mentioning them.\n' +
@@ -43,19 +44,18 @@ module.exports = {
                     message.channel.send(`⛔ Profile for user **${us.tag}** not found!`).catch(() => {});
                 } else {
                     const embed = new Discord.MessageEmbed()
-                        .setAuthor(`${us.tag}'s profile`)
-                        .setThumbnail(us.displayAvatarURL({
+                        .setAuthor(`${us.username}'s profile`, us.displayAvatarURL({
                             dynamic: true
                         }))
-                        .addField('Level', `\`${p.lvl}\``, true)
-                        .addField('XP', `\`${util.comma(p.xp)} / ${util.comma(((5 * (Math.pow(p.lvl, 2))) + (50 * p.lvl) + 100))}\` ${bot.xp}`, true)
-                        .addField('Coins', `**${util.comma(coins)}** ${bot.coin}`, false)
+                        .setDescription(`${p.shortDesc} `)
+                        .addField('Level 🆙', `\`${p.lvl}\``, true)
+                        .addField(`Exp ${bot.xp}`, `\`${util.comma(p.xp)} / ${util.comma(((5 * (Math.pow(p.lvl, 2))) + (50 * p.lvl) + 100))}\` `, true)
+                        .addField(`Coins ${bot.coin}`, `**${util.comma(coins)}**`, true)
                         .addField('Commands ran', `**${util.comma(cmds)}**`, true)
-                        .addField('Info', p.shortDesc, false)
-                        .addField('Description', p.longDesc, true)
+                        .addField('Info box', p.longDesc, false)
                         .setColor(p.color)
                         .setTimestamp(p.creationDate)
-                        .setFooter('Profile created on');
+                        .setFooter('Profile created at');
                     message.channel.send(embed).catch(() => {});
                 }
             });
@@ -80,8 +80,8 @@ module.exports = {
                 const setting = args[1].toLowerCase();
                 if (setting === validSettings[0]) {
                     const info = args.slice(2).join(' ');
-                    if (!info) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `sp!profile settings info someone`').catch(() => {});
-                    if (util.count(info) > 50) return message.channel.send('⛔ That\'s a bit too long! (`50` characters max)').catch(() => {});
+                    if (!info) return message.channel.send('⛔ You must provide some text!\nℹ Usage: `sp!profile settings info someone`').catch(() => {});
+                    if (util.count(info) > 50) return message.channel.send('⛔ Character limit of `50` exceeded.').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
@@ -90,8 +90,8 @@ module.exports = {
                     message.channel.send('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[1]) {
                     const description = args.slice(2).join(' ');
-                    if (!description) return message.channel.send('⛔ You must provide a text!\nℹ Usage: `sp!profile settings description spaghetti bot user`').catch(() => {});
-                    if (util.count(description) > 750) return message.channel.send('⛔ That\'s a bit too long! (`750` characters max)').catch(() => {});
+                    if (!description) return message.channel.send('⛔ You must provide some text!\nℹ Usage: `sp!profile settings description spaghetti bot user`').catch(() => {});
+                    if (util.count(description) > 750) return message.channel.send('⛔ Character limit of `750` exceeded.').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {

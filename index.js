@@ -3,6 +3,7 @@
  * Spaghetti bot for discord lol
  * 
  */
+const DEBUG = false;
 require('dotenv').config();
 require('moment-duration-format');
 /** load modules */
@@ -66,7 +67,7 @@ const bot = new Discord.Client({
         'WEBHOOKS_UPDATE'
     ]
 });
-bot.login(process.env.DISCORD_TOKEN).catch(e => util.log(e));
+bot.login(DEBUG ? process.env.DEBUG_DISCORD_TOKEN : process.env.DISCORD_TOKEN).catch(e => util.log(e));
 /** load emojis */
 bot.coin = '<:coin:770386683471331438>';
 bot.clear = '<:TEclear:538475982542340163>';
@@ -192,7 +193,7 @@ bot.on('message', async message => {
             }
         }
     }
-    /** add user who sent this message - testing */
+    /** add message author - testing */
     bot.users.add(message.author, true);
     /** mention */
     if (['<@585142238217240577>', '<@!585142238217240577>'].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});

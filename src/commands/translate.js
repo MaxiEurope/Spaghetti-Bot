@@ -3,6 +3,7 @@ const util = require('../util/util.js');
 
 module.exports = {
     name: 'translate',
+    aliases: ['tr', 'tl'],
     example: ['sp!translate How are you? /de'],
     description: 'Translate your message in whatever language you like. English is the default language, if nothing else is chosen.',
     usage: 'sp!translate <text> (/language)',
