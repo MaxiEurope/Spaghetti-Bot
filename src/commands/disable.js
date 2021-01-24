@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 3,
     async execute(bot, message, args) {
 
-        if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.channel.send('⛔ You require the permission `Manage Channels`!').catch(() => {});
+        if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the permission `Manage Channels`!').catch(() => {});
 
         const {
             commands
@@ -61,7 +61,7 @@ module.exports = {
                     disabled: arrayDone
                 });
             }
-            message.channel.send(`✅ Updated commands for channel <#${ID}>.`).catch(() => {});
+            message.reply(`✅ Updated commands for channel <#${ID}>.`).catch(() => {});
         }
 
         async function listCommands(ID) {
@@ -78,7 +78,7 @@ module.exports = {
                     tmp.push((res.disabled.includes(c) ? `~~${c}~~` : c));
                 });
             }
-            message.channel.send(`🖇️ Commands for channel <#${ID}>:\n${bot.clear} ${tmp.join(', ')}`).catch(() => {});
+            message.reply(`🖇️ Commands for channel <#${ID}>:\n${bot.clear} ${tmp.join(', ')}`).catch(() => {});
         }
 
     },

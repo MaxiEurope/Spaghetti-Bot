@@ -17,7 +17,7 @@ module.exports = {
             c = res.coins;
         }
 
-        message.channel.send(`You've got **${util.comma(c)}** ${bot.coin}.`).catch(() => {});
+        message.reply(`You've got **${util.comma(c)}** ${bot.coin}.`).catch(() => {});
 
     },
 };

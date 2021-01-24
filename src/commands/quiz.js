@@ -41,15 +41,15 @@ module.exports = {
                         }))
                         .setTitle(question)
                         .setDescription('\n\n' +
-                            `**[A]** __${answers[0]}__\n` +
-                            `**[B]** __${answers[1]}__\n` +
-                            `**[C]** __${answers[2]}__\n` +
-                            `**[D]** __${answers[3]}__`)
+                            `**[A]** __${he.decode(answers[0])}__\n` +
+                            `**[B]** __${he.decode(answers[1])}__\n` +
+                            `**[C]** __${he.decode(answers[2])}__\n` +
+                            `**[D]** __${he.decode(answers[3])}__`)
                         .addField('Category', category, true)
                         .addField('Difficulty', difficulty, true)
                         .setColor('#00ff00');
 
-                    message.channel.send('React with the correct emoji below.', embed).then(async msg => {
+                    message.reply('React with the correct emoji below.', embed).then(async msg => {
                         message.channel.stopTyping();
                         const start = Date.now();
                         abcd.forEach(async e => {
@@ -93,7 +93,7 @@ module.exports = {
                     }).catch(() => {});
                 });
         } catch (e) {
-            return message.channel.send('⛔ Oh no! The API I\'m using seems to be down 😒');
+            return message.reply('⛔ Oh no! The quiz API seems to be down atm 😒');
         }
 
     },

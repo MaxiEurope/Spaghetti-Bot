@@ -12,7 +12,7 @@ module.exports = {
 
         const coins = await util.addCoins(message.author.id, 0);
 
-        if (!args.length) return message.channel.send(`ℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
+        if (!args.length) return message.reply(`ℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
         let amount = 0;
         if (!util.isNum(args[0])) {
@@ -36,7 +36,7 @@ module.exports = {
         }
 
         if (coins < amount) {
-            return message.channel.send(`⛔ You were about to play slots with **${util.comma(amount)}** ${bot.coin} while only having **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
+            return message.reply(`⛔ You were about to play slots with **${util.comma(amount)}** ${bot.coin} while only having **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
         }
 
         let charts = ['🍇', '🔔', '🍒', '🍉', '💎'];
@@ -98,7 +98,7 @@ module.exports = {
         /** message */
         const lastMsg = `**${message.author.username}** bet **${util.comma(amount)}** ${bot.coin} and won ${(win === true)?`**${util.comma(won)}** ${bot.coin}`:'nothing 😒'}`;
 
-        message.channel.send(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
+        message.reply(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
             await wait(800);
             msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``).catch(() => {});
             await wait(800);

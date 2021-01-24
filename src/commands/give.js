@@ -9,12 +9,12 @@ module.exports = {
     cooldown: 15,
     async execute(bot, message, args) {
 
-        if (!args.length) return message.channel.send(`ℹ Example: \`${this.example.join('`\n`')}\``).catch(() => {});
+        if (!args.length) return message.reply(`ℹ Example: \`${this.example.join('`\n`')}\``).catch(() => {});
 
         const user = await util.getUser(bot, args[0]);
-        if (!user) return message.channel.send(`⛔ User not found!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
+        if (!user) return message.reply(`⛔ User not found!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
-        if (user.id === message.author.id) return message.channel.send('❓ Why tho').catch(() => {});
+        if (user.id === message.author.id) return message.reply('❓ Why tho').catch(() => {});
 
         let amount = 0;
         if (!util.isNum(args[1])) {
@@ -39,13 +39,13 @@ module.exports = {
 
         async function give(money) {
             if (money < amount) {
-                return message.channel.send(`⛔ You were about to give **${user.tag}** **${util.comma(amount)}** ${bot.coin}, but you've got only **${util.comma(money)}** ${bot.coin}!`).catch(() => {});
+                return message.reply(`⛔ You were about to give **${user.tag}** **${util.comma(amount)}** ${bot.coin}, but you've got only **${util.comma(money)}** ${bot.coin}!`).catch(() => {});
             }
 
             await util.addCoins(message.author.id, amount * (-1));
             const receiverCoins = await util.addCoins(user.id, amount);
 
-            message.channel.send(`✅ You gave **${user.tag}** **${util.comma(amount)}** ${bot.coin}. They now have **${util.comma(receiverCoins)}** ${bot.coin}.`).catch(() => {});
+            message.reply(`✅ You gave **${user.tag}** **${util.comma(amount)}** ${bot.coin}. They now have **${util.comma(receiverCoins)}** ${bot.coin}.`).catch(() => {});
             try {
                 user.send(`👋 Hey, **${message.author.tag}** gave you **${util.comma(amount)}** ${bot.coin}!`);
             } catch (e) {

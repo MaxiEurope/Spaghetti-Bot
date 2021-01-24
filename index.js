@@ -13,6 +13,25 @@ const bfd = require('bfdapi.js');
 const util = require('./src/util/util.js');
 /** discord + client */
 const Discord = require('discord.js-light');
+/** use new reply feature */
+Discord.Structures.extend('Message', Message => {
+    class ExtendedMessage extends Message {
+        reply(...args) {
+            const apiMessage = Discord.APIMessage.create(this.channel, ...args).resolveData();
+            apiMessage.data.message_reference = {
+                message_id: this.id,
+                guild_id: this.guild.id
+            };
+            apiMessage.data.allowed_mentions = {
+                ...(apiMessage.data.allowed_mentions || {}),
+                replied_user: apiMessage.options.ping || false
+            };
+            return this.channel.send(apiMessage);
+        }
+    }
+    return ExtendedMessage;
+});
+/** client */
 const bot = new Discord.Client({
     cacheChannels: false,
     cacheEmojis: false,
@@ -180,7 +199,7 @@ bot.on('message', async message => {
                             .setDescription(`**${message.author.tag}** leveled up to lvl **${(res.lvl + 1)}**!`)
                             .setColor(res.color)
                             .setFooter('edit profile settings with: -profile settings');
-                        message.channel.send(embed);
+                        message.reply(embed);
                     }
                     res.totXp = util.totXP(res.lvl + 1, rndXp);
                     res.xp = rndXp;
@@ -196,7 +215,7 @@ bot.on('message', async message => {
     /** add message author - testing */
     bot.users.add(message.author, true);
     /** mention */
-    if (['<@585142238217240577>', '<@!585142238217240577>'].some(e => message.content === e)) return message.channel.send('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
+    if (['<@585142238217240577>', '<@!585142238217240577>'].some(e => message.content === e)) return message.reply('🍝 Hello there! Run `sp!help` for a list of commands.').catch(() => {});
     /** check prefix */
     let prefix;
     let _prefixes = ['sp!', '<@585142238217240577>', '<@!585142238217240577>'];
@@ -231,7 +250,7 @@ bot.on('message', async message => {
                 util.log(e);
             }
         } else {
-            await message.channel.send('⛔ This command has been disabled for this channel.').catch(() => {});
+            await message.reply('⛔ This command has been disabled for this channel.').catch(() => {});
         }
         setTimeout(() => cmdCooldown.delete(`${message.author.id}-${cmd.name}`), commandCooldown);
     } else {
@@ -240,7 +259,7 @@ bot.on('message', async message => {
             const timeLeft = (cd[0] - Date.now());
             if (cd[1] === true) return;
             cmdCooldown.set(`${message.author.id}-${cmd.name}`, [cd[0], true]);
-            return message.channel.send(`😔 Calm down a bit and wait \`${(timeLeft/1000).toFixed(2)}\`s before using the command **${cmd.name}**!`).then(msg => {
+            return message.reply(`😔 Calm down a bit and wait \`${(timeLeft/1000).toFixed(2)}\`s before using the command **${cmd.name}**!`).then(msg => {
                 msg.delete({
                     timeout: timeLeft + 3000
                 }).catch(() => {});

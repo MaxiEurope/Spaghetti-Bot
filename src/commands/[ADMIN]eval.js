@@ -9,9 +9,9 @@ module.exports = {
 
         try {
             const com = eval(message.content.split(' ').slice(1).join(' '));
-            message.channel.send('```\n' + com + '```');
+            message.reply('```\n' + com + '```');
         } catch (e) {
-            message.channel.send('```javascript\n' + e + '```');
+            message.reply('```javascript\n' + e + '```');
         }
     }
 };

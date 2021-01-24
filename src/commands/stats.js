@@ -36,7 +36,7 @@ module.exports = {
                 `Account created: **${createdAt}**\n` +
                 `Game: **${game}**`, false)
             .setColor('#00ff00');
-        message.channel.send(embed).catch(() => {});
+        message.reply(embed).catch(() => {});
 
     },
 };

@@ -28,7 +28,7 @@ module.exports = {
                 .addField('Latest news - 24nd jan 2021 📬', '```diff\n+ added "support" server\n- yeeted typos```')
                 .setFooter('Arguments between <> are required')
                 .setColor('#00ff00');
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         } else {
             const {
                 commands
@@ -37,7 +37,7 @@ module.exports = {
             const name = args[0].toLowerCase();
             const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
-            if (!command) return message.channel.send('⛔ Command not found. Get a list of available commands by simply running `sp!help`.').catch(() => {});
+            if (!command) return message.reply('⛔ Command not found. Get a list of available commands by simply running `sp!help`.').catch(() => {});
 
             embed.setAuthor(`Help for command: ${command.name}`, bot.user.displayAvatarURL())
                 .setColor('#00ff00')
@@ -49,7 +49,7 @@ module.exports = {
             if (command.description) embed.addField('📋 Description:', command.description);
             if (command.usage) embed.addField('🔋 Usage:', `\`${command.usage}\``);
 
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
     },

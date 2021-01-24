@@ -32,7 +32,7 @@ module.exports = {
             }
         }
 
-        message.channel.send(`😋 Here's some ${res}, enjoy!`).catch(() => {});
+        message.reply(`😋 Here's some ${res}, enjoy!`).catch(() => {});
 
     },
 };

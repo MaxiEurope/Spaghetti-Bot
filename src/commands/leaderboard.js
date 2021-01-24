@@ -16,7 +16,7 @@ module.exports = {
     async execute(bot, message, args) {
 
         if (!args.length) {
-            return message.channel.send(`⛔ You need to provide a valid category!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
+            return message.reply(`⛔ You need to provide a valid category!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
         } else {
             const category = args[0].toLowerCase();
             if (category === 'coins') {
@@ -28,7 +28,7 @@ module.exports = {
             } else if (category === 'cmds') {
                 cmds();
             } else {
-                return message.channel.send(`⛔ You need to provide a valid category!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
+                return message.reply(`⛔ You need to provide a valid category!\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
             }
         }
 
@@ -47,7 +47,7 @@ module.exports = {
                 }
             }]).exec();
             const size = await Coins.find().estimatedDocumentCount();
-            if (res === null) return message.channel.send('⛔ No data found. Please try again later!').catch(() => {});
+            if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
             const embed = new Discord.MessageEmbed()
                 .setTitle('Coins leaderboard')
@@ -63,7 +63,7 @@ module.exports = {
                     embed.addField(`${numbers[i]} ${user.username}`, `${bot.clear} **${util.comma(res[i].coins)}** ${bot.coin}`);
                 }
             }
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
         async function feed() {
@@ -81,7 +81,7 @@ module.exports = {
                 }
             }]).exec();
             const size = await Feed.find().estimatedDocumentCount();
-            if (res === null) return message.channel.send('⛔ No data found. Please try again later!').catch(() => {});
+            if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
             const embed = new Discord.MessageEmbed()
                 .setTitle('Feed leaderboard')
@@ -97,7 +97,7 @@ module.exports = {
                     embed.addField(`${numbers[i]} ${user.username}`, `${bot.clear} **${util.comma(res[i].total)}**`);
                 }
             }
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
         async function xp() {
@@ -115,7 +115,7 @@ module.exports = {
                 }
             }]).exec();
             const size = await Profile.find().estimatedDocumentCount();
-            if (res === null) return message.channel.send('⛔ No data found. Please try again later!').catch(() => {});
+            if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
             const embed = new Discord.MessageEmbed()
                 .setTitle('XP leaderboard')
@@ -131,7 +131,7 @@ module.exports = {
                     embed.addField(`${numbers[i]} ${user.username}`, `${bot.clear} **${util.comma(res[i].totXp)}** ${bot.xp} ${bot.clear}Lvl: **${res[i].lvl}**`);
                 }
             }
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
         async function cmds() {
@@ -149,7 +149,7 @@ module.exports = {
                 }
             }]).exec();
             const size = await Commands.find().estimatedDocumentCount();
-            if (res === null) return message.channel.send('⛔ No data found. Please try again later!').catch(() => {});
+            if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
             const embed = new Discord.MessageEmbed()
                 .setTitle('Commands leaderboard')
@@ -165,7 +165,7 @@ module.exports = {
                     embed.addField(`${numbers[i]} ${user.username}`, `${bot.clear} **${util.comma(res[i].total)}**`);
                 }
             }
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
 

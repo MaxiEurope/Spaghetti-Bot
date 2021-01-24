@@ -20,7 +20,7 @@ module.exports = {
                 last: Date.now(),
                 streak: 1
             }).save().catch(() => {});
-            message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
+            message.reply(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
             await util.addCoins(message.author.id, total);
         } else {
             if ((Date.now() - res.last) > 172800000) {
@@ -31,7 +31,7 @@ module.exports = {
                     streak: 1,
                     last: Date.now()
                 });
-                message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
+                message.reply(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`1\` daily streak)`).catch(() => {});
             } else if ((Date.now() - res.last) > 82800000) {
                 total = 2500 + (res.streak * 83);
                 await util.addCoins(message.author.id, total);
@@ -41,12 +41,12 @@ module.exports = {
                     streak: res.streak + 1,
                     last: Date.now()
                 });
-                message.channel.send(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`${res.streak+1}\` daily streak)`).catch(() => {});
+                message.reply(`✅ Daily claimed, you received **${util.comma(total)}** ${bot.coin}. (\`${res.streak+1}\` daily streak)`).catch(() => {});
             } else {
                 const dur = moment.duration((res.last + 82800000) - Date.now()).format(' H [H], m [M], s [S]', {
                     trim: 'both'
                 });
-                message.channel.send(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});
+                message.reply(`⛔ You can claim your daily in **${dur}**.`).catch(() => {});
             }
         }
 

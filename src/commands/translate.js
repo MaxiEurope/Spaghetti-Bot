@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 5,
     async execute(bot, message, args) {
 
-        if (!args.length) return message.channel.send(`⛔ How about providing a message?\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
+        if (!args.length) return message.reply(`⛔ How about providing a message?\nℹ Example: \`${this.example.join('` `')}\``).catch(() => {});
 
         let language = args[args.length - 1];
         if (language.charAt(0) == '/') {
@@ -22,7 +22,7 @@ module.exports = {
 
         let text = args.join(' ');
         const count = util.count(text).chars;
-        if (count > 500) return message.channel.send('⛔ Oh no, your message exceeded the **500** character limit!').catch(() => {});
+        if (count > 500) return message.reply('⛔ Oh no, your message exceeded the **500** character limit!').catch(() => {});
 
         text = text.split(/(?=[?!.])/gi);
         text.push('');
@@ -30,9 +30,9 @@ module.exports = {
         translate(text, {
             to: language
         }).then(res => {
-            message.channel.send(`✅ Translated **${message.author.tag}'s** message.\n${bot.clear} ${res.join(' ')}`).catch(() => {});
+            message.reply(`✅ Translated **${message.author.tag}'s** message.\n${bot.clear} ${res.join(' ')}`).catch(() => {});
         }).catch(() => {
-            message.channel.send('⛔ You provided an invalid language code. Language codes: https://imgur.com/a/kroNrwa').catch(() => {});
+            message.reply('⛔ You provided an invalid language code. Language codes: https://imgur.com/a/kroNrwa').catch(() => {});
         });
 
     },

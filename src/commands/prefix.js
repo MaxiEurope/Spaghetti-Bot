@@ -14,21 +14,21 @@ module.exports = {
                 serverID: message.guild.id
             });
             if (res) {
-                message.channel.send(`🖇️ This servers prefix is set to \`${res.prefix}\``).catch(() => {});
+                message.reply(`🖇️ This servers prefix is set to \`${res.prefix}\``).catch(() => {});
             } else {
-                message.channel.send('🖇️ The default prefix `sp!`. You can also mention me. You can set a prefix using `sp!prefix +` for example.').catch(() => {});
+                message.reply('🖇️ The default prefix `sp!`. You can also mention me. You can set a prefix using `sp!prefix +` for example.').catch(() => {});
             }
         } else {
-            if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.channel.send('⛔ You require the permission `Manage Channels`!').catch(() => {});
+            if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the permission `Manage Channels`!').catch(() => {});
             const prefix = args[0];
             if (prefix === 'sp!') {
                 await Prefix.findOneAndDelete({
                     serverID: message.guild.id
                 }).catch(() => {});
                 bot.guildPrefixes.delete(message.guild.id);
-                message.channel.send('✅ Set the server prefix to `sp!` (removed it).').catch(() => {});
+                message.reply('✅ Set the server prefix to `sp!` (removed it).').catch(() => {});
             } else {
-                if (util.count(prefix) > 10) return message.channel.send('⛔ That\'s a bit too long! (`10` characters max)').catch(() => {});
+                if (util.count(prefix) > 10) return message.reply('⛔ That\'s a bit too long! (`10` characters max)').catch(() => {});
                 const res = await Prefix.findOne({
                     serverID: message.guild.id
                 });
@@ -45,7 +45,7 @@ module.exports = {
                     }).catch(() => {});
                 }
                 bot.guildPrefixes.set(message.guild.id, prefix);
-                message.channel.send(`✅ Set the server prefix to \`${prefix}\`.`).catch(() => {});
+                message.reply(`✅ Set the server prefix to \`${prefix}\`.`).catch(() => {});
             }
         }
 

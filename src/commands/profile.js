@@ -41,7 +41,7 @@ module.exports = {
             }, (err, p) => {
                 if (err) return util.log(err);
                 if (!p) {
-                    message.channel.send(`⛔ Profile for user **${us.tag}** not found!`).catch(() => {});
+                    message.reply(`⛔ Profile for user **${us.tag}** not found!`).catch(() => {});
                 } else {
                     const embed = new Discord.MessageEmbed()
                         .setAuthor(`${us.username}'s profile`, us.displayAvatarURL({
@@ -56,7 +56,7 @@ module.exports = {
                         .setColor(p.color)
                         .setTimestamp(p.creationDate)
                         .setFooter('Profile created at');
-                    message.channel.send(embed).catch(() => {});
+                    message.reply(embed).catch(() => {});
                 }
             });
         }
@@ -72,7 +72,7 @@ module.exports = {
                 .addField('Send msg on lvlup', `\`\`\`diff\n${(userSetting.lvlupMessage === true)?'+ true': '-false'}\`\`\``, false)
                 .addField('Color', `\`\`\`${userSetting.color}\`\`\``)
                 .setColor(userSetting.color);
-            message.channel.send(embed).catch(() => {});
+            message.reply(embed).catch(() => {});
         }
 
         async function settings(ID, args) {
@@ -80,44 +80,44 @@ module.exports = {
                 const setting = args[1].toLowerCase();
                 if (setting === validSettings[0]) {
                     const info = args.slice(2).join(' ');
-                    if (!info) return message.channel.send('⛔ You must provide some text!\nℹ Usage: `sp!profile settings info someone`').catch(() => {});
-                    if (util.count(info) > 50) return message.channel.send('⛔ Character limit of `50` exceeded.').catch(() => {});
+                    if (!info) return message.reply('⛔ You must provide some text!\nℹ Usage: `sp!profile settings info someone`').catch(() => {});
+                    if (util.count(info) > 50) return message.reply('⛔ Character limit of `50` exceeded.').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
                         shortDesc: info
                     });
-                    message.channel.send('✅ Updated your profile.').catch(() => {});
+                    message.reply('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[1]) {
                     const description = args.slice(2).join(' ');
-                    if (!description) return message.channel.send('⛔ You must provide some text!\nℹ Usage: `sp!profile settings description spaghetti bot user`').catch(() => {});
-                    if (util.count(description) > 750) return message.channel.send('⛔ Character limit of `750` exceeded.').catch(() => {});
+                    if (!description) return message.reply('⛔ You must provide some text!\nℹ Usage: `sp!profile settings description spaghetti bot user`').catch(() => {});
+                    if (util.count(description) > 750) return message.reply('⛔ Character limit of `750` exceeded.').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
                         longDesc: description
                     });
-                    message.channel.send('✅ Updated your profile.').catch(() => {});
+                    message.reply('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[2]) {
                     const color = args[2].toLowerCase();
-                    if (!color) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
-                    if (!parse(color).hex) return message.channel.send('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
+                    if (!color) return message.reply('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
+                    if (!parse(color).hex) return message.reply('⛔ You must provide a valid **hex** color!\nℹ Usage: `sp!profile settings color #000000`').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
                         color: parse(color).hex
                     });
-                    message.channel.send('✅ Updated your profile.').catch(() => {});
+                    message.reply('✅ Updated your profile.').catch(() => {});
                 } else if (setting === validSettings[3]) {
                     const lvlupMessage = args[2].toLowerCase();
-                    if (!lvlupMessage) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
-                    if (!['true', 'false'].some(e => lvlupMessage === e)) return message.channel.send('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
+                    if (!lvlupMessage) return message.reply('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
+                    if (!['true', 'false'].some(e => lvlupMessage === e)) return message.reply('⛔ You must provide **true** or **false**!\nℹ Usage: `sp!profile settings lvlup true`').catch(() => {});
                     await Profile.findOneAndUpdate({
                         userID: ID
                     }, {
                         lvlupMessage: (lvlupMessage === 'true')
                     });
-                    message.channel.send('✅ Updated your profile.').catch(() => {});
+                    message.reply('✅ Updated your profile.').catch(() => {});
                 }
             } else {
                 viewSetting(message.author);

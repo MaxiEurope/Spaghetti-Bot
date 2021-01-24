@@ -15,7 +15,7 @@ module.exports = {
             user = await util.getUser(bot, args[0]);
         }
 
-        message.channel.send(`📸 Found **${user.tag}'s** avatar!`, {
+        message.reply(`📸 Found **${user.tag}'s** avatar!`, {
             files: [{
                 attachment: user.displayAvatarURL({
                     dynamic: true,

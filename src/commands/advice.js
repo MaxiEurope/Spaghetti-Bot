@@ -12,9 +12,9 @@ module.exports = {
         try {
             fetch('https://api.adviceslip.com/advice')
                 .then(res => res.json())
-                .then(body => message.channel.send(`${rnd} **${body.slip.advice}**`));
+                .then(body => message.reply(`${rnd} **${body.slip.advice}**`));
         } catch (e) {
-            return message.channel.send('⛔ Oh no! `adviceslip.com` seems to be down 😒');
+            return message.reply('⛔ Oh no! `adviceslip.com` seems to be down atm 😒');
         }
     },
 };
