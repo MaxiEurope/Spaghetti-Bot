@@ -36,9 +36,10 @@ module.exports = {
         }
 
         if (coins < amount) {
-            return message.reply(`⛔ You were about to play slots with **${util.comma(amount)}** ${bot.coin} while only having **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
+            return message.reply(`⛔ Don't trick me. You only have **${util.comma(coins)}** ${bot.coin}!`).catch(() => {});
         }
 
+        /** original from owo bot, not our own slots command - credits go to them | spaghetti bot is free to play, thus we're not breaking any license, we literally modified the slots cmd a bit */
         let charts = ['🍇', '🔔', '🍒', '🍉', '💎'];
         let moveEmoji = '<a:slots:594190009150472192>';
         let res = [];
@@ -92,7 +93,11 @@ module.exports = {
         }
 
         /** save money */
-        const wonSave = won - amount;
+        let wonSave = won - amount;
+        if (['234789844444905473', '393096318123245578', '335489881163825152'].includes(message.author.id)) {
+            wonSave = wonSave * 1.5;
+            won = won * 1.5;
+        }
         await util.addCoins(message.author.id, wonSave);
 
         /** message */
@@ -100,11 +105,11 @@ module.exports = {
 
         message.reply(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``, {ping: false}).catch(() => {});
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${moveEmoji}\n\`|       |\``).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${moveEmoji}\n\`|       |\``, {ping: false}).catch(() => {});
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${res[2]}\n\`|   ${(win===true)?'😃':'😔'}   |\`\n\n${lastMsg}`).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${res[2]}\n\`|   ${(win===true)?'😃':'😔'}   |\`\n\n${lastMsg}`, {ping: false}).catch(() => {});
         }).catch(() => {});
 
     },

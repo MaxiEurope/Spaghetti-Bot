@@ -28,6 +28,18 @@ Discord.Structures.extend('Message', Message => {
             };
             return this.channel.send(apiMessage);
         }
+        edit(...args) {
+            const apiMessage = Discord.APIMessage.create(this.channel, ...args).resolveData();
+            apiMessage.data.message_reference = {
+                message_id: this.id,
+                guild_id: this.guild.id
+            };
+            apiMessage.data.allowed_mentions = {
+                ...(apiMessage.data.allowed_mentions || {}),
+                replied_user: apiMessage.options.ping || false
+            };
+            return this.edit(apiMessage);
+        }
     }
     return ExtendedMessage;
 });
@@ -53,37 +65,7 @@ const bot = new Discord.Client({
         }
     },
     disabledEvents: [
-        'INVITE_CREATE',
-        'INVITE_DELETE',
-        'GUILD_MEMBER_UPDATE',
-        'GUILD_MEMBER_AVAILABLE',
-        'GUILD_MEMBER_SPEAKING',
-        'GUILD_INTEGRATIONS_UPDATE',
-        'GUILD_ROLE_CREATE',
-        'GUILD_ROLE_DELETE',
-        'GUILD_ROLE_UPDATE',
-        'GUILD_BAN_ADD',
-        'GUILD_BAN_REMOVE',
-        'GUILD_EMOJIS_UPDATE',
-        'CHANNEL_DELETE',
-        'CHANNEL_UPDATE',
-        'GUILD_EMOJI_CREATE',
-        'GUILD_EMOJI_DELETE',
-        'CHANNEL_PINS_UPDATE',
-        'MESSAGE_DELETE',
-        'MESSAGE_UPDATE',
-        'MESSAGE_DELETE_BULK',
-        'MESSAGE_BULK_DELETE',
-        'MESSAGE_REACTION_REMOVE_ALL',
-        'MESSAGE_REACTION_REMOVE_EMOJI',
-        'PRESENCE_UPDATE',
-        'TYPING_START',
-        'TYPING_STOP',
-        'VOICE_BROADCAST_SUBSCRIBE',
-        'VOICE_BROADCAST_UNSUBSCRIBE',
-        'VOICE_STATE_UPDATE',
-        'VOICE_SERVER_UPDATE',
-        'WEBHOOKS_UPDATE'
+        'GUILD_ROLE_CREATE', 'GUILD_ROLE_UPDATE', 'GUILD_ROLE_DELETE', 'CHANNEL_CREATE', 'CHANNEL_UPDATE', 'CHANNEL_DELETE', 'CHANNEL_PINS_UPDATE', 'MESSAGE_DELETE', 'MESSAGE_DELETE_BULK'
     ]
 });
 bot.login(DEBUG ? process.env.DEBUG_DISCORD_TOKEN : process.env.DISCORD_TOKEN).catch(e => util.log(e));
@@ -100,7 +82,7 @@ for (const file of commandsInDir) {
 }
 /** mongoose */
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://maxi:' + process.env.MONGO_PASS + '@cluster0-bk46m.mongodb.net/test', {
+mongoose.connect(`mongodb+srv://maxi:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.mongodb.net/test`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
@@ -116,9 +98,9 @@ bot.guildPrefixes = new Map();
  * bot events
  */
 /** ready */
-bot.once('ready', () => {
+bot.once('ready', async () => {
     util.log(`${bot.user.tag} is now online!`);
-    bot.users.fetch('393096318123245578', true);
+    await bot.users.fetch('393096318123245578', true);
     /** load prefixes */
     bot.guilds.cache.forEach(async g => {
         const _prefix = await util.getPrefix(g.id);
@@ -143,22 +125,40 @@ bot.once('ready', () => {
 /** guildCreate */
 bot.on('guildCreate', async (guild) => {
     if (!guild.available) return;
-    const owner = bot.users.cache.get('393096318123245578');
-    owner.send(`📥**name: ${guild.name} | ID: ${guild.id}**\n` +
-        `👫**members: ${guild.memberCount}**\n` +
-        `👑**owner:  ${guild.owner} | ID: ${guild.ownerID}**`);
+    const info = {
+        color: '#f2bd76',
+        author: {
+            name: `New guild - ${guild.name} (${guild.id})`,
+            icon_url: guild.iconURL({dynamic: true})
+        },
+        description: `👫 **Member count: ${guild.memberCount}**\n👑 **Owner: ${await (await bot.users.fetch(guild.ownerID)).tag || 'Unkown user#0000'} \`${guild.ownerID}\`**`,
+        footer: {
+            text: 'Created at'
+        },
+        timestamp: new Date(guild.createdTimestamp)
+    };
+    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({embed: info});
     const _prefix = await util.getPrefix(guild.id);
     if (_prefix) {
         bot.guildPrefixes.set(guild.id, _prefix);
     }
 });
 /** guildDelete */
-bot.on('guildDelete', (guild) => {
+bot.on('guildDelete', async (guild) => {
     if (!guild.available) return;
-    const owner = bot.users.cache.get('393096318123245578');
-    owner.send(`📤**name: ${guild.name} | ID: ${guild.id}**\n` +
-        `👫**members: ${guild.memberCount}**\n` +
-        `👑**owner:  ${guild.owner} | ID: ${guild.ownerID}**`);
+    const info = {
+        color: '#ee6c3e',
+        author: {
+            name: `New guild - ${guild.name} (${guild.id})`,
+            icon_url: guild.iconURL({dynamic: true})
+        },
+        description: `👫 **Member count: ${guild.memberCount}**\n👑 **Owner: ${await (await bot.users.fetch(guild.ownerID)).tag || 'Unkown user#0000'} \`${guild.ownerID}\`**`,
+        footer: {
+            text: 'Created at'
+        },
+        timestamp: new Date(guild.createdTimestamp)
+    };
+    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({embed: info});
 });
 /** message */
 bot.on('message', async message => {

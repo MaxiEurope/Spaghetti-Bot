@@ -7,7 +7,7 @@
         "start": "node ."
     },
     "engines": {
-        "node": "12.16.3"
+        "node": "14.15.3"
     },
     "dependencies": {
         "bfdapi.js": "WetterEurope/bfdapi.js",
@@ -26,7 +26,8 @@
         "node-emoji": "^1.10.0",
         "node-fetch": "^2.6.1",
         "parse-color": "^1.0.0",
-        "translate-google": "WetterEurope/NODE_GOOGLE_TRANSLATE"
+        "translate-google": "WetterEurope/NODE_GOOGLE_TRANSLATE",
+        "sharp": "^0.27.2"
     },
     "devDependencies": {}
 }
