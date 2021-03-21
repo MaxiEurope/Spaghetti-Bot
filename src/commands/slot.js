@@ -5,7 +5,7 @@ module.exports = {
     name: 'slot',
     aliases: ['slots', 's'],
     example: ['sp!slots 100'],
-    description: 'Spin the wheel. (max bet: 50k coins)',
+    description: 'Spin the wheel. (max bet: 50k coins) | original from owo bot, this command has been modified',
     usage: 'sp!slots <coins>',
     cooldown: 10,
     async execute(bot, message, args) {
@@ -103,13 +103,13 @@ module.exports = {
         /** message */
         const lastMsg = `**${message.author.username}** bet **${util.comma(amount)}** ${bot.coin} and won ${(win === true)?`**${util.comma(won)}** ${bot.coin}`:'nothing 😒'}`;
 
-        message.reply(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
+        message.channel.send(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``, {ping: false}).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``).catch(() => {});
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${moveEmoji}\n\`|       |\``, {ping: false}).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${moveEmoji}\n\`|       |\``).catch(() => {});
             await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${res[2]}\n\`|   ${(win===true)?'😃':'😔'}   |\`\n\n${lastMsg}`, {ping: false}).catch(() => {});
+            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${res[2]}\n\`|   ${(win===true)?'😃':'😔'}   |\`\n\n${lastMsg}`).catch(() => {});
         }).catch(() => {});
 
     },

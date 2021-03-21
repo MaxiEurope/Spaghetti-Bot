@@ -28,18 +28,6 @@ Discord.Structures.extend('Message', Message => {
             };
             return this.channel.send(apiMessage);
         }
-        edit(...args) {
-            const apiMessage = Discord.APIMessage.create(this.channel, ...args).resolveData();
-            apiMessage.data.message_reference = {
-                message_id: this.id,
-                guild_id: this.guild.id
-            };
-            apiMessage.data.allowed_mentions = {
-                ...(apiMessage.data.allowed_mentions || {}),
-                replied_user: apiMessage.options.ping || false
-            };
-            return this.edit(apiMessage);
-        }
     }
     return ExtendedMessage;
 });
