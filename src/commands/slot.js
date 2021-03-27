@@ -102,17 +102,30 @@ module.exports = {
         }
         await util.addCoins(message.author.id, wonSave);
 
-        /** message */
-        const lastMsg = `**${message.author.username}** bet **${util.comma(amount)}** ${bot.coin} and won ${(win === true)?`**${util.comma(won)}** ${bot.coin}`:'nothing 😒'}`;
+        const embed = {
+            author: {
+                name: 'SLOTS',
+                icon_url: message.author.displayAvatarURL({dynamic: true})
+            },
+            description: `${bot.clear} **>** ${moveEmoji} ${moveEmoji} ${moveEmoji} **<**`,
+            color: '#fbdca3'
+        };
 
-        message.channel.send(`**\\> SLOTS**\n${moveEmoji} ${moveEmoji} ${moveEmoji}\n\`|       |\``).then(async msg => {
-            await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${moveEmoji} ${moveEmoji}\n\`|       |\``).catch(() => {});
-            await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${moveEmoji}\n\`|       |\``).catch(() => {});
-            await wait(800);
-            msg.edit(`**\\> SLOTS**\n${res[0]} ${res[1]} ${res[2]}\n\`|   ${(win===true)?'😃':'😔'}   |\`\n\n${lastMsg}`).catch(() => {});
-        }).catch(() => {});
+        /** message */
+        const msg = await message.channel.send({embed: embed}).catch(() => {});
+
+        await wait(700);
+        embed.description = `${bot.clear} **>** ${res[0]} ${moveEmoji} ${moveEmoji} **<**`;
+        await msg.edit({embed: embed}).catch(() => {});
+
+        await wait(700);
+        embed.description = `${bot.clear} **>** ${res[0]} ${res[1]} ${moveEmoji} **<**`;
+        await msg.edit({embed: embed}).catch(() => {});
+
+        await wait(700);
+        embed.description = `${bot.clear} **>** ${res[0]} ${res[1]} ${res[2]} **<**\n\n**${message.author.username}**, ${win ? `you won **${util.comma(won)}** ${bot.coin}!` : ' you lost...'}\nYou've got **${util.comma(await util.addCoins(message.author.id, 0))}** ${bot.coin}.`;
+        embed.color = win ? '#3f8009' : '#d22b0f';
+        await msg.edit({embed: embed}).catch(() => {});
 
     },
 };

@@ -25,7 +25,7 @@ module.exports = {
                 .addField('Additional information', '◽ [Invite me](https://discord.com/oauth2/authorize?client_id=585142238217240577&scope=bot&permissions=19520) ' +
                     '◽ [Support server](https://discord.gg/adrRzgQ) ' +
                     '◽ [Vote for more coins on top.gg](https://top.gg/bot/585142238217240577/vote)')
-                .addField('Latest news - 24nd jan 2021 📬', '```diff\n+ added "support" server\n- yeeted typos```')
+                .addField('Latest news - march/27/2021 📬', '```diff\n+ 150% slots multi\n+ up to 70k coins when voting on top.gg\n- lowered slots cooldown```')
                 .setFooter('Arguments between <> are required')
                 .setColor('#00ff00');
             message.reply(embed).catch(() => {});
