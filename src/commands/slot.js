@@ -95,8 +95,10 @@ module.exports = {
         /** save money */
         let wonSave = won - amount;
         if (['234789844444905473', '393096318123245578', '335489881163825152'].includes(message.author.id)) {
-            wonSave = wonSave * 1.5;
-            won = won * 1.5;
+            if (wonSave > 0) {
+                wonSave = wonSave * 1.5;
+                won = won * 1.5;
+            }
         }
         await util.addCoins(message.author.id, wonSave);
 
