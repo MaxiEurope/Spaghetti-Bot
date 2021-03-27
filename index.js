@@ -8,7 +8,7 @@ require('dotenv').config();
 require('moment-duration-format');
 /** load modules */
 const fs = require('fs');
-const topgg = require('dblapi.js');
+const topgg = require('@top-gg/sdk');
 const bfd = require('bfdapi.js');
 const util = require('./src/util/util.js');
 /** discord + client */
@@ -97,12 +97,14 @@ bot.once('ready', async () => {
         }
     });
     /** vote clients */
-    bot.topggClient = new topgg(process.env.TOPGG_TOKEN);
+    bot.topggClient = new topgg.Api(process.env.TOPGG_TOKEN);
     bot.bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
     /** vote handler & post server count */
-    vote.handler(bot, bot.topggClient);
+    vote.handler(bot);
     setInterval(() => {
-        bot.topggClient.postStats(bot.guilds.cache.size).then(() => {
+        bot.topggClient.postStats({
+            serverCount: bot.guilds.cache.size
+        }).then(() => {
             util.log('Posted server count to top.gg');
         }).catch(() => {});
         bot.bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
@@ -137,7 +139,7 @@ bot.on('guildDelete', async (guild) => {
     const info = {
         color: '#ee6c3e',
         author: {
-            name: `New guild - ${guild.name} (${guild.id})`,
+            name: `Left guild - ${guild.name} (${guild.id})`,
             icon_url: guild.iconURL({dynamic: true})
         },
         description: `👫 **Member count: ${guild.memberCount}**\n👑 **Owner: ${await (await bot.users.fetch(guild.ownerID)).tag || 'Unkown user#0000'} \`${guild.ownerID}\`**`,

@@ -10,7 +10,6 @@ module.exports = {
         let bfdVoted = false;
         try {
             topggVoted = await bot.topggClient.hasVoted(message.author.id);
-            bfdVoted = await bot.bfdClient.getBotVotes();
         } catch (error) {
             return message.reply('⛔ Sorry, but it seems like either top.gg or botsfordiscord.com is down right now. Please try again later.').catch(() => {});
         }
@@ -19,7 +18,7 @@ module.exports = {
             .setAuthor('Vote for me to get some coins', bot.user.displayAvatarURL())
             .setColor('#00ff00')
             .setDescription(`${!topggVoted?'<:TEyes:522434534139232256> You can now vote for me on [top.gg](https://top.gg/bot/585142238217240577/vote).':'<:TEno:522434586521763850> You have already voted for me on [top.gg](https://top.gg/bot/585142238217240577/vote) in the past **12 hours**.'}\n\n` +
-                `${!bfdVoted.hasVoted24.includes(message.author.id)?'<:TEyes:522434534139232256> You can now vote for me on [botsfordiscord.com](https://botsfordiscord.com/bot/585142238217240577/vote).':'<:TEno:522434586521763850> You have already voted for me on [botsfordiscord.com](https://botsfordiscord.com/bot/585142238217240577/vote) in the past **24 hours**.'}`);
+                `${!bfdVoted ? '<:TEyes:522434534139232256> You can now vote for me on [botsfordiscord.com](https://botsfordiscord.com/bot/585142238217240577/vote).':'<:TEno:522434586521763850> You have already voted for me on [botsfordiscord.com](https://botsfordiscord.com/bot/585142238217240577/vote) in the past **24 hours**.'}`);
         message.reply(embed).catch(() => {});
 
     }

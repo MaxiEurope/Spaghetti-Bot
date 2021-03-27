@@ -10,9 +10,9 @@
         "node": "14.15.3"
     },
     "dependencies": {
+        "@top-gg/sdk": "^3.0.9",
         "bfdapi.js": "WetterEurope/bfdapi.js",
         "body-parser": "^1.19.0",
-        "dblapi.js": "^2.4.1",
         "discord.js": "^12.4.1",
         "discord.js-light": "^3.3.3",
         "dotenv": "^8.2.0",
@@ -26,8 +26,8 @@
         "node-emoji": "^1.10.0",
         "node-fetch": "^2.6.1",
         "parse-color": "^1.0.0",
-        "translate-google": "WetterEurope/NODE_GOOGLE_TRANSLATE",
-        "sharp": "^0.27.2"
+        "sharp": "^0.27.2",
+        "translate-google": "WetterEurope/NODE_GOOGLE_TRANSLATE"
     },
     "devDependencies": {}
 }

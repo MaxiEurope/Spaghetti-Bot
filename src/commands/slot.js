@@ -7,7 +7,7 @@ module.exports = {
     example: ['sp!slots 100'],
     description: 'Spin the wheel. (max bet: 50k coins) | original from owo bot, this command has been modified',
     usage: 'sp!slots <coins>',
-    cooldown: 10,
+    cooldown: 5,
     async execute(bot, message, args) {
 
         const coins = await util.addCoins(message.author.id, 0);

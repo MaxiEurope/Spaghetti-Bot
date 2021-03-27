@@ -1,4 +1,4 @@
-exports.handler = (bot, dbl) => {
+exports.handler = (bot) => {
 
     const util = require('./util.js');
     const express = require('express');
@@ -17,8 +17,8 @@ exports.handler = (bot, dbl) => {
         }
 
         const body = JSON.parse(req.body);
-        const multi = (await dbl.isWeekend()) ? 2 : 1;
-        const rndCoins = Math.round(Math.random() * (1100 - 700 + 1) + 700) * multi;
+        const multi = [0, 6].includes(new Date().getDay()) ? 2.5 : 1;
+        const rndCoins = Math.round(Math.random() * (33333 - 22222 + 1) + 22222) * multi;
 
         await util.addCoins(body.user, rndCoins);
         const user = await util.getUser(bot, body.user);
@@ -29,7 +29,7 @@ exports.handler = (bot, dbl) => {
                     color: '#79bfeb',
                     author: {
                         name: `New vote - ${user.tag} (${user.id})`,
-                        icon_url: user.iconURL({dynamic: true})
+                        icon_url: user.displayAvatarURL({dynamic: true})
                     },
                     description: `🍝 **Thank you for voting!** You received **${util.comma(rndCoins)}** ${bot.coin}`,
                     footer: {
