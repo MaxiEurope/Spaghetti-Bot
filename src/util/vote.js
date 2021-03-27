@@ -17,7 +17,7 @@ exports.handler = (bot) => {
         }
 
         const body = JSON.parse(req.body);
-        const multi = [0, 6].includes(new Date().getDay()) ? 2.5 : 1;
+        const multi = [0, 6].includes(new Date().getDay()) ? 3 : 1;
         const rndCoins = Math.round(Math.random() * (33333 - 22222 + 1) + 22222) * multi;
 
         await util.addCoins(body.user, rndCoins);
