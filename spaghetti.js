@@ -9,7 +9,6 @@ require('moment-duration-format');
 /** load modules */
 const fs = require('fs');
 const topgg = require('@top-gg/sdk');
-const bfd = require('bfdapi.js');
 const util = require('./src/util/util.js');
 /** discord + client */
 const Discord = require('discord.js-light');
@@ -38,7 +37,7 @@ const bot = new Discord.Client({
     cacheGuilds: true,
     cacheOverwrites: false,
     cachePresences: false,
-    cacheRoles: true,
+    cacheRoles: false,
     fetchAllMembers: true,
     messageSweepInterval: 15,
     messageCacheMaxSize: 0,
@@ -80,7 +79,7 @@ const Profile = require('./src/util/mongo/profile.js');
 const vote = require('./src/util/vote.js');
 /** cooldowns / prefixes*/
 const cmdCooldown = new Map();
-const xpCooldown = new Set();
+const cooldown = {};
 bot.guildPrefixes = new Map();
 /** 
  * bot events
@@ -98,7 +97,6 @@ bot.once('ready', async () => {
     });
     /** vote clients */
     bot.topggClient = new topgg.Api(process.env.TOPGG_TOKEN);
-    bot.bfdClient = new bfd('585142238217240577', process.env.BFD_TOKEN);
     /** vote handler & post server count */
     vote.handler(bot);
     setInterval(() => {
@@ -106,9 +104,6 @@ bot.once('ready', async () => {
             serverCount: bot.guilds.cache.size
         }).then(() => {
             util.log('Posted server count to top.gg');
-        }).catch(() => {});
-        bot.bfdClient.postServerCount(bot.guilds.cache.size).then(() => {
-            util.log('Posted server count to botsfordiscord.com');
         }).catch(() => {});
     }, 900000);
 });
@@ -119,7 +114,9 @@ bot.on('guildCreate', async (guild) => {
         color: '#f2bd76',
         author: {
             name: `New guild - ${guild.name} (${guild.id})`,
-            icon_url: guild.iconURL({dynamic: true})
+            icon_url: guild.iconURL({
+                dynamic: true
+            })
         },
         description: `👫 **Member count: ${guild.memberCount}**\n👑 **Owner: ${await (await bot.users.fetch(guild.ownerID)).tag || 'Unkown user#0000'} \`${guild.ownerID}\`**`,
         footer: {
@@ -127,7 +124,9 @@ bot.on('guildCreate', async (guild) => {
         },
         timestamp: new Date(guild.createdTimestamp)
     };
-    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({embed: info});
+    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({
+        embed: info
+    });
     const _prefix = await util.getPrefix(guild.id);
     if (_prefix) {
         bot.guildPrefixes.set(guild.id, _prefix);
@@ -140,7 +139,9 @@ bot.on('guildDelete', async (guild) => {
         color: '#ee6c3e',
         author: {
             name: `Left guild - ${guild.name} (${guild.id})`,
-            icon_url: guild.iconURL({dynamic: true})
+            icon_url: guild.iconURL({
+                dynamic: true
+            })
         },
         description: `👫 **Member count: ${guild.memberCount}**\n👑 **Owner: ${await (await bot.users.fetch(guild.ownerID)).tag || 'Unkown user#0000'} \`${guild.ownerID}\`**`,
         footer: {
@@ -148,33 +149,38 @@ bot.on('guildDelete', async (guild) => {
         },
         timestamp: new Date(guild.createdTimestamp)
     };
-    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({embed: info});
+    await (await bot.channels.fetch(process.env.LOG_CHANNEL)).send({
+        embed: info
+    });
 });
 /** message */
 bot.on('message', async message => {
     if (message.channel.type !== 'text') return;
     /** xp system */
-    const res = await Profile.findOne({
-        userID: message.author.id
-    });
-    if (res === null) {
-        await new Profile({
-            userID: message.author.id,
-            xp: 0,
-            totXp: 0,
-            lvl: 0,
-            creationDate: Date.now(),
-            shortDesc: 'A spy 🕵️',
-            longDesc: 'Noone knows 😱',
-            color: '#00ff00',
-            lvlupMessage: false
-        }).save().catch(() => {});
-        if (message.author.bot) return;
-    } else {
-        if (message.author.bot) return;
-        if (res.xp >= 0) {
-            if (!xpCooldown.has(message.author.id)) {
-                xpCooldown.add(message.author.id);
+    const key = message.author.id;
+    if (!cooldown[key]) {
+        const res = await Profile.findOne({
+            userID: message.author.id
+        });
+        setTimeout(() => {
+            delete cooldown[key];
+        }, 60000);
+        cooldown[key] = true;
+        if (res === null) {
+            await new Profile({
+                userID: message.author.id,
+                xp: 0,
+                totXp: 0,
+                lvl: 0,
+                creationDate: Date.now(),
+                shortDesc: 'A spy 🕵️',
+                longDesc: 'Noone knows 😱',
+                color: '#00ff00',
+                lvlupMessage: false
+            }).save().catch(() => {});
+        } else {
+            if (message.author.bot) return;
+            if (res.xp >= 0) {
                 const rndXp = Math.round(Math.random() * (25 - 15 + 1) + 15);
                 if (res.xp + rndXp < ((5 * (Math.pow(res.lvl, 2))) + (50 * res.lvl) + 100)) {
                     res.totXp = util.totXP(res.lvl, res.xp + rndXp);
@@ -196,9 +202,6 @@ bot.on('message', async message => {
                     res.lvl = res.lvl + 1;
                     await res.save().catch(() => {});
                 }
-                setTimeout(() => {
-                    xpCooldown.delete(message.author.id);
-                }, 60000);
             }
         }
     }

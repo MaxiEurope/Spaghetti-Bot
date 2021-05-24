@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 3,
     async execute(bot, message, args) {
 
-        if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the permission `Manage Channels`!').catch(() => {});
+        if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the `Administrator` permission!').catch(() => {});
 
         const {
             commands

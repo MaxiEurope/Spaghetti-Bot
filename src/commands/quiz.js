@@ -17,7 +17,6 @@ module.exports = {
         let res = 0;
 
         try {
-
             message.channel.startTyping();
             fetch(url)
                 .then(res => res.json())
@@ -39,14 +38,14 @@ module.exports = {
                         .setAuthor(`${message.author.tag}'s question`, message.author.displayAvatarURL({
                             dynamic: true
                         }))
-                        .setTitle(question)
+                        .setTitle(he.decode(question))
                         .setDescription('\n\n' +
                             `**[A]** __${he.decode(answers[0])}__\n` +
                             `**[B]** __${he.decode(answers[1])}__\n` +
                             `**[C]** __${he.decode(answers[2])}__\n` +
                             `**[D]** __${he.decode(answers[3])}__`)
-                        .addField('Category', category, true)
-                        .addField('Difficulty', difficulty, true)
+                        .addField('Category', he.decode(category), true)
+                        .addField('Difficulty', he.decode(difficulty), true)
                         .setColor('#00ff00');
 
                     message.reply('React with the correct emoji below.', embed).then(async msg => {

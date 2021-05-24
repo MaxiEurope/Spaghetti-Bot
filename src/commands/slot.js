@@ -94,10 +94,12 @@ module.exports = {
 
         /** save money */
         let wonSave = won - amount;
-        if (['234789844444905473', '393096318123245578', '335489881163825152'].includes(message.author.id)) {
+        let multi = 1;
+        if (Date.now() % 10 === 0) {
+            multi += Math.random();
             if (wonSave > 0) {
-                wonSave = Math.round(wonSave * 1.5);
-                won = Math.round(won * 1.5);
+                wonSave = Math.round(wonSave * multi);
+                won = Math.round(won * multi);
             }
         }
         await util.addCoins(message.author.id, wonSave);
@@ -108,7 +110,10 @@ module.exports = {
                 icon_url: message.author.displayAvatarURL({dynamic: true})
             },
             description: `${bot.clear} **>** ${moveEmoji} ${moveEmoji} ${moveEmoji} **<**`,
-            color: '#fbdca3'
+            color: '#fbdca3',
+            footer: {
+                text: multi > 1 ? `🍀 Multi: ${multi * 100}` : null
+            }
         };
 
         /** message */

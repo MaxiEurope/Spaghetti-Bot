@@ -19,7 +19,7 @@ module.exports = {
                 message.reply('🖇️ The default prefix `sp!`. You can also mention me. You can set a prefix using `sp!prefix +` for example.').catch(() => {});
             }
         } else {
-            if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the permission `Manage Channels`!').catch(() => {});
+            if (!message.member.permissions.has('MANAGE_MESSAGES')) return message.reply('⛔ You require the `Administrator` permission!').catch(() => {});
             const prefix = args[0];
             if (prefix === 'sp!') {
                 await Prefix.findOneAndDelete({
