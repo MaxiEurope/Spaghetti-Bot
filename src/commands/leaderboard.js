@@ -45,7 +45,7 @@ module.exports = {
                         }
                     }
                 }
-            }]).lean().exec();
+            }]).exec();
             const size = await Coins.find().estimatedDocumentCount();
             if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
@@ -79,7 +79,7 @@ module.exports = {
                         }
                     }
                 }
-            }]).lean().exec();
+            }]).exec();
             const size = await Feed.find().estimatedDocumentCount();
             if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
@@ -113,7 +113,7 @@ module.exports = {
                         }
                     }
                 }
-            }]).lean().exec();
+            }]).exec();
             const size = await Profile.find().estimatedDocumentCount();
             if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
@@ -147,7 +147,7 @@ module.exports = {
                         }
                     }
                 }
-            }]).lean().exec();
+            }]).exec();
             const size = await Commands.find().estimatedDocumentCount();
             if (res === null) return message.reply('⛔ No data found. Please try again later!').catch(() => {});
 
