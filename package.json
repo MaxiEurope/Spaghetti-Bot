@@ -15,7 +15,7 @@
         "eslint": "^7.12.1",
         "express": "^4.17.1",
         "he": "^1.2.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.2",
         "moment-duration-format": "^2.3.2",
         "moment-timezone": "^0.5.31",
         "mongoose": "^5.11.10",
