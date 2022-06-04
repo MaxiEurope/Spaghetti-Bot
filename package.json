@@ -1,7 +1,7 @@
 {
     "main": "spaghetti.js",
     "author": {
-        "name": "maxi#7777 & Spaghetti (OberNub)#6666"
+        "name": "maxi#7777 & Spaghetti#6400"
     },
     "scripts": {
         "start": "node ."
