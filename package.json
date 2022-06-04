@@ -15,14 +15,13 @@
         "eslint": "^7.12.1",
         "express": "^4.17.1",
         "he": "^1.2.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.3",
         "moment-duration-format": "^2.3.2",
         "moment-timezone": "^0.5.31",
         "mongoose": "^5.11.10",
         "node-emoji": "^1.10.0",
-        "node-fetch": "^2.6.1",
+        "node-fetch": "^3.2.5",
         "parse-color": "^1.0.0",
         "translate-google": "https://github.com/WetterEurope/NODE_GOOGLE_TRANSLATE"
-    },
-    "devDependencies": {}
+    }
 }
