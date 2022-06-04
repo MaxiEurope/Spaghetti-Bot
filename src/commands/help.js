@@ -18,7 +18,7 @@ module.exports = {
                 .addField('💰 Economy', '`coins` `daily` `feed` `leaderboard` `slots`')
                 .addField('❓ Quiz', '`quiz`')
                 .addField('🖼 Profile', '`profile`')
-                .addField('🖇 Util', '`enable` `disable` `prefix` `translate`')
+                .addField('🖇 Util', '`enable` `disable` `prefix`')
                 .setDescription('My prefix is `sp!`. Run commands with `sp!<command>`.\n' +
                     'Need help 🤔? Use `sp!help <command>`.\n' +
                     'Make sure to replace `<command>` with a command name.')
